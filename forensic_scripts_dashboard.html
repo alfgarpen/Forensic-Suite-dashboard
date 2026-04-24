@@ -1,0 +1,1070 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap');
+
+  :root {
+    --c-bg: #0d0f14;
+    --c-surface: #131720;
+    --c-panel: #1a1f2e;
+    --c-border: #252c3d;
+    --c-accent-green: #00e5a0;
+    --c-accent-blue: #3d8ef8;
+    --c-accent-amber: #f5a623;
+    --c-accent-red: #e0484a;
+    --c-text-primary: #e8ecf4;
+    --c-text-secondary: #7a8399;
+    --c-text-mono: #00e5a0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .db-root {
+    background: var(--c-bg);
+    font-family: 'Syne', sans-serif;
+    color: var(--c-text-primary);
+    min-height: 100vh;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .db-header {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .db-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .db-logo {
+    width: 32px;
+    height: 32px;
+    background: var(--c-accent-green);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+  }
+
+  .db-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--c-text-primary);
+  }
+
+  .db-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--c-text-secondary);
+    margin-top: 2px;
+  }
+
+  .db-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--c-accent-green);
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-accent-green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Tab Navigation */
+  .db-nav {
+    display: flex;
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: 0 24px;
+    gap: 0;
+  }
+
+  .nav-tab {
+    padding: 12px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    user-select: none;
+    border: none;
+    background: none;
+  }
+
+  .nav-tab:hover {
+    color: var(--c-text-primary);
+  }
+
+  .nav-tab.active {
+    color: var(--c-accent-green);
+    border-bottom: 2px solid var(--c-accent-green);
+  }
+
+  .nav-tab span.num {
+    font-size: 10px;
+    background: var(--c-panel);
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin-left: 6px;
+    color: var(--c-text-secondary);
+  }
+
+  .nav-tab.active span.num {
+    background: rgba(0,229,160,0.15);
+    color: var(--c-accent-green);
+  }
+
+  /* Content */
+  .db-content {
+    padding: 24px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Section title */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .section-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .badge-green { background: rgba(0,229,160,0.12); color: var(--c-accent-green); border: 1px solid rgba(0,229,160,0.2); }
+  .badge-blue  { background: rgba(61,142,248,0.12); color: var(--c-accent-blue); border: 1px solid rgba(61,142,248,0.2); }
+  .badge-amber { background: rgba(245,166,35,0.12); color: var(--c-accent-amber); border: 1px solid rgba(245,166,35,0.2); }
+  .badge-purple{ background: rgba(160,110,255,0.12); color: #a06eff; border: 1px solid rgba(160,110,255,0.2); }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--c-text-primary);
+  }
+
+  /* Info grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .info-card {
+    background: var(--c-panel);
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .info-card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--c-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .info-card-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--c-text-primary);
+    line-height: 1.4;
+  }
+
+  .info-card-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--c-accent-green);
+  }
+
+  /* Dep list */
+  .dep-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .dep-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--c-panel);
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  .dep-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .dep-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-text-primary);
+    flex: 1;
+  }
+
+  .dep-role {
+    font-size: 12px;
+    color: var(--c-text-secondary);
+  }
+
+  /* Flow diagram */
+  .flow-container {
+    background: var(--c-panel);
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .flow-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--c-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 80px;
+  }
+
+  .flow-step-box {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--c-text-primary);
+    font-weight: 600;
+    width: 80px;
+  }
+
+  .flow-step-box.highlight {
+    border-color: var(--c-accent-green);
+    color: var(--c-accent-green);
+    background: rgba(0,229,160,0.06);
+  }
+
+  .flow-step-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--c-text-secondary);
+    text-align: center;
+  }
+
+  .flow-arrow {
+    color: var(--c-border);
+    font-size: 18px;
+    margin: 0 4px;
+    flex-shrink: 0;
+    padding-bottom: 20px;
+    color: var(--c-accent-green);
+    opacity: 0.5;
+  }
+
+  /* Class diagram */
+  .class-card {
+    background: var(--c-panel);
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .class-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--c-border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .class-kw {
+    font-size: 10px;
+    color: var(--c-accent-blue);
+    opacity: 0.7;
+  }
+
+  .class-name {
+    color: var(--c-accent-green);
+  }
+
+  .class-methods {
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .method-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--c-text-secondary);
+    padding: 2px 0;
+  }
+
+  .method-line .fn { color: var(--c-accent-blue); }
+  .method-line .ret { color: var(--c-accent-amber); }
+  .method-line .param { color: var(--c-text-primary); }
+  .method-line .vis { color: #a06eff; margin-right: 4px; }
+
+  /* Complexity table */
+  .complexity-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+
+  .complexity-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--c-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--c-border);
+    font-weight: 400;
+  }
+
+  .complexity-table td {
+    font-size: 13px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(37,44,61,0.5);
+    vertical-align: middle;
+  }
+
+  .complexity-table tr:last-child td { border-bottom: none; }
+
+  .complexity-table td:first-child {
+    font-weight: 600;
+    color: var(--c-text-primary);
+  }
+
+  .complexity-table td:nth-child(2) {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--c-accent-amber);
+  }
+
+  .complexity-table td:last-child {
+    font-size: 12px;
+    color: var(--c-text-secondary);
+  }
+
+  /* Integration panel */
+  .pipeline-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 20px;
+  }
+
+  .pipeline-script {
+    flex: 1;
+    background: var(--c-panel);
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .pipeline-script-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .pipeline-script-desc {
+    font-size: 11px;
+    color: var(--c-text-secondary);
+    line-height: 1.5;
+  }
+
+  .pipeline-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    gap: 4px;
+  }
+
+  .pipeline-arrow-line {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--c-accent-green), rgba(0,229,160,0.3));
+  }
+
+  .pipeline-artifact {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--c-accent-green);
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+
+  /* Tech stack */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .tech-item {
+    background: var(--c-panel);
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .tech-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--c-text-primary);
+    margin-bottom: 4px;
+  }
+
+  .tech-role {
+    font-size: 11px;
+    color: var(--c-text-secondary);
+  }
+
+  /* Overview summary cards */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .overview-card {
+    background: var(--c-panel);
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    padding: 18px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .overview-card:hover {
+    border-color: var(--c-accent-green);
+  }
+
+  .overview-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .overview-card.card-green::before { background: var(--c-accent-green); }
+  .overview-card.card-blue::before  { background: var(--c-accent-blue);  }
+  .overview-card.card-amber::before { background: var(--c-accent-amber); }
+
+  .ov-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--c-text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .ov-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-text-primary);
+    margin-bottom: 6px;
+  }
+
+  .ov-desc {
+    font-size: 12px;
+    color: var(--c-text-secondary);
+    line-height: 1.5;
+  }
+
+  .ov-go {
+    margin-top: 12px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--c-accent-green);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .overview-card:hover .ov-go { opacity: 1; }
+</style>
+
+<div class="db-root">
+
+  <div class="db-header">
+    <div class="db-header-left">
+      <div class="db-logo">&#9650;</div>
+      <div>
+        <div class="db-title">Forensic Scripts Suite</div>
+        <div class="db-subtitle">memory_acquisition · analyze_dump · generate_report</div>
+      </div>
+    </div>
+    <div class="db-status">
+      <div class="status-dot"></div>
+      Python 3.8+ · Volatility 3
+    </div>
+  </div>
+
+  <div class="db-nav">
+    <button class="nav-tab active" onclick="switchTab('overview')">Visión general</button>
+    <button class="nav-tab" onclick="switchTab('script1')">01 · Adquisición<span class="num">acq</span></button>
+    <button class="nav-tab" onclick="switchTab('script2')">02 · Análisis<span class="num">vol</span></button>
+    <button class="nav-tab" onclick="switchTab('script3')">03 · Reporte<span class="num">html</span></button>
+    <button class="nav-tab" onclick="switchTab('integration')">Integración</button>
+  </div>
+
+  <div class="db-content">
+
+    <!-- OVERVIEW -->
+    <div class="tab-panel active" id="tab-overview">
+      <div class="section-header">
+        <span class="section-badge badge-green">Suite</span>
+        <span class="section-title">Pipeline de análisis forense de memoria</span>
+      </div>
+
+      <div class="overview-grid">
+        <div class="overview-card card-green" onclick="switchTab('script1')">
+          <div class="ov-num">01 / memory_acquisition.py</div>
+          <div class="ov-name">Adquisición</div>
+          <div class="ov-desc">Captura la RAM del sistema activo. Verifica integridad con hashes criptográficos.</div>
+          <div class="ov-go">Ver script →</div>
+        </div>
+        <div class="overview-card card-blue" onclick="switchTab('script2')">
+          <div class="ov-num">02 / analyze_dump.py</div>
+          <div class="ov-name">Análisis</div>
+          <div class="ov-desc">Ejecuta plugins de Volatility 3 sobre el volcado. Extrae procesos, red y artefactos.</div>
+          <div class="ov-go">Ver script →</div>
+        </div>
+        <div class="overview-card card-amber" onclick="switchTab('script3')">
+          <div class="ov-num">03 / generate_report.py</div>
+          <div class="ov-name">Reporte</div>
+          <div class="ov-desc">Genera un informe HTML estructurado con Jinja2 a partir de los datos analizados.</div>
+          <div class="ov-go">Ver script →</div>
+        </div>
+      </div>
+
+      <div class="flow-container">
+        <div class="flow-label">Flujo completo del pipeline</div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Sistema<br>activo</div>
+            <div class="flow-step-label">Input</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">memory_<br>acquisition</div>
+            <div class="flow-step-label">Script 01</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">.raw + hash</div>
+            <div class="flow-step-label">Volcado</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">analyze_<br>dump</div>
+            <div class="flow-step-label">Script 02</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">datos<br>.json</div>
+            <div class="flow-step-label">Artefactos</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">generate_<br>report</div>
+            <div class="flow-step-label">Script 03</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Informe<br>HTML</div>
+            <div class="flow-step-label">Output</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="tech-name">Python 3.8+</div>
+          <div class="tech-role">Lenguaje base</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">Click</div>
+          <div class="tech-role">CLI framework</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">Volatility 3</div>
+          <div class="tech-role">Análisis forense</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">psutil</div>
+          <div class="tech-role">Info del sistema</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">hashlib</div>
+          <div class="tech-role">Hashes criptográficos</div>
+        </div>
+        <div class="tech-item">
+          <div class="tech-name">Jinja2</div>
+          <div class="tech-role">Motor de templates</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-label">Complejidad temporal · Resumen</div>
+        <table class="complexity-table" style="margin-bottom:0">
+          <thead>
+            <tr><th>Script</th><th>Complejidad</th><th>Variable dominante</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>memory_acquisition.py</td>
+              <td>O(n)</td>
+              <td>n = tamaño de RAM</td>
+            </tr>
+            <tr>
+              <td>analyze_dump.py</td>
+              <td>O(m × p)</td>
+              <td>m = volcado, p = plugins</td>
+            </tr>
+            <tr>
+              <td>generate_report.py</td>
+              <td>O(k)</td>
+              <td>k = datos analizados</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SCRIPT 1 -->
+    <div class="tab-panel" id="tab-script1">
+      <div class="section-header">
+        <span class="section-badge badge-green">01</span>
+        <span class="section-title">memory_acquisition.py</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Función principal</div>
+          <div class="info-card-value">Captura de memoria RAM del sistema en tiempo de ejecución</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Complejidad temporal</div>
+          <div class="info-card-mono">O(n) donde n = tamaño de RAM</div>
+        </div>
+      </div>
+
+      <div class="flow-container">
+        <div class="flow-label">Diagrama de flujo principal</div>
+        <div class="flow-steps" style="flex-wrap: wrap; gap: 8px; justify-content: flex-start;">
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Inicio CLI</div>
+            <div class="flow-step-label">click entry</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Validar<br>permisos</div>
+            <div class="flow-step-label">psutil</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Detectar<br>RAM</div>
+            <div class="flow-step-label">psutil</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Volcar<br>memoria</div>
+            <div class="flow-step-label">.raw output</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Hash<br>MD5/SHA</div>
+            <div class="flow-step-label">hashlib</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Fin</div>
+            <div class="flow-step-label">volcado listo</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span class="section-badge badge-blue">Clases</span>
+          <span style="font-size: 15px; font-weight: 600;">Arquitectura de clases</span>
+        </div>
+        <div class="class-card">
+          <div class="class-header">
+            <span class="class-kw">class</span>
+            <span class="class-name">MemoryAcquisition</span>
+          </div>
+          <div class="class-methods">
+            <div class="method-line"><span class="vis">+</span><span class="fn">acquire</span>(<span class="param">output_path: str</span>) → <span class="ret">str</span></div>
+            <div class="method-line"><span class="vis">+</span><span class="fn">verify_hash</span>(<span class="param">filepath: str, algo: str</span>) → <span class="ret">str</span></div>
+            <div class="method-line"><span class="vis">-</span><span class="fn">_detect_ram_size</span>() → <span class="ret">int</span></div>
+            <div class="method-line"><span class="vis">-</span><span class="fn">_validate_permissions</span>() → <span class="ret">bool</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span class="section-badge badge-green">Deps</span>
+          <span style="font-size: 15px; font-weight: 600;">Dependencias</span>
+        </div>
+        <div class="dep-list">
+          <div class="dep-item">
+            <div class="dep-icon" style="background:rgba(0,229,160,0.1); color: var(--c-accent-green);">Py</div>
+            <span class="dep-name">Python 3.8+</span>
+            <span class="dep-role">Lenguaje base</span>
+          </div>
+          <div class="dep-item">
+            <div class="dep-icon" style="background:rgba(61,142,248,0.1); color: var(--c-accent-blue);">Cl</div>
+            <span class="dep-name">Click</span>
+            <span class="dep-role">CLI framework · gestión de argumentos</span>
+          </div>
+          <div class="dep-item">
+            <div class="dep-icon" style="background:rgba(245,166,35,0.1); color: var(--c-accent-amber);">ps</div>
+            <span class="dep-name">psutil</span>
+            <span class="dep-role">Información del sistema y RAM</span>
+          </div>
+          <div class="dep-item">
+            <div class="dep-icon" style="background:rgba(160,110,255,0.1); color: #a06eff;">hb</div>
+            <span class="dep-name">hashlib</span>
+            <span class="dep-role">Cálculo de hashes MD5 / SHA-256</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPT 2 -->
+    <div class="tab-panel" id="tab-script2">
+      <div class="section-header">
+        <span class="section-badge badge-blue">02</span>
+        <span class="section-title">analyze_dump.py</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Función principal</div>
+          <div class="info-card-value">Análisis forense del volcado con plugins de Volatility 3</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Complejidad temporal</div>
+          <div class="info-card-mono">O(m × p) — m=volcado, p=plugins</div>
+        </div>
+      </div>
+
+      <div class="flow-container">
+        <div class="flow-label">Diagrama de flujo principal</div>
+        <div class="flow-steps" style="flex-wrap: wrap; gap: 8px;">
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Cargar<br>volcado</div>
+            <div class="flow-step-label">.raw input</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Detectar<br>perfil OS</div>
+            <div class="flow-step-label">Volatility</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Ejecutar<br>plugins</div>
+            <div class="flow-step-label">paralelo</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Extraer<br>artefactos</div>
+            <div class="flow-step-label">procesos, red</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Exportar<br>datos</div>
+            <div class="flow-step-label">.json</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span class="section-badge badge-blue">Clases</span>
+          <span style="font-size: 15px; font-weight: 600;">Arquitectura de clases</span>
+        </div>
+        <div class="class-card">
+          <div class="class-header">
+            <span class="class-kw">class</span>
+            <span class="class-name">DumpAnalyzer</span>
+          </div>
+          <div class="class-methods">
+            <div class="method-line"><span class="vis">+</span><span class="fn">analyze</span>(<span class="param">dump_path: str, plugins: list</span>) → <span class="ret">dict</span></div>
+            <div class="method-line"><span class="vis">+</span><span class="fn">run_plugin</span>(<span class="param">plugin_name: str</span>) → <span class="ret">list</span></div>
+            <div class="method-line"><span class="vis">-</span><span class="fn">_detect_profile</span>() → <span class="ret">str</span></div>
+            <div class="method-line"><span class="vis">-</span><span class="fn">_load_context</span>() → <span class="ret">Context</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span class="section-badge badge-amber">Plugins</span>
+          <span style="font-size: 15px; font-weight: 600;">Mapa de plugins de Volatility</span>
+        </div>
+        <div class="tech-grid">
+          <div class="tech-item"><div class="tech-name">windows.pslist</div><div class="tech-role">Lista de procesos</div></div>
+          <div class="tech-item"><div class="tech-name">windows.netscan</div><div class="tech-role">Conexiones de red</div></div>
+          <div class="tech-item"><div class="tech-name">windows.dlllist</div><div class="tech-role">DLLs cargadas</div></div>
+          <div class="tech-item"><div class="tech-name">windows.cmdline</div><div class="tech-role">Líneas de comando</div></div>
+          <div class="tech-item"><div class="tech-name">windows.filescan</div><div class="tech-role">Archivos en memoria</div></div>
+          <div class="tech-item"><div class="tech-name">windows.malfind</div><div class="tech-role">Código sospechoso</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPT 3 -->
+    <div class="tab-panel" id="tab-script3">
+      <div class="section-header">
+        <span class="section-badge badge-amber">03</span>
+        <span class="section-title">generate_report.py</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Función principal</div>
+          <div class="info-card-value">Generación de informe HTML estructurado desde datos forenses</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Complejidad temporal</div>
+          <div class="info-card-mono">O(k) donde k = datos analizados</div>
+        </div>
+      </div>
+
+      <div class="flow-container">
+        <div class="flow-label">Pipeline de generación</div>
+        <div class="flow-steps" style="flex-wrap: wrap; gap: 8px;">
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Leer<br>datos .json</div>
+            <div class="flow-step-label">input</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Cargar<br>template</div>
+            <div class="flow-step-label">Jinja2</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Renderizar<br>secciones</div>
+            <div class="flow-step-label">context vars</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box">Incrustar<br>metadatos</div>
+            <div class="flow-step-label">caso, fecha</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-step-box highlight">Exportar<br>HTML</div>
+            <div class="flow-step-label">output</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span class="section-badge badge-amber">Clases</span>
+          <span style="font-size: 15px; font-weight: 600;">Arquitectura de clases</span>
+        </div>
+        <div class="class-card">
+          <div class="class-header">
+            <span class="class-kw">class</span>
+            <span class="class-name">ReportGenerator</span>
+          </div>
+          <div class="class-methods">
+            <div class="method-line"><span class="vis">+</span><span class="fn">generate</span>(<span class="param">data: dict, output_path: str</span>) → <span class="ret">str</span></div>
+            <div class="method-line"><span class="vis">+</span><span class="fn">load_template</span>(<span class="param">template_name: str</span>) → <span class="ret">Template</span></div>
+            <div class="method-line"><span class="vis">-</span><span class="fn">_build_context</span>(<span class="param">data: dict</span>) → <span class="ret">dict</span></div>
+            <div class="method-line"><span class="vis">-</span><span class="fn">_render_section</span>(<span class="param">section: str</span>) → <span class="ret">str</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span class="section-badge badge-purple">HTML</span>
+          <span style="font-size: 15px; font-weight: 600;">Estructura del informe HTML</span>
+        </div>
+        <div class="dep-list">
+          <div class="dep-item"><div class="dep-icon" style="background:rgba(160,110,255,0.1);color:#a06eff">H</div><span class="dep-name">Cabecera del caso</span><span class="dep-role">Metadatos: fecha, investigador, sistema</span></div>
+          <div class="dep-item"><div class="dep-icon" style="background:rgba(0,229,160,0.1);color:var(--c-accent-green)">P</div><span class="dep-name">Sección de procesos</span><span class="dep-role">Tabla de procesos activos</span></div>
+          <div class="dep-item"><div class="dep-icon" style="background:rgba(61,142,248,0.1);color:var(--c-accent-blue)">N</div><span class="dep-name">Sección de red</span><span class="dep-role">Conexiones detectadas</span></div>
+          <div class="dep-item"><div class="dep-icon" style="background:rgba(224,72,74,0.1);color:var(--c-accent-red)">A</div><span class="dep-name">Artefactos sospechosos</span><span class="dep-role">Resultados de malfind y similares</span></div>
+          <div class="dep-item"><div class="dep-icon" style="background:rgba(245,166,35,0.1);color:var(--c-accent-amber)">H</div><span class="dep-name">Hashes de verificación</span><span class="dep-role">Cadena de custodia</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRATION -->
+    <div class="tab-panel" id="tab-integration">
+      <div class="section-header">
+        <span class="section-badge badge-purple">INT</span>
+        <span class="section-title">Integración de los tres scripts</span>
+      </div>
+
+      <div class="flow-container" style="margin-bottom: 20px;">
+        <div class="flow-label">Flujo de trabajo completo</div>
+        <div class="pipeline-row">
+          <div class="pipeline-script">
+            <div class="pipeline-script-name" style="color: var(--c-accent-green);">memory_acquisition.py</div>
+            <div class="pipeline-script-desc">Captura RAM<br>Calcula hashes</div>
+          </div>
+          <div class="pipeline-connector">
+            <div class="pipeline-artifact">.raw + .hash</div>
+            <div class="pipeline-arrow-line"></div>
+          </div>
+          <div class="pipeline-script">
+            <div class="pipeline-script-name" style="color: var(--c-accent-blue);">analyze_dump.py</div>
+            <div class="pipeline-script-desc">Ejecuta plugins<br>Extrae artefactos</div>
+          </div>
+          <div class="pipeline-connector">
+            <div class="pipeline-artifact">results.json</div>
+            <div class="pipeline-arrow-line"></div>
+          </div>
+          <div class="pipeline-script">
+            <div class="pipeline-script-name" style="color: var(--c-accent-amber);">generate_report.py</div>
+            <div class="pipeline-script-desc">Renderiza Jinja2<br>Exporta HTML</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div class="section-header" style="margin-bottom: 12px;">
+          <span class="section-badge badge-purple">Deps</span>
+          <span style="font-size: 15px; font-weight: 600;">Dependencias entre scripts</span>
+        </div>
+        <div class="dep-list">
+          <div class="dep-item">
+            <div class="dep-icon" style="background:rgba(0,229,160,0.1);color:var(--c-accent-green)">01</div>
+            <span class="dep-name">memory_acquisition → analyze_dump</span>
+            <span class="dep-role">Provee el archivo .raw</span>
+          </div>
+          <div class="dep-item">
+            <div class="dep-icon" style="background:rgba(61,142,248,0.1);color:var(--c-accent-blue)">02</div>
+            <span class="dep-name">analyze_dump → generate_report</span>
+            <span class="dep-role">Provee results.json</span>
+          </div>
+          <div class="dep-item">
+            <div class="dep-icon" style="background:rgba(245,166,35,0.1);color:var(--c-accent-amber)">03</div>
+            <span class="dep-name">generate_report → Informe final</span>
+            <span class="dep-role">Produce el HTML de cadena de custodia</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-label">Tecnologías utilizadas · Resumen completo</div>
+        <table class="complexity-table" style="margin-bottom:0">
+          <thead><tr><th>Librería</th><th>Script</th><th>Rol</th></tr></thead>
+          <tbody>
+            <tr><td>Python 3.8+</td><td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c-accent-green)">todos</td><td>Lenguaje base</td></tr>
+            <tr><td>Click</td><td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c-accent-green)">01</td><td>CLI framework</td></tr>
+            <tr><td>psutil</td><td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c-accent-green)">01</td><td>Información del sistema</td></tr>
+            <tr><td>hashlib</td><td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c-accent-green)">01</td><td>Hashes criptográficos</td></tr>
+            <tr><td>Volatility 3</td><td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c-accent-blue)">02</td><td>Framework de análisis forense</td></tr>
+            <tr><td>Jinja2</td><td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--c-accent-amber)">03</td><td>Motor de templates HTML</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const tabs = { overview: 0, script1: 1, script2: 2, script3: 3, integration: 4 };
+  document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+}
+</script>

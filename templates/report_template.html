@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensic Analysis Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        .meta {
+            background: #eef2f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .meta p {
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        .meta span {
+            font-weight: normal;
+            font-family: monospace;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .plugin-section {
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Reporte de Análisis Forense</h1>
+
+        <div class="meta">
+            <p>Archivo de Volcado: <span>{{ dump_file }}</span></p>
+            <p>Perfil SO Detectado: <span>{{ os_profile }}</span></p>
+            <p>Plugins Ejecutados: <span>{{ plugins_run | join(', ') }}</span></p>
+        </div>
+
+        {% for plugin, data in findings.items() %}
+        <div class="plugin-section">
+            <h2>Resultados: {{ plugin }}</h2>
+
+            {% if data is mapping %}
+            <!-- Dictionary data (e.g. windows.info) -->
+            <table>
+                <tr>
+                    <th>Propiedad</th>
+                    <th>Valor</th>
+                </tr>
+                {% for key, val in data.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td><code>{{ val }}</code></td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% elif data is iterable and data is not string %}
+            <!-- List data (e.g. pslist, netscan) -->
+            {% if data|length > 0 %}
+            <table>
+                <tr>
+                    {% for header in data[0].keys() %}
+                    <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+                {% for row_dict in data %}
+                <tr>
+                    {% for val in row_dict.values() %}
+                    <td>{{ val }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <p>No se encontraron resultados para este plugin.</p>
+            {% endif %}
+            {% else %}
+            <p>{{ data }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <p style="text-align: center; color: #777; margin-top: 50px; font-size: 0.9em;">
+            Generado automáticamente por Digital Forensics Suite
+        </p>
+    </div>
+</body>
+
+</html>

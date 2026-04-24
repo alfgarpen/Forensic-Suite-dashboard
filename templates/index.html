@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forensic Scripts Suite</title>
+    <!-- Incluir CSS existente -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap');
+
+        :root {
+            --c-bg: #0d0f14;
+            --c-surface: #131720;
+            --c-panel: #1a1f2e;
+            --c-border: #252c3d;
+            --c-accent-green: #00e5a0;
+            --c-accent-blue: #3d8ef8;
+            --c-accent-amber: #f5a623;
+            --c-accent-red: #e0484a;
+            --c-text-primary: #e8ecf4;
+            --c-text-secondary: #7a8399;
+            --c-text-mono: #00e5a0;
+        }
+
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            display: flex;
+            justify-content: center;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .db-root {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--c-bg);
+            font-family: 'Syne', sans-serif;
+            color: var(--c-text-primary);
+            min-height: 90vh;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .db-header {
+            background: var(--c-surface);
+            border-bottom: 1px solid var(--c-border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .db-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .db-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--c-accent-green);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .db-title {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--c-text-primary);
+        }
+
+        .db-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--c-text-secondary);
+            margin-top: 2px;
+        }
+
+        .db-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--c-accent-green);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--c-accent-green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .db-nav {
+            display: flex;
+            background: var(--c-surface);
+            border-bottom: 1px solid var(--c-border);
+            padding: 0 24px;
+            gap: 0;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--c-text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+            user-select: none;
+            border: none;
+            background: none;
+        }
+
+        .nav-tab:hover {
+            color: var(--c-text-primary);
+        }
+
+        .nav-tab.active {
+            color: var(--c-accent-green);
+            border-bottom: 2px solid var(--c-accent-green);
+        }
+
+        .nav-tab span.num {
+            font-size: 10px;
+            background: var(--c-panel);
+            border-radius: 4px;
+            padding: 2px 5px;
+            margin-left: 6px;
+            color: var(--c-text-secondary);
+        }
+
+        .nav-tab.active span.num {
+            background: rgba(0, 229, 160, 0.15);
+            color: var(--c-accent-green);
+        }
+
+        .db-content {
+            padding: 24px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge-green {
+            background: rgba(0, 229, 160, 0.12);
+            color: var(--c-accent-green);
+            border: 1px solid rgba(0, 229, 160, 0.2);
+        }
+
+        .badge-blue {
+            background: rgba(61, 142, 248, 0.12);
+            color: var(--c-accent-blue);
+            border: 1px solid rgba(61, 142, 248, 0.2);
+        }
+
+        .badge-amber {
+            background: rgba(245, 166, 35, 0.12);
+            color: var(--c-accent-amber);
+            border: 1px solid rgba(245, 166, 35, 0.2);
+        }
+
+        .badge-purple {
+            background: rgba(160, 110, 255, 0.12);
+            color: #a06eff;
+            border: 1px solid rgba(160, 110, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--c-text-primary);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-card {
+            background: var(--c-panel);
+            border: 1px solid var(--c-border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .info-card-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--c-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .info-card-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--c-text-primary);
+            line-height: 1.4;
+        }
+
+        .info-card-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--c-accent-green);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .overview-card {
+            background: var(--c-panel);
+            border: 1px solid var(--c-border);
+            border-radius: 10px;
+            padding: 18px 16px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overview-card:hover {
+            border-color: var(--c-accent-green);
+        }
+
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+
+        .overview-card.card-green::before {
+            background: var(--c-accent-green);
+        }
+
+        .overview-card.card-blue::before {
+            background: var(--c-accent-blue);
+        }
+
+        .overview-card.card-amber::before {
+            background: var(--c-accent-amber);
+        }
+
+        .ov-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--c-text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .ov-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--c-text-primary);
+            margin-bottom: 6px;
+        }
+
+        .ov-desc {
+            font-size: 12px;
+            color: var(--c-text-secondary);
+            line-height: 1.5;
+        }
+
+        .ov-go {
+            margin-top: 12px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--c-accent-green);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .overview-card:hover .ov-go {
+            opacity: 1;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            background: var(--c-accent-blue);
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s opacity;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn-green {
+            background: var(--c-accent-green);
+            color: #000;
+        }
+
+        .btn-amber {
+            background: var(--c-accent-amber);
+            color: #000;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-file {
+            margin-right: 15px;
+            color: var(--c-text-secondary);
+        }
+
+        .terminal-box {
+            background: #000;
+            color: #0f0;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            height: 150px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 1px solid var(--c-border);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="db-root">
+        <div class="db-header">
+            <div class="db-header-left">
+                <div class="db-logo">&#9650;</div>
+                <div>
+                    <div class="db-title">Forensic Scripts Suite</div>
+                    <div class="db-subtitle">memory_acquisition · analyze_dump · generate_report</div>
+                </div>
+            </div>
+            <div class="db-status">
+                <div class="status-dot"></div>
+                <span id="sys-info">Cargando info del sistema...</span>
+            </div>
+        </div>
+
+        <div class="db-nav">
+            <button class="nav-tab active" onclick="switchTab('overview')">Visión general</button>
+            <button class="nav-tab" onclick="switchTab('script1')">01 · Adquisición<span class="num">acq</span></button>
+            <button class="nav-tab" onclick="switchTab('script2')">02 · Análisis<span class="num">vol</span></button>
+            <button class="nav-tab" onclick="switchTab('script3')">03 · Reporte<span class="num">html</span></button>
+        </div>
+
+        <div class="db-content">
+            <!-- OVERVIEW -->
+            <div class="tab-panel active" id="tab-overview">
+                <div class="section-header">
+                    <span class="section-badge badge-green">Suite</span>
+                    <span class="section-title">Automated Analysis Dashboard</span>
+                </div>
+                <p
+                    style="margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; color: var(--c-text-secondary); font-size: 13px;">
+                    Ejecuta un flujo automatizado completo de todas las fases o ingresa a cada pestaña para controles
+                    manuales.</p>
+
+                <button id="btn-full-flow" class="btn btn-green" onclick="runFullPipeline()"
+                    style="margin-bottom: 30px; font-size: 14px; padding: 12px 24px;">▶ Ejecutar Memdump & Pipeline
+                    Completo</button>
+
+                <div class="overview-grid">
+                    <div class="overview-card card-green" onclick="switchTab('script1')">
+                        <div class="ov-num">01 / memory_acquisition.py</div>
+                        <div class="ov-name">Adquisición</div>
+                        <div class="ov-desc">Captura la RAM del sistema activo o permite subir un .raw local.</div>
+                        <div class="ov-go">Ir a Adquisición →</div>
+                    </div>
+                    <div class="overview-card card-blue" onclick="switchTab('script2')">
+                        <div class="ov-num">02 / analyze_dump.py</div>
+                        <div class="ov-name">Análisis</div>
+                        <div class="ov-desc">Ejecuta plugins de Volatility 3 sobre el volcado (Mocked via API).</div>
+                        <div class="ov-go">Ir a Análisis →</div>
+                    </div>
+                    <div class="overview-card card-amber" onclick="switchTab('script3')">
+                        <div class="ov-num">03 / generate_report.py</div>
+                        <div class="ov-name">Reporte</div>
+                        <div class="ov-desc">Genera un informe HTML dinámico e incrusta metadatos.</div>
+                        <div class="ov-go">Ver Reporte →</div>
+                    </div>
+                </div>
+
+                <div class="terminal-box" id="term-global">Esperando comandos...&#10;</div>
+            </div>
+
+            <!-- SCRIPT 1 -->
+            <div class="tab-panel" id="tab-script1">
+                <div class="section-header">
+                    <span class="section-badge badge-green">01</span>
+                    <span class="section-title">memory_acquisition.py</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-label">Acción: Capturar RAM equipo local</div>
+                        <button class="btn btn-green" onclick="triggerAcquisition()" id="btn-acq">Iniciar Captura
+                            (Mock)</button>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Acción: Subir volcado (.raw)</div>
+                        <input type="file" id="file-upload" class="input-file">
+                        <button class="btn" onclick="uploadRaw()" id="btn-up">Subir Archivo</button>
+                    </div>
+                </div>
+                <div class="terminal-box" id="term-acq">Esperando comandos de adquisición...&#10;</div>
+            </div>
+
+            <!-- SCRIPT 2 -->
+            <div class="tab-panel" id="tab-script2">
+                <div class="section-header">
+                    <span class="section-badge badge-blue">02</span>
+                    <span class="section-title">analyze_dump.py</span>
+                </div>
+                <p
+                    style="margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--c-text-secondary);">
+                    Analizar archivo guardado localmente (data/memory.raw)</p>
+
+                <div id="plugin-selection" style="margin-bottom: 20px; background: var(--c-panel); border: 1px solid var(--c-border); padding: 15px; border-radius: 8px;">
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--c-text-primary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Plugins de Volatility 3</div>
+                    <div id="plugins-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <span style="color: var(--c-text-secondary); font-size: 12px;">Cargando plugins...</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-blue" onclick="triggerAnalysis()" id="btn-ana">Ejecutar Análisis Volatility
+                    3</button>
+
+                <div class="terminal-box" id="term-ana" style="margin-top: 20px;">Esperando instrucciones del
+                    analista...&#10;</div>
+            </div>
+
+            <!-- SCRIPT 3 -->
+            <div class="tab-panel" id="tab-script3">
+                <div class="section-header">
+                    <span class="section-badge badge-amber">03</span>
+                    <span class="section-title">generate_report.py</span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-label">Generar Reporte</div>
+                        <button class="btn btn-amber" onclick="triggerReport()" id="btn-rep">Procesar JSON y Exportar
+                            HTML</button>
+                    </div>
+                    <div class="info-card" id="download-card"
+                        style="display:none; text-align: center; border-color: var(--c-accent-green);">
+                        <div class="info-card-label" style="color:var(--c-accent-green);">Resultados listos</div>
+                        <a href="/download/report" target="_blank" class="btn btn-green"
+                            style="text-decoration:none;">Descargar Final Report</a>
+                    </div>
+                </div>
+                <div class="terminal-box" id="term-rep">Esperando generación...&#10;</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(id) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            const tabs = { overview: 0, script1: 1, script2: 2, script3: 3 };
+            document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+        }
+
+        function logTo(termId, msg) {
+            const t = document.getElementById(termId);
+            if (t) {
+                t.innerHTML += `> ${msg}&#10;`;
+                t.scrollTop = t.scrollHeight;
+            }
+        }
+
+        async function updateSystemInfo() {
+            try {
+                let res = await fetch('/api/system_info');
+                let data = await res.json();
+                document.getElementById('sys-info').innerText = `${data.os_name} | RAM: ${data.ram_total_gb}GB | CPU: ${data.cpu_percent}%`;
+            } catch (e) {
+                document.getElementById('sys-info').innerText = "Sysinfo Inaccesible (Error)";
+            }
+        }
+        updateSystemInfo();
+
+        async function triggerAcquisition() {
+            logTo('term-acq', "Iniciando memory_acquisition.py (modo Mock)...");
+            logTo('term-global', "[Fase 1] Adquisición iniciada.");
+            document.getElementById('btn-acq').disabled = true;
+
+            try {
+                let res = await fetch('/api/acquire', { method: 'POST' });
+                let data = await res.json();
+                logTo('term-acq', `Completado: ${data.message} Hash: ${data.hash}`);
+                logTo('term-global', `[Fase 1] OK. Hash: ${data.hash}`);
+            } catch (e) {
+                logTo('term-acq', "Error al adquirir memoria.");
+            }
+            document.getElementById('btn-acq').disabled = false;
+            return true;
+        }
+
+        async function uploadRaw() {
+            let fileInput = document.getElementById('file-upload');
+            if (fileInput.files.length === 0) {
+                logTo('term-acq', "Ningun archivo seleccionado."); return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            logTo('term-acq', "Subiendo volcado...");
+            document.getElementById('btn-up').disabled = true;
+
+            try {
+                let res = await fetch('/api/acquire', { method: 'POST', body: formData });
+                let data = await res.json();
+                logTo('term-acq', `Subido: ${data.message} Hash validado: ${data.hash}`);
+            } catch (e) {
+                logTo('term-acq', "Error al subir.");
+            }
+            document.getElementById('btn-up').disabled = false;
+        }
+
+        async function loadPlugins() {
+            try {
+                let res = await fetch('/api/plugins');
+                let data = await res.json();
+                if(data.status === 'success') {
+                    const list = document.getElementById('plugins-list');
+                    list.innerHTML = '';
+                    data.plugins.forEach(p => {
+                        const label = document.createElement('label');
+                        label.style.display = 'flex';
+                        label.style.alignItems = 'center';
+                        label.style.gap = '8px';
+                        label.style.cursor = 'pointer';
+                        
+                        const cb = document.createElement('input');
+                        cb.type = 'checkbox';
+                        cb.value = p.id;
+                        cb.className = 'plugin-checkbox';
+                        // Default to selecting some core plugins
+                        if (['windows.info.Info', 'windows.pslist.PsList', 'windows.netscan.NetScan'].includes(p.id)) {
+                            cb.checked = true;
+                        }
+
+                        const text = document.createElement('span');
+                        text.innerHTML = `<strong style="color: var(--c-text-primary); font-size: 13px;">${p.name}</strong> <span style="color: var(--c-text-secondary); font-size: 12px;">- ${p.description}</span>`;
+                        
+                        label.appendChild(cb);
+                        label.appendChild(text);
+                        list.appendChild(label);
+                    });
+                }
+            } catch (e) {
+                console.error("Error cargando plugins", e);
+                document.getElementById('plugins-list').innerHTML = '<span style="color: var(--c-accent-red);">Error al cargar plugins.</span>';
+            }
+        }
+        
+        loadPlugins();
+
+        async function triggerAnalysis() {
+            logTo('term-ana', "Iniciando analyze_dump.py...");
+            logTo('term-global', "[Fase 2] Análisis en curso...");
+            document.getElementById('btn-ana').disabled = true;
+
+            // Get selected plugins
+            const checkboxes = document.querySelectorAll('.plugin-checkbox:checked');
+            const selectedPlugins = Array.from(checkboxes).map(cb => cb.value);
+            
+            if (selectedPlugins.length === 0) {
+                logTo('term-ana', "Error: Debes seleccionar al menos un plugin.");
+                document.getElementById('btn-ana').disabled = false;
+                return false;
+            }
+
+            try {
+                let res = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plugins: selectedPlugins })
+                });
+                let data = await res.json();
+                if (data.status === 'success') {
+                    logTo('term-ana', "Análisis completado. JSON generado correctamente.");
+                    logTo('term-global', "[Fase 2] OK. Artefactos exportados a results.json.");
+                } else {
+                    logTo('term-ana', `Error: ${data.message}`);
+                }
+            } catch (e) {
+                logTo('term-ana', "Error de red al ejecutar análisis.");
+            }
+            document.getElementById('btn-ana').disabled = false;
+            return true;
+        }
+
+        async function triggerReport() {
+            logTo('term-rep', "Ejecutando generate_report.py...");
+            logTo('term-global', "[Fase 3] Renderizando Jinja2...");
+            document.getElementById('btn-rep').disabled = true;
+
+            try {
+                let res = await fetch('/api/report', { method: 'POST' });
+                let data = await res.json();
+                if (data.status === 'success') {
+                    logTo('term-rep', "Reporte Jinja2 generado con éxito.");
+                    logTo('term-global', "[Fase 3] OK. Informe HTML listo para descargar.");
+                    document.getElementById('download-card').style.display = 'block';
+                } else {
+                    logTo('term-rep', `Fallo: ${data.message}`);
+                }
+            } catch (e) {
+                logTo('term-rep', "Error en la generación del reporte.");
+            }
+            document.getElementById('btn-rep').disabled = false;
+        }
+
+        // Para control automático del pipeline desde el Dashboard
+        async function runFullPipeline() {
+            const btn = document.getElementById('btn-full-flow');
+            btn.disabled = true;
+            btn.innerText = "Procesando...";
+
+            await triggerAcquisition();
+            await triggerAnalysis();
+            await triggerReport();
+
+            btn.innerText = "▶ Ejecutar Memdump & Pipeline Completo";
+            btn.disabled = false;
+
+            alert("Pipeline completado. El informe está listo en la pestaña 03.");
+        }
+    </script>
+</body>
+
+</html>

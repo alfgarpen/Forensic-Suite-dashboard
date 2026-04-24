@@ -1,0 +1,318 @@
+{
+    "dump_file": "memory.raw",
+    "os_profile": "Windows 11 AMD64",
+    "plugins_run": [
+        "windows.info.Info",
+        "windows.pslist.PsList",
+        "windows.netscan.NetScan",
+        "windows.cmdline.CmdLine",
+        "windows.malfind.Malfind"
+    ],
+    "findings": {
+        "windows.info.Info": {
+            "Kernel Base": "0xf807abcdef123456 (Simulado)",
+            "DTB": "0x1aa000 (Simulado)",
+            "SystemTime": "2026-04-24 08:34:20 UTC"
+        },
+        "windows.pslist.PsList": [
+            {
+                "PID": 0,
+                "Name": "System Idle Process",
+                "Parent": 0
+            },
+            {
+                "PID": 4,
+                "Name": "System",
+                "Parent": 0
+            },
+            {
+                "PID": 188,
+                "Name": "",
+                "Parent": 4
+            },
+            {
+                "PID": 232,
+                "Name": "Registry",
+                "Parent": 4
+            },
+            {
+                "PID": 776,
+                "Name": "smss.exe",
+                "Parent": 4
+            },
+            {
+                "PID": 816,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1080,
+                "Name": "csrss.exe",
+                "Parent": 1064
+            },
+            {
+                "PID": 1168,
+                "Name": "wininit.exe",
+                "Parent": 1064
+            },
+            {
+                "PID": 1176,
+                "Name": "csrss.exe",
+                "Parent": 1160
+            },
+            {
+                "PID": 1248,
+                "Name": "winlogon.exe",
+                "Parent": 1160
+            },
+            {
+                "PID": 1292,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1312,
+                "Name": "services.exe",
+                "Parent": 1168
+            },
+            {
+                "PID": 1320,
+                "Name": "LsaIso.exe",
+                "Parent": 1168
+            },
+            {
+                "PID": 1328,
+                "Name": "PresentMonService.exe",
+                "Parent": 6972
+            },
+            {
+                "PID": 1340,
+                "Name": "lsass.exe",
+                "Parent": 1168
+            },
+            {
+                "PID": 1424,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1484,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1516,
+                "Name": "WUDFHost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1524,
+                "Name": "fontdrvhost.exe",
+                "Parent": 1248
+            },
+            {
+                "PID": 1532,
+                "Name": "fontdrvhost.exe",
+                "Parent": 1168
+            },
+            {
+                "PID": 1596,
+                "Name": "ms-teams.exe",
+                "Parent": 15336
+            },
+            {
+                "PID": 1664,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1720,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1760,
+                "Name": "WUDFHost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1844,
+                "Name": "dwm.exe",
+                "Parent": 1248
+            },
+            {
+                "PID": 1916,
+                "Name": "WUDFHost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1964,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 1992,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 2012,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            },
+            {
+                "PID": 2020,
+                "Name": "svchost.exe",
+                "Parent": 1312
+            }
+        ],
+        "windows.netscan.NetScan": [
+            {
+                "Proto": "UDP",
+                "Local": "10.216.3.113:138",
+                "Remote": "0.0.0.0:0",
+                "State": "NONE",
+                "PID": 4
+            },
+            {
+                "Proto": "TCP",
+                "Local": "10.216.3.113:54188",
+                "Remote": "64.233.167.84:443",
+                "State": "ESTABLISHED",
+                "PID": 10964
+            },
+            {
+                "Proto": "UDP",
+                "Local": "0.0.0.0:55608",
+                "Remote": "0.0.0.0:0",
+                "State": "NONE",
+                "PID": 3820
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:61019",
+                "Remote": "127.0.0.1:51367",
+                "State": "TIME_WAIT",
+                "PID": "Unknown"
+            },
+            {
+                "Proto": "TCP",
+                "Local": ":::49678",
+                "Remote": "0.0.0.0:0",
+                "State": "LISTEN",
+                "PID": 5348
+            },
+            {
+                "Proto": "UDP",
+                "Local": ":::3702",
+                "Remote": "0.0.0.0:0",
+                "State": "NONE",
+                "PID": 3820
+            },
+            {
+                "Proto": "TCP",
+                "Local": "10.216.3.113:56299",
+                "Remote": "85.208.10.202:80",
+                "State": "ESTABLISHED",
+                "PID": 12624
+            },
+            {
+                "Proto": "TCP",
+                "Local": "10.216.3.113:52347",
+                "Remote": "20.189.173.11:443",
+                "State": "TIME_WAIT",
+                "PID": "Unknown"
+            },
+            {
+                "Proto": "TCP",
+                "Local": "0.0.0.0:49668",
+                "Remote": "0.0.0.0:0",
+                "State": "LISTEN",
+                "PID": 2208
+            },
+            {
+                "Proto": "TCP",
+                "Local": "10.216.3.113:53673",
+                "Remote": "151.101.134.172:80",
+                "State": "TIME_WAIT",
+                "PID": "Unknown"
+            },
+            {
+                "Proto": "TCP",
+                "Local": "10.216.3.113:56303",
+                "Remote": "5.255.145.147:80",
+                "State": "ESTABLISHED",
+                "PID": 20500
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:55761",
+                "Remote": "127.0.0.1:63903",
+                "State": "ESTABLISHED",
+                "PID": 7144
+            },
+            {
+                "Proto": "TCP",
+                "Local": "0.0.0.0:49664",
+                "Remote": "0.0.0.0:0",
+                "State": "LISTEN",
+                "PID": 1340
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:61030",
+                "Remote": "127.0.0.1:61019",
+                "State": "ESTABLISHED",
+                "PID": 3964
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:61019",
+                "Remote": "127.0.0.1:61030",
+                "State": "ESTABLISHED",
+                "PID": 17444
+            },
+            {
+                "Proto": "TCP",
+                "Local": "10.216.3.113:54690",
+                "Remote": "72.154.7.107:443",
+                "State": "TIME_WAIT",
+                "PID": "Unknown"
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:52944",
+                "Remote": "127.0.0.1:5000",
+                "State": "TIME_WAIT",
+                "PID": "Unknown"
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:55761",
+                "Remote": "127.0.0.1:63902",
+                "State": "ESTABLISHED",
+                "PID": 7144
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:61021",
+                "Remote": "0.0.0.0:0",
+                "State": "LISTEN",
+                "PID": 3964
+            },
+            {
+                "Proto": "TCP",
+                "Local": "127.0.0.1:61045",
+                "Remote": "127.0.0.1:55763",
+                "State": "ESTABLISHED",
+                "PID": 17444
+            }
+        ],
+        "windows.cmdline.CmdLine": {
+            "Message": "No specific data for this plugin yet."
+        },
+        "windows.malfind.Malfind": {
+            "Message": "No specific data for this plugin yet."
+        }
+    }
+}
