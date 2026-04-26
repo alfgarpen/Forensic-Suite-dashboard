@@ -78,6 +78,21 @@
         .plugin-section {
             margin-bottom: 40px;
         }
+
+        .executive-summary {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .executive-summary.high { border-left: 5px solid #e0484a; background-color: #faeaea; }
+        .executive-summary.medium { border-left: 5px solid #f5a623; background-color: #fdf5e8; }
+        .executive-summary.low { border-left: 5px solid #00e5a0; background-color: #e6fcf5; }
+        
+        .executive-summary h2 {
+            margin-top: 0;
+            border-bottom: none;
+            color: inherit;
+        }
     </style>
 </head>
 
@@ -85,10 +100,26 @@
     <div class="container">
         <h1>Reporte de Análisis Forense</h1>
 
-        <div class="meta">
+        <div class="meta" style="margin-top: 20px;">
             <p>Archivo de Volcado: <span>{{ dump_file }}</span></p>
             <p>Perfil SO Detectado: <span>{{ os_profile }}</span></p>
             <p>Plugins Ejecutados: <span>{{ plugins_run | join(', ') }}</span></p>
+            <p>Generado el: <span>{{ generation_time }}</span></p>
+        </div>
+
+        <div class="executive-summary {{ severity }}">
+            <h2>Executive Summary</h2>
+            <p style="margin-top: 10px;"><strong>Overall Severity:</strong> <span style="text-transform: uppercase;">{{ severity }}</span></p>
+            <h3 style="margin-top: 15px; font-size: 1.1em;">Detected Threats:</h3>
+            {% if alerts %}
+            <ul>
+                {% for alert in alerts %}
+                <li>{{ alert }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No threats detected.</p>
+            {% endif %}
         </div>
 
         {% for plugin, data in findings.items() %}

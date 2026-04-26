@@ -1,151 +1,1695 @@
 {
-    "dump_file": "memory.raw",
-    "os_profile": "Windows 11 AMD64",
-    "plugins_run": [
-        "windows.netscan.NetScan"
-    ],
-    "findings": {
-        "windows.netscan.NetScan": [
-            {
-                "Proto": "UDP",
-                "Local": "10.216.3.113:138",
-                "Remote": "0.0.0.0:0",
-                "State": "NONE",
-                "PID": 4
-            },
-            {
-                "Proto": "TCP",
-                "Local": "10.216.3.113:53257",
-                "Remote": "34.54.84.110:443",
-                "State": "TIME_WAIT",
-                "PID": "Unknown"
-            },
-            {
-                "Proto": "TCP",
-                "Local": "10.216.3.113:64944",
-                "Remote": "72.154.7.104:443",
-                "State": "ESTABLISHED",
-                "PID": 12624
-            },
-            {
-                "Proto": "TCP",
-                "Local": "10.216.3.113:51588",
-                "Remote": "5.255.145.153:80",
-                "State": "ESTABLISHED",
-                "PID": 12624
-            },
-            {
-                "Proto": "TCP",
-                "Local": ":::49678",
-                "Remote": "0.0.0.0:0",
-                "State": "LISTEN",
-                "PID": 5348
-            },
-            {
-                "Proto": "UDP",
-                "Local": ":::3702",
-                "Remote": "0.0.0.0:0",
-                "State": "NONE",
-                "PID": 3820
-            },
-            {
-                "Proto": "TCP",
-                "Local": "10.216.3.113:61910",
-                "Remote": "172.217.20.238:443",
-                "State": "ESTABLISHED",
-                "PID": 10964
-            },
-            {
-                "Proto": "TCP",
-                "Local": "0.0.0.0:49668",
-                "Remote": "0.0.0.0:0",
-                "State": "LISTEN",
-                "PID": 2208
-            },
-            {
-                "Proto": "TCP",
-                "Local": "127.0.0.1:61030",
-                "Remote": "127.0.0.1:61019",
-                "State": "ESTABLISHED",
-                "PID": 3964
-            },
-            {
-                "Proto": "TCP",
-                "Local": "127.0.0.1:55761",
-                "Remote": "127.0.0.1:63903",
-                "State": "ESTABLISHED",
-                "PID": 7144
-            },
-            {
-                "Proto": "TCP",
-                "Local": "0.0.0.0:49664",
-                "Remote": "0.0.0.0:0",
-                "State": "LISTEN",
-                "PID": 1340
-            },
-            {
-                "Proto": "TCP",
-                "Local": "127.0.0.1:61019",
-                "Remote": "127.0.0.1:61030",
-                "State": "ESTABLISHED",
-                "PID": 17444
-            },
-            {
-                "Proto": "TCP",
-                "Local": "127.0.0.1:61045",
-                "Remote": "127.0.0.1:55763",
-                "State": "ESTABLISHED",
-                "PID": 17444
-            },
-            {
-                "Proto": "TCP",
-                "Local": "127.0.0.1:61021",
-                "Remote": "0.0.0.0:0",
-                "State": "LISTEN",
-                "PID": 3964
-            },
-            {
-                "Proto": "TCP",
-                "Local": "127.0.0.1:55761",
-                "Remote": "127.0.0.1:63902",
-                "State": "ESTABLISHED",
-                "PID": 7144
-            },
-            {
-                "Proto": "TCP",
-                "Local": "127.0.0.1:55763",
-                "Remote": "0.0.0.0:0",
-                "State": "LISTEN",
-                "PID": 15992
-            },
-            {
-                "Proto": "UDP",
-                "Local": "0.0.0.0:62767",
-                "Remote": "0.0.0.0:0",
-                "State": "NONE",
-                "PID": 2260
-            },
-            {
-                "Proto": "TCP",
-                "Local": "10.216.3.113:51779",
-                "Remote": "199.232.214.172:80",
-                "State": "ESTABLISHED",
-                "PID": 12624
-            },
-            {
-                "Proto": "TCP",
-                "Local": "10.216.3.113:49378",
-                "Remote": "74.125.133.84:443",
-                "State": "ESTABLISHED",
-                "PID": 10964
-            },
-            {
-                "Proto": "TCP",
-                "Local": "10.216.3.113:55995",
-                "Remote": "85.208.10.204:80",
-                "State": "ESTABLISHED",
-                "PID": 12624
-            }
-        ]
+    "system_info": {
+        "status": "success",
+        "os_version": "Windows 11",
+        "architecture": "AMD64",
+        "system_time": "2026-04-26 22:33:18 UTC"
+    },
+    "plugins": {
+        "windows.info": {
+            "status": "success",
+            "os_version": "Windows 11",
+            "architecture": "AMD64",
+            "system_time": "2026-04-26 22:33:18 UTC"
+        },
+        "windows.netscan": {
+            "status": "success",
+            "connections": [
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:61846",
+                    "foreign_addr": "127.0.0.1:57405",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:61843",
+                    "foreign_addr": "127.0.0.1:61853",
+                    "state": "ESTABLISHED",
+                    "pid": 22884
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "192.168.1.22:51279",
+                    "foreign_addr": "72.145.35.106:443",
+                    "state": "ESTABLISHED",
+                    "pid": 22880
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "192.168.1.22:55919",
+                    "foreign_addr": "172.64.146.73:443",
+                    "state": "CLOSE_WAIT",
+                    "pid": 18496
+                },
+                {
+                    "protocol": "UDP",
+                    "local_addr": "0.0.0.0:5353",
+                    "foreign_addr": "0.0.0.0:0",
+                    "state": "NONE",
+                    "pid": 3200
+                },
+                {
+                    "protocol": "UDP",
+                    "local_addr": "169.254.192.73:138",
+                    "foreign_addr": "0.0.0.0:0",
+                    "state": "NONE",
+                    "pid": 4
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "0.0.0.0:49664",
+                    "foreign_addr": "0.0.0.0:0",
+                    "state": "LISTEN",
+                    "pid": 1488
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "192.168.1.22:54409",
+                    "foreign_addr": "192.168.1.21:7070",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "fe80::289f:9f5b:653e:f0ad:53997",
+                    "foreign_addr": "fe80::5d1b:44af:684b:4592:5357",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "UDP",
+                    "local_addr": "0.0.0.0:3702",
+                    "foreign_addr": "0.0.0.0:0",
+                    "state": "NONE",
+                    "pid": 3076
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:61851",
+                    "foreign_addr": "127.0.0.1:61854",
+                    "state": "ESTABLISHED",
+                    "pid": 3048
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:54581",
+                    "foreign_addr": "127.0.0.1:5001",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "UDP",
+                    "local_addr": "192.168.1.22:50523",
+                    "foreign_addr": "0.0.0.0:0",
+                    "state": "NONE",
+                    "pid": 16920
+                },
+                {
+                    "protocol": "UDP",
+                    "local_addr": "192.168.1.22:137",
+                    "foreign_addr": "0.0.0.0:0",
+                    "state": "NONE",
+                    "pid": 4
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:61843",
+                    "foreign_addr": "127.0.0.1:57409",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "192.168.1.22:65202",
+                    "foreign_addr": "162.159.130.234:443",
+                    "state": "ESTABLISHED",
+                    "pid": 5912
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:53211",
+                    "foreign_addr": "127.0.0.1:7768",
+                    "state": "ESTABLISHED",
+                    "pid": 22132
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:7768",
+                    "foreign_addr": "127.0.0.1:53211",
+                    "state": "ESTABLISHED",
+                    "pid": 20588
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "192.168.1.22:51203",
+                    "foreign_addr": "35.186.224.26:443",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:62687",
+                    "foreign_addr": "127.0.0.1:61845",
+                    "state": "ESTABLISHED",
+                    "pid": 22884
+                }
+            ]
+        },
+        "windows.pslist": {
+            "status": "success",
+            "processes": [
+                {
+                    "pid": 0,
+                    "name": "System Idle Process",
+                    "ppid": 0
+                },
+                {
+                    "pid": 4,
+                    "name": "System",
+                    "ppid": 0
+                },
+                {
+                    "pid": 188,
+                    "name": "[Oculto/Restringido]",
+                    "ppid": 4
+                },
+                {
+                    "pid": 232,
+                    "name": "Registry",
+                    "ppid": 4
+                },
+                {
+                    "pid": 424,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 796,
+                    "name": "smss.exe",
+                    "ppid": 4
+                },
+                {
+                    "pid": 1148,
+                    "name": "WUDFHost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 1152,
+                    "name": "vgtray.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 1212,
+                    "name": "csrss.exe",
+                    "ppid": 1204
+                },
+                {
+                    "pid": 1336,
+                    "name": "wininit.exe",
+                    "ppid": 1204
+                },
+                {
+                    "pid": 1344,
+                    "name": "csrss.exe",
+                    "ppid": 1328
+                },
+                {
+                    "pid": 1420,
+                    "name": "services.exe",
+                    "ppid": 1336
+                },
+                {
+                    "pid": 1448,
+                    "name": "winlogon.exe",
+                    "ppid": 1328
+                },
+                {
+                    "pid": 1480,
+                    "name": "LsaIso.exe",
+                    "ppid": 1336
+                },
+                {
+                    "pid": 1488,
+                    "name": "lsass.exe",
+                    "ppid": 1336
+                },
+                {
+                    "pid": 1656,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 1688,
+                    "name": "fontdrvhost.exe",
+                    "ppid": 1336
+                },
+                {
+                    "pid": 1692,
+                    "name": "fontdrvhost.exe",
+                    "ppid": 1448
+                },
+                {
+                    "pid": 1768,
+                    "name": "WUDFHost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 1812,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 1888,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 1908,
+                    "name": "RuntimeBroker.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 2044,
+                    "name": "dwm.exe",
+                    "ppid": 1448
+                },
+                {
+                    "pid": 2068,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2076,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2092,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2168,
+                    "name": "EpicWebHelper.exe",
+                    "ppid": 11980
+                },
+                {
+                    "pid": 2240,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2252,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2272,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2368,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2392,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2400,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2408,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2576,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2588,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2600,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2652,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2664,
+                    "name": "AntigravitySetup-stable-15487b3041e65228cae24980a3f796c905ef582c.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 2676,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2736,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2788,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 2872,
+                    "name": "EpicOnlineServicesUserHelper.exe",
+                    "ppid": 6788
+                },
+                {
+                    "pid": 2888,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 2988,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3048,
+                    "name": "language_server_windows_x64.exe",
+                    "ppid": 22884
+                },
+                {
+                    "pid": 3076,
+                    "name": "dasHost.exe",
+                    "ppid": 2988
+                },
+                {
+                    "pid": 3100,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3200,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3232,
+                    "name": "dllhost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 3252,
+                    "name": "wlanext.exe",
+                    "ppid": 4640
+                },
+                {
+                    "pid": 3388,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3408,
+                    "name": "pyrefly.exe",
+                    "ppid": 22884
+                },
+                {
+                    "pid": 3440,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3452,
+                    "name": "WidgetService.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 3496,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3520,
+                    "name": "dasHost.exe",
+                    "ppid": 2988
+                },
+                {
+                    "pid": 3544,
+                    "name": "NVDisplay.Container.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3576,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3616,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3624,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3632,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3716,
+                    "name": "MemCompression",
+                    "ppid": 4
+                },
+                {
+                    "pid": 3764,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3792,
+                    "name": "python3.13.exe",
+                    "ppid": 16876
+                },
+                {
+                    "pid": 3812,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3820,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3828,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 3944,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4008,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4044,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 4128,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4228,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4236,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4324,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4456,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4564,
+                    "name": "NVDisplay.Container.exe",
+                    "ppid": 3544
+                },
+                {
+                    "pid": 4640,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4676,
+                    "name": "Discord.exe",
+                    "ppid": 4764
+                },
+                {
+                    "pid": 4696,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4756,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4764,
+                    "name": "Discord.exe",
+                    "ppid": 2792
+                },
+                {
+                    "pid": 4808,
+                    "name": "spoolsv.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 4904,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5068,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5196,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5200,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5380,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5388,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5396,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5404,
+                    "name": "GigabyteUpdateService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5412,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5420,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5428,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5440,
+                    "name": "brave.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 5444,
+                    "name": "wallpaperservice32.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5468,
+                    "name": "AnyDesk.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5516,
+                    "name": "nvcontainer.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5540,
+                    "name": "OneApp.IGCC.WinService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5548,
+                    "name": "GameInputRedistService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5556,
+                    "name": "armsvc.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5584,
+                    "name": "VoiceControl_Service.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5592,
+                    "name": "vncserver.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5600,
+                    "name": "jhi_service.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5608,
+                    "name": "HPPrintScanDoctorService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5640,
+                    "name": "gamingservicesnet.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5644,
+                    "name": "SSUService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5660,
+                    "name": "DSAService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5668,
+                    "name": "EasyTuneEngineService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5676,
+                    "name": "RtkAudUService64.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5692,
+                    "name": "WMIRegistrationService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5712,
+                    "name": "DSAUpdateService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5728,
+                    "name": "wslservice.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5748,
+                    "name": "lghub_updater.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5776,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 5784,
+                    "name": "MsMpEng.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5792,
+                    "name": "MpDefenderCoreService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5832,
+                    "name": "OfficeClickToRun.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 5904,
+                    "name": "Discord.exe",
+                    "ppid": 4764
+                },
+                {
+                    "pid": 5912,
+                    "name": "Discord.exe",
+                    "ppid": 4764
+                },
+                {
+                    "pid": 6372,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 6704,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 6796,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 6948,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 6964,
+                    "name": "vncagent.exe",
+                    "ppid": 5592
+                },
+                {
+                    "pid": 7100,
+                    "name": "conhost.exe",
+                    "ppid": 6964
+                },
+                {
+                    "pid": 7436,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 7512,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 7592,
+                    "name": "WmiPrvSE.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 8032,
+                    "name": "gamingservices.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 8112,
+                    "name": "steamservice.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 8204,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 8336,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 8392,
+                    "name": "NgcIso.exe",
+                    "ppid": 8336
+                },
+                {
+                    "pid": 8420,
+                    "name": "nvcontainer.exe",
+                    "ppid": 5516
+                },
+                {
+                    "pid": 8468,
+                    "name": "nvsphelper64.exe",
+                    "ppid": 5516
+                },
+                {
+                    "pid": 8924,
+                    "name": "AggregatorHost.exe",
+                    "ppid": 5380
+                },
+                {
+                    "pid": 9124,
+                    "name": "ApplicationFrameHost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 9288,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 9420,
+                    "name": "TextInputHost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 9516,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 9544,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 9572,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 9604,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 9884,
+                    "name": "NisSrv.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 10004,
+                    "name": "SystemSettings.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 10084,
+                    "name": "EpicWebHelper.exe",
+                    "ppid": 11980
+                },
+                {
+                    "pid": 10132,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 10244,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 10296,
+                    "name": "Antigravity.exe",
+                    "ppid": 22884
+                },
+                {
+                    "pid": 10428,
+                    "name": "GameInputRedistService.exe",
+                    "ppid": 5548
+                },
+                {
+                    "pid": 10452,
+                    "name": "SecurityHealthService.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 10484,
+                    "name": "wallpaper32.exe",
+                    "ppid": 5444
+                },
+                {
+                    "pid": 10540,
+                    "name": "SecurityHealthSystray.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 10588,
+                    "name": "nvcontainer.exe",
+                    "ppid": 5516
+                },
+                {
+                    "pid": 10612,
+                    "name": "nvcontainer.exe",
+                    "ppid": 5516
+                },
+                {
+                    "pid": 10624,
+                    "name": "Discord.exe",
+                    "ppid": 4764
+                },
+                {
+                    "pid": 10668,
+                    "name": "sihost.exe",
+                    "ppid": 2588
+                },
+                {
+                    "pid": 10776,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 10792,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 10848,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 10896,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 11088,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 11132,
+                    "name": "taskhostw.exe",
+                    "ppid": 2368
+                },
+                {
+                    "pid": 11456,
+                    "name": "steamwebhelper.exe",
+                    "ppid": 18776
+                },
+                {
+                    "pid": 11500,
+                    "name": "DSATray.exe",
+                    "ppid": 5660
+                },
+                {
+                    "pid": 11560,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 11756,
+                    "name": "NVIDIA Overlay.exe",
+                    "ppid": 10588
+                },
+                {
+                    "pid": 11852,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 11892,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 11896,
+                    "name": "explorer.exe",
+                    "ppid": 11800
+                },
+                {
+                    "pid": 11936,
+                    "name": "vncserverui.exe",
+                    "ppid": 5592
+                },
+                {
+                    "pid": 11980,
+                    "name": "EpicGamesLauncher.exe",
+                    "ppid": 9020
+                },
+                {
+                    "pid": 12008,
+                    "name": "ShellHost.exe",
+                    "ppid": 10668
+                },
+                {
+                    "pid": 12160,
+                    "name": "CrossDeviceResume.exe",
+                    "ppid": 10668
+                },
+                {
+                    "pid": 12464,
+                    "name": "XboxPcAppFT.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 12504,
+                    "name": "CrossDeviceService.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 12804,
+                    "name": "NVIDIA Overlay.exe",
+                    "ppid": 11756
+                },
+                {
+                    "pid": 12848,
+                    "name": "NVIDIA Overlay.exe",
+                    "ppid": 11756
+                },
+                {
+                    "pid": 12968,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 13152,
+                    "name": "NVIDIA Overlay.exe",
+                    "ppid": 11756
+                },
+                {
+                    "pid": 13352,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 13460,
+                    "name": "NVIDIA Overlay.exe",
+                    "ppid": 11756
+                },
+                {
+                    "pid": 13632,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 13720,
+                    "name": "GraphicsCardEngine.exe",
+                    "ppid": 12424
+                },
+                {
+                    "pid": 13736,
+                    "name": "WidgetBoard.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 13864,
+                    "name": "SearchHost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 13872,
+                    "name": "StartMenuExperienceHost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 13988,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 14048,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 14312,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 14636,
+                    "name": "msedgewebview2.exe",
+                    "ppid": 13864
+                },
+                {
+                    "pid": 14720,
+                    "name": "msedgewebview2.exe",
+                    "ppid": 14636
+                },
+                {
+                    "pid": 14740,
+                    "name": "Discord.exe",
+                    "ppid": 4764
+                },
+                {
+                    "pid": 15044,
+                    "name": "msedgewebview2.exe",
+                    "ppid": 14636
+                },
+                {
+                    "pid": 15064,
+                    "name": "audiodg.exe",
+                    "ppid": 3944
+                },
+                {
+                    "pid": 15148,
+                    "name": "msedgewebview2.exe",
+                    "ppid": 14636
+                },
+                {
+                    "pid": 15208,
+                    "name": "Antigravity.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 15248,
+                    "name": "msedgewebview2.exe",
+                    "ppid": 14636
+                },
+                {
+                    "pid": 15348,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 15368,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 15604,
+                    "name": "EpicWebHelper.exe",
+                    "ppid": 11980
+                },
+                {
+                    "pid": 15608,
+                    "name": "msedgewebview2.exe",
+                    "ppid": 14636
+                },
+                {
+                    "pid": 15672,
+                    "name": "UserOOBEBroker.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 15724,
+                    "name": "SearchIndexer.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 15856,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 15860,
+                    "name": "Antigravity.exe",
+                    "ppid": 22884
+                },
+                {
+                    "pid": 16020,
+                    "name": "conhost.exe",
+                    "ppid": 25156
+                },
+                {
+                    "pid": 16052,
+                    "name": "WhatsApp.Root.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 16076,
+                    "name": "BraveCrashHandler.exe",
+                    "ppid": 11000
+                },
+                {
+                    "pid": 16456,
+                    "name": "EpicWebHelper.exe",
+                    "ppid": 11980
+                },
+                {
+                    "pid": 16608,
+                    "name": "conhost.exe",
+                    "ppid": 3048
+                },
+                {
+                    "pid": 16864,
+                    "name": "MicrosoftStartFeedProvider.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 16876,
+                    "name": "python.exe",
+                    "ppid": 20764
+                },
+                {
+                    "pid": 16920,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 17000,
+                    "name": "GBT_DL_LIB.exe",
+                    "ppid": 11020
+                },
+                {
+                    "pid": 17400,
+                    "name": "AntigravitySetup-stable-15487b3041e65228cae24980a3f796c905ef582c.tmp",
+                    "ppid": 2664
+                },
+                {
+                    "pid": 17472,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 17548,
+                    "name": "ctfmon.exe",
+                    "ppid": 4008
+                },
+                {
+                    "pid": 17748,
+                    "name": "conhost.exe",
+                    "ppid": 18404
+                },
+                {
+                    "pid": 17804,
+                    "name": "RuntimeBroker.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 17816,
+                    "name": "PhoneExperienceHost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 17860,
+                    "name": "Antigravity.exe",
+                    "ppid": 22884
+                },
+                {
+                    "pid": 17956,
+                    "name": "Spotify.exe",
+                    "ppid": 20588
+                },
+                {
+                    "pid": 18052,
+                    "name": "RtkAudUService64.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 18336,
+                    "name": "BraveCrashHandler64.exe",
+                    "ppid": 11000
+                },
+                {
+                    "pid": 18372,
+                    "name": "RuntimeBroker.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 18404,
+                    "name": "EpicOnlineServicesUserHelper.exe",
+                    "ppid": 2872
+                },
+                {
+                    "pid": 18496,
+                    "name": "RiotClientServices.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 18600,
+                    "name": "AdobeCollabSync.exe",
+                    "ppid": 20472
+                },
+                {
+                    "pid": 18628,
+                    "name": "RiotClientCrashHandler.exe",
+                    "ppid": 18496
+                },
+                {
+                    "pid": 18776,
+                    "name": "steamwebhelper.exe",
+                    "ppid": 19364
+                },
+                {
+                    "pid": 18844,
+                    "name": "lghub_system_tray.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 18900,
+                    "name": "lghub_agent.exe",
+                    "ppid": 18844
+                },
+                {
+                    "pid": 18980,
+                    "name": "logi_crashpad_handler.exe",
+                    "ppid": 18900
+                },
+                {
+                    "pid": 19364,
+                    "name": "steam.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 19428,
+                    "name": "unsecapp.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 19492,
+                    "name": "OneDrive.Sync.Service.exe",
+                    "ppid": 25168
+                },
+                {
+                    "pid": 19600,
+                    "name": "steamwebhelper.exe",
+                    "ppid": 18776
+                },
+                {
+                    "pid": 19716,
+                    "name": "logi_crashpad_handler.exe",
+                    "ppid": 5748
+                },
+                {
+                    "pid": 19828,
+                    "name": "steamwebhelper.exe",
+                    "ppid": 18776
+                },
+                {
+                    "pid": 19948,
+                    "name": "steamwebhelper.exe",
+                    "ppid": 18776
+                },
+                {
+                    "pid": 20024,
+                    "name": "steamwebhelper.exe",
+                    "ppid": 18776
+                },
+                {
+                    "pid": 20344,
+                    "name": "steamwebhelper.exe",
+                    "ppid": 18776
+                },
+                {
+                    "pid": 20472,
+                    "name": "AdobeCollabSync.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 20512,
+                    "name": "Spotify.exe",
+                    "ppid": 20588
+                },
+                {
+                    "pid": 20528,
+                    "name": "Spotify.exe",
+                    "ppid": 20588
+                },
+                {
+                    "pid": 20588,
+                    "name": "Spotify.exe",
+                    "ppid": 20596
+                },
+                {
+                    "pid": 20692,
+                    "name": "python3.13.exe",
+                    "ppid": 21356
+                },
+                {
+                    "pid": 20696,
+                    "name": "AppActions.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 20756,
+                    "name": "mscopilot.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 20796,
+                    "name": "mscopilot.exe",
+                    "ppid": 20756
+                },
+                {
+                    "pid": 20976,
+                    "name": "mscopilot.exe",
+                    "ppid": 20756
+                },
+                {
+                    "pid": 20984,
+                    "name": "mscopilot.exe",
+                    "ppid": 20756
+                },
+                {
+                    "pid": 21056,
+                    "name": "mscopilot.exe",
+                    "ppid": 20756
+                },
+                {
+                    "pid": 21344,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 21356,
+                    "name": "python.exe",
+                    "ppid": 3792
+                },
+                {
+                    "pid": 21452,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 21460,
+                    "name": "AppleMobileDeviceLauncher.exe",
+                    "ppid": 10668
+                },
+                {
+                    "pid": 21544,
+                    "name": "Spotify.exe",
+                    "ppid": 20588
+                },
+                {
+                    "pid": 21948,
+                    "name": "backgroundTaskHost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 22020,
+                    "name": "RuntimeBroker.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 22132,
+                    "name": "SpotifyLauncher.exe",
+                    "ppid": 20588
+                },
+                {
+                    "pid": 22180,
+                    "name": "Spotify.exe",
+                    "ppid": 20588
+                },
+                {
+                    "pid": 22196,
+                    "name": "crashpad_handler.exe",
+                    "ppid": 22132
+                },
+                {
+                    "pid": 22336,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 22444,
+                    "name": "AppleMobileDeviceProcess.exe",
+                    "ppid": 21460
+                },
+                {
+                    "pid": 22524,
+                    "name": "SWXDAgent.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 22588,
+                    "name": "ShellExperienceHost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 22608,
+                    "name": "Spotify.exe",
+                    "ppid": 20588
+                },
+                {
+                    "pid": 22768,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 22824,
+                    "name": "conhost.exe",
+                    "ppid": 25156
+                },
+                {
+                    "pid": 22880,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 22884,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 22988,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 23028,
+                    "name": "AnyDesk.exe",
+                    "ppid": 11896
+                },
+                {
+                    "pid": 23168,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 23188,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 23276,
+                    "name": "RuntimeBroker.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 23376,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 23592,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 23892,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 23960,
+                    "name": "conhost.exe",
+                    "ppid": 25156
+                },
+                {
+                    "pid": 23964,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 24008,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 24100,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 24180,
+                    "name": "conhost.exe",
+                    "ppid": 3408
+                },
+                {
+                    "pid": 24380,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 24484,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 24492,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 24520,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 24580,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 24744,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 24924,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 25156,
+                    "name": "Antigravity.exe",
+                    "ppid": 15208
+                },
+                {
+                    "pid": 25364,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 25684,
+                    "name": "RuntimeBroker.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 25940,
+                    "name": "brave.exe",
+                    "ppid": 5440
+                },
+                {
+                    "pid": 26272,
+                    "name": "WindowsPackageManagerServer.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 26328,
+                    "name": "svchost.exe",
+                    "ppid": 1420
+                },
+                {
+                    "pid": 27016,
+                    "name": "IntelSoftwareAssetManagerService.exe",
+                    "ppid": 2368
+                },
+                {
+                    "pid": 27044,
+                    "name": "mscopilot_proxy.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 27176,
+                    "name": "dllhost.exe",
+                    "ppid": 1656
+                },
+                {
+                    "pid": 27408,
+                    "name": "dllhost.exe",
+                    "ppid": 1656
+                }
+            ]
+        }
+    },
+    "yara": {
+        "status": "success",
+        "matches": []
+    },
+    "correlations": {},
+    "threats": {
+        "alerts": [],
+        "severity": "low"
     }
 }
