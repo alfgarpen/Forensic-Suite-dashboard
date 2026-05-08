@@ -8,8 +8,22 @@ echo ""
 if ! command -v python3 &> /dev/null
 then
     echo "[!] Python3 no está instalado o no está en el PATH."
-    echo "Por favor, instala la versión más reciente (ej. sudo apt install python3 python3-venv) y vuelve a probar."
+    echo "Por favor, instala la versión más reciente (ej. sudo apt install python3) y vuelve a probar."
     exit 1
+fi
+
+# Verificar si python3-venv está instalado (necesario en Ubuntu/Debian)
+if ! python3 -m venv --help &> /dev/null
+then
+    echo "[!] python3-venv no está instalado."
+    echo "[*] Intentando instalar python3-venv..."
+    sudo apt update && sudo apt install -y python3-venv
+    
+    if [ $? -ne 0 ]; then
+        echo "[!] Falló la instalación automática de python3-venv."
+        echo "Por favor, ejecute: sudo apt install python3-venv"
+        exit 1
+    fi
 fi
 
 # Crear entorno virtual si no existe

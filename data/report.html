@@ -102,23 +102,32 @@
 
         <div class="meta" style="margin-top: 20px;">
             <p>Archivo de Volcado: <span>memory.raw</span></p>
-            <p>Perfil SO Detectado: <span>Windows 11 AMD64</span></p>
-            <p>Plugins Ejecutados: <span>windows.info, windows.netscan, windows.pslist</span></p>
-            <p>Generado el: <span>2026-04-27 00:33:58</span></p>
+            <p>Tamaño: <span>17408 bytes</span></p>
+            <p>MD5: <span>5d936e54713125488757b186c7c04a34</span></p>
+            <p>SHA256: <span>6862bd3d0c5e6cb9b1dc170ad7952e43f99cb68a51e6f0c798c05179411f0346</span></p>
+            <p>Perfil SO Detectado: <span>Ubuntu 24.04.4 LTS (6.17.0-14-generic) x86_64</span></p>
+            <p>Plugins Ejecutados: <span>linux.info, linux.netstat, linux.pslist</span></p>
+            <p>Generado el: <span>2026-05-08 10:18:31</span></p>
         </div>
 
-        <div class="executive-summary low">
+        <div class="executive-summary high">
             <h2>Executive Summary</h2>
-            <p style="margin-top: 10px;"><strong>Overall Severity:</strong> <span style="text-transform: uppercase;">low</span></p>
+            <p style="margin-top: 10px;"><strong>Overall Severity:</strong> <span style="text-transform: uppercase;">high</span></p>
             <h3 style="margin-top: 15px; font-size: 1.1em;">Detected Threats:</h3>
             
-            <p>No threats detected.</p>
+            <ul>
+                
+                <li>Detected 10 network connections without an associated running process.</li>
+                
+                <li>Suspicious process detected: nc (PID: 1337)</li>
+                
+            </ul>
             
         </div>
 
         
         <div class="plugin-section">
-            <h2>Resultados: windows.info</h2>
+            <h2>Resultados: linux.info</h2>
 
             
             <!-- Dictionary data (e.g. windows.info) -->
@@ -130,17 +139,27 @@
                 
                 <tr>
                     <td>os_version</td>
-                    <td><code>Windows 11</code></td>
+                    <td><code>Ubuntu 24.04.4 LTS (6.17.0-14-generic)</code></td>
                 </tr>
                 
                 <tr>
                     <td>architecture</td>
-                    <td><code>AMD64</code></td>
+                    <td><code>x86_64</code></td>
+                </tr>
+                
+                <tr>
+                    <td>analyzed_file</td>
+                    <td><code>memory.raw</code></td>
+                </tr>
+                
+                <tr>
+                    <td>capture_method</td>
+                    <td><code>Live Acquisition</code></td>
                 </tr>
                 
                 <tr>
                     <td>system_time</td>
-                    <td><code>2026-04-26 22:33:18 UTC</code></td>
+                    <td><code>2026-05-08 08:18:24 UTC</code></td>
                 </tr>
                 
             </table>
@@ -148,7 +167,7 @@
         </div>
         
         <div class="plugin-section">
-            <h2>Resultados: windows.netscan</h2>
+            <h2>Resultados: linux.netstat</h2>
 
             
             <!-- List data (e.g. pslist, netscan) -->
@@ -172,9 +191,37 @@
                     
                     <td>TCP</td>
                     
-                    <td>127.0.0.1:61846</td>
+                    <td>127.0.0.1:45639</td>
                     
-                    <td>127.0.0.1:57405</td>
+                    <td>127.0.0.1:37766</td>
+                    
+                    <td>ESTABLISHED</td>
+                    
+                    <td>21044</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>127.0.0.1:34473</td>
+                    
+                    <td>127.0.0.1:50550</td>
+                    
+                    <td>ESTABLISHED</td>
+                    
+                    <td>21212</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>127.0.0.1:48330</td>
+                    
+                    <td>127.0.0.1:5001</td>
                     
                     <td>TIME_WAIT</td>
                     
@@ -186,27 +233,13 @@
                     
                     <td>TCP</td>
                     
-                    <td>127.0.0.1:61843</td>
+                    <td>127.0.0.1:43364</td>
                     
-                    <td>127.0.0.1:61853</td>
-                    
-                    <td>ESTABLISHED</td>
-                    
-                    <td>22884</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>TCP</td>
-                    
-                    <td>192.168.1.22:51279</td>
-                    
-                    <td>72.145.35.106:443</td>
+                    <td>127.0.0.1:45639</td>
                     
                     <td>ESTABLISHED</td>
                     
-                    <td>22880</td>
+                    <td>21212</td>
                     
                 </tr>
                 
@@ -214,55 +247,13 @@
                     
                     <td>TCP</td>
                     
-                    <td>192.168.1.22:55919</td>
-                    
-                    <td>172.64.146.73:443</td>
-                    
-                    <td>CLOSE_WAIT</td>
-                    
-                    <td>18496</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>UDP</td>
-                    
-                    <td>0.0.0.0:5353</td>
-                    
-                    <td>0.0.0.0:0</td>
-                    
-                    <td>NONE</td>
-                    
-                    <td>3200</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>UDP</td>
-                    
-                    <td>169.254.192.73:138</td>
-                    
-                    <td>0.0.0.0:0</td>
-                    
-                    <td>NONE</td>
-                    
-                    <td>4</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>TCP</td>
-                    
-                    <td>0.0.0.0:49664</td>
+                    <td>127.0.0.1:5001</td>
                     
                     <td>0.0.0.0:0</td>
                     
                     <td>LISTEN</td>
                     
-                    <td>1488</td>
+                    <td>30854</td>
                     
                 </tr>
                 
@@ -270,9 +261,37 @@
                     
                     <td>TCP</td>
                     
-                    <td>192.168.1.22:54409</td>
+                    <td>127.0.0.1:44975</td>
                     
-                    <td>192.168.1.21:7070</td>
+                    <td>127.0.0.1:45316</td>
+                    
+                    <td>ESTABLISHED</td>
+                    
+                    <td>21044</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>10.195.157.92:58684</td>
+                    
+                    <td>141.227.128.56:443</td>
+                    
+                    <td>ESTABLISHED</td>
+                    
+                    <td>0</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>10.195.157.92:59728</td>
+                    
+                    <td>34.54.84.110:443</td>
                     
                     <td>TIME_WAIT</td>
                     
@@ -284,9 +303,79 @@
                     
                     <td>TCP</td>
                     
-                    <td>fe80::289f:9f5b:653e:f0ad:53997</td>
+                    <td>10.195.157.92:60144</td>
                     
-                    <td>fe80::5d1b:44af:684b:4592:5357</td>
+                    <td>34.54.84.110:443</td>
+                    
+                    <td>TIME_WAIT</td>
+                    
+                    <td>0</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>127.0.0.1:54102</td>
+                    
+                    <td>127.0.0.1:5001</td>
+                    
+                    <td>TIME_WAIT</td>
+                    
+                    <td>0</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>127.0.0.1:48666</td>
+                    
+                    <td>127.0.0.1:45639</td>
+                    
+                    <td>ESTABLISHED</td>
+                    
+                    <td>21212</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>127.0.0.1:34215</td>
+                    
+                    <td>127.0.0.1:36124</td>
+                    
+                    <td>ESTABLISHED</td>
+                    
+                    <td>21212</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>:::39859</td>
+                    
+                    <td>0.0.0.0:0</td>
+                    
+                    <td>LISTEN</td>
+                    
+                    <td>3659</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>TCP</td>
+                    
+                    <td>2a02:9130:84a8:8f0d:f8c8:1664:e464:af2c:49970</td>
+                    
+                    <td>2a00:1450:4006:809::200a:443</td>
                     
                     <td>TIME_WAIT</td>
                     
@@ -298,13 +387,13 @@
                     
                     <td>UDP</td>
                     
-                    <td>0.0.0.0:3702</td>
+                    <td>0.0.0.0:50001</td>
                     
                     <td>0.0.0.0:0</td>
                     
                     <td>NONE</td>
                     
-                    <td>3076</td>
+                    <td>0</td>
                     
                 </tr>
                 
@@ -312,13 +401,27 @@
                     
                     <td>TCP</td>
                     
-                    <td>127.0.0.1:61851</td>
+                    <td>2a02:9130:84a8:8f0d:f8c8:1664:e464:af2c:40712</td>
                     
-                    <td>127.0.0.1:61854</td>
+                    <td>2a00:1450:4003:811::200a:443</td>
                     
                     <td>ESTABLISHED</td>
                     
-                    <td>3048</td>
+                    <td>21212</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>UDP</td>
+                    
+                    <td>:::5353</td>
+                    
+                    <td>0.0.0.0:0</td>
+                    
+                    <td>NONE</td>
+                    
+                    <td>0</td>
                     
                 </tr>
                 
@@ -326,7 +429,7 @@
                     
                     <td>TCP</td>
                     
-                    <td>127.0.0.1:54581</td>
+                    <td>127.0.0.1:48314</td>
                     
                     <td>127.0.0.1:5001</td>
                     
@@ -340,39 +443,11 @@
                     
                     <td>UDP</td>
                     
-                    <td>192.168.1.22:50523</td>
+                    <td>0.0.0.0:5353</td>
                     
                     <td>0.0.0.0:0</td>
                     
                     <td>NONE</td>
-                    
-                    <td>16920</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>UDP</td>
-                    
-                    <td>192.168.1.22:137</td>
-                    
-                    <td>0.0.0.0:0</td>
-                    
-                    <td>NONE</td>
-                    
-                    <td>4</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>TCP</td>
-                    
-                    <td>127.0.0.1:61843</td>
-                    
-                    <td>127.0.0.1:57409</td>
-                    
-                    <td>TIME_WAIT</td>
                     
                     <td>0</td>
                     
@@ -382,69 +457,13 @@
                     
                     <td>TCP</td>
                     
-                    <td>192.168.1.22:65202</td>
+                    <td>127.0.0.1:34215</td>
                     
-                    <td>162.159.130.234:443</td>
-                    
-                    <td>ESTABLISHED</td>
-                    
-                    <td>5912</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>TCP</td>
-                    
-                    <td>127.0.0.1:53211</td>
-                    
-                    <td>127.0.0.1:7768</td>
+                    <td>127.0.0.1:36118</td>
                     
                     <td>ESTABLISHED</td>
                     
-                    <td>22132</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>TCP</td>
-                    
-                    <td>127.0.0.1:7768</td>
-                    
-                    <td>127.0.0.1:53211</td>
-                    
-                    <td>ESTABLISHED</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>TCP</td>
-                    
-                    <td>192.168.1.22:51203</td>
-                    
-                    <td>35.186.224.26:443</td>
-                    
-                    <td>TIME_WAIT</td>
-                    
-                    <td>0</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>TCP</td>
-                    
-                    <td>127.0.0.1:62687</td>
-                    
-                    <td>127.0.0.1:61845</td>
-                    
-                    <td>ESTABLISHED</td>
-                    
-                    <td>22884</td>
+                    <td>21212</td>
                     
                 </tr>
                 
@@ -454,7 +473,7 @@
         </div>
         
         <div class="plugin-section">
-            <h2>Resultados: windows.pslist</h2>
+            <h2>Resultados: linux.pslist</h2>
 
             
             <!-- List data (e.g. pslist, netscan) -->
@@ -468,3045 +487,121 @@
                     
                     <th>ppid</th>
                     
+                    <th>user</th>
+                    
+                    <th>status</th>
+                    
                 </tr>
                 
                 <tr>
+                    
+                    <td>1</td>
+                    
+                    <td>systemd</td>
                     
                     <td>0</td>
                     
-                    <td>System Idle Process</td>
+                    <td>root</td>
+                    
+                    <td>sleeping</td>
+                    
+                </tr>
+                
+                <tr>
+                    
+                    <td>2</td>
+                    
+                    <td>kthreadd</td>
                     
                     <td>0</td>
                     
-                </tr>
-                
-                <tr>
-                    
-                    <td>4</td>
-                    
-                    <td>System</td>
-                    
-                    <td>0</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>188</td>
-                    
-                    <td>[Oculto/Restringido]</td>
-                    
-                    <td>4</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>232</td>
-                    
-                    <td>Registry</td>
-                    
-                    <td>4</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>424</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>796</td>
-                    
-                    <td>smss.exe</td>
-                    
-                    <td>4</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1148</td>
-                    
-                    <td>WUDFHost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1152</td>
-                    
-                    <td>vgtray.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1212</td>
-                    
-                    <td>csrss.exe</td>
-                    
-                    <td>1204</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1336</td>
-                    
-                    <td>wininit.exe</td>
-                    
-                    <td>1204</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1344</td>
-                    
-                    <td>csrss.exe</td>
-                    
-                    <td>1328</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1420</td>
-                    
-                    <td>services.exe</td>
-                    
-                    <td>1336</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1448</td>
-                    
-                    <td>winlogon.exe</td>
-                    
-                    <td>1328</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1480</td>
-                    
-                    <td>LsaIso.exe</td>
-                    
-                    <td>1336</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1488</td>
-                    
-                    <td>lsass.exe</td>
-                    
-                    <td>1336</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1656</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1688</td>
-                    
-                    <td>fontdrvhost.exe</td>
-                    
-                    <td>1336</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1692</td>
-                    
-                    <td>fontdrvhost.exe</td>
-                    
-                    <td>1448</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1768</td>
-                    
-                    <td>WUDFHost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1812</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1888</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>1908</td>
-                    
-                    <td>RuntimeBroker.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2044</td>
-                    
-                    <td>dwm.exe</td>
-                    
-                    <td>1448</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2068</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2076</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2092</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2168</td>
-                    
-                    <td>EpicWebHelper.exe</td>
-                    
-                    <td>11980</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2240</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2252</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2272</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2368</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2392</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2400</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2408</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2576</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2588</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2600</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2652</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2664</td>
-                    
-                    <td>AntigravitySetup-stable-15487b3041e65228cae24980a3f796c905ef582c.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2676</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2736</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2788</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2872</td>
-                    
-                    <td>EpicOnlineServicesUserHelper.exe</td>
-                    
-                    <td>6788</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2888</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>2988</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3048</td>
-                    
-                    <td>language_server_windows_x64.exe</td>
-                    
-                    <td>22884</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3076</td>
-                    
-                    <td>dasHost.exe</td>
-                    
-                    <td>2988</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3100</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3200</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3232</td>
-                    
-                    <td>dllhost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3252</td>
-                    
-                    <td>wlanext.exe</td>
-                    
-                    <td>4640</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3388</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3408</td>
-                    
-                    <td>pyrefly.exe</td>
-                    
-                    <td>22884</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3440</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3452</td>
-                    
-                    <td>WidgetService.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3496</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3520</td>
-                    
-                    <td>dasHost.exe</td>
-                    
-                    <td>2988</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3544</td>
-                    
-                    <td>NVDisplay.Container.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3576</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3616</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3624</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3632</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3716</td>
-                    
-                    <td>MemCompression</td>
-                    
-                    <td>4</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3764</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3792</td>
-                    
-                    <td>python3.13.exe</td>
-                    
-                    <td>16876</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3812</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3820</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3828</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>3944</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4008</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4044</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4128</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4228</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4236</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4324</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4456</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4564</td>
-                    
-                    <td>NVDisplay.Container.exe</td>
-                    
-                    <td>3544</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4640</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4676</td>
-                    
-                    <td>Discord.exe</td>
-                    
-                    <td>4764</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4696</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4756</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4764</td>
-                    
-                    <td>Discord.exe</td>
-                    
-                    <td>2792</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4808</td>
-                    
-                    <td>spoolsv.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>4904</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5068</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5196</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5200</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5380</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5388</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5396</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5404</td>
-                    
-                    <td>GigabyteUpdateService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5412</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5420</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5428</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5440</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5444</td>
-                    
-                    <td>wallpaperservice32.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5468</td>
-                    
-                    <td>AnyDesk.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5516</td>
-                    
-                    <td>nvcontainer.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5540</td>
-                    
-                    <td>OneApp.IGCC.WinService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5548</td>
-                    
-                    <td>GameInputRedistService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5556</td>
-                    
-                    <td>armsvc.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5584</td>
-                    
-                    <td>VoiceControl_Service.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5592</td>
-                    
-                    <td>vncserver.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5600</td>
-                    
-                    <td>jhi_service.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5608</td>
-                    
-                    <td>HPPrintScanDoctorService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5640</td>
-                    
-                    <td>gamingservicesnet.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5644</td>
-                    
-                    <td>SSUService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5660</td>
-                    
-                    <td>DSAService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5668</td>
-                    
-                    <td>EasyTuneEngineService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5676</td>
-                    
-                    <td>RtkAudUService64.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5692</td>
-                    
-                    <td>WMIRegistrationService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5712</td>
-                    
-                    <td>DSAUpdateService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5728</td>
-                    
-                    <td>wslservice.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5748</td>
-                    
-                    <td>lghub_updater.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5776</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5784</td>
-                    
-                    <td>MsMpEng.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5792</td>
-                    
-                    <td>MpDefenderCoreService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5832</td>
-                    
-                    <td>OfficeClickToRun.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5904</td>
-                    
-                    <td>Discord.exe</td>
-                    
-                    <td>4764</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>5912</td>
-                    
-                    <td>Discord.exe</td>
-                    
-                    <td>4764</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>6372</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>6704</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>6796</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>6948</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>6964</td>
-                    
-                    <td>vncagent.exe</td>
-                    
-                    <td>5592</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>7100</td>
-                    
-                    <td>conhost.exe</td>
-                    
-                    <td>6964</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>7436</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>7512</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>7592</td>
-                    
-                    <td>WmiPrvSE.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8032</td>
-                    
-                    <td>gamingservices.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8112</td>
-                    
-                    <td>steamservice.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8204</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8336</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8392</td>
-                    
-                    <td>NgcIso.exe</td>
-                    
-                    <td>8336</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8420</td>
-                    
-                    <td>nvcontainer.exe</td>
-                    
-                    <td>5516</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8468</td>
-                    
-                    <td>nvsphelper64.exe</td>
-                    
-                    <td>5516</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>8924</td>
-                    
-                    <td>AggregatorHost.exe</td>
-                    
-                    <td>5380</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9124</td>
-                    
-                    <td>ApplicationFrameHost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9288</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9420</td>
-                    
-                    <td>TextInputHost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9516</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9544</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9572</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9604</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>9884</td>
-                    
-                    <td>NisSrv.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10004</td>
-                    
-                    <td>SystemSettings.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10084</td>
-                    
-                    <td>EpicWebHelper.exe</td>
-                    
-                    <td>11980</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10132</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10244</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10296</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>22884</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10428</td>
-                    
-                    <td>GameInputRedistService.exe</td>
-                    
-                    <td>5548</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10452</td>
-                    
-                    <td>SecurityHealthService.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10484</td>
-                    
-                    <td>wallpaper32.exe</td>
-                    
-                    <td>5444</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10540</td>
-                    
-                    <td>SecurityHealthSystray.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10588</td>
-                    
-                    <td>nvcontainer.exe</td>
-                    
-                    <td>5516</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10612</td>
-                    
-                    <td>nvcontainer.exe</td>
-                    
-                    <td>5516</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10624</td>
-                    
-                    <td>Discord.exe</td>
-                    
-                    <td>4764</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10668</td>
-                    
-                    <td>sihost.exe</td>
-                    
-                    <td>2588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10776</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10792</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10848</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>10896</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11088</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11132</td>
-                    
-                    <td>taskhostw.exe</td>
-                    
-                    <td>2368</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11456</td>
-                    
-                    <td>steamwebhelper.exe</td>
-                    
-                    <td>18776</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11500</td>
-                    
-                    <td>DSATray.exe</td>
-                    
-                    <td>5660</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11560</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11756</td>
-                    
-                    <td>NVIDIA Overlay.exe</td>
-                    
-                    <td>10588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11852</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11892</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11896</td>
-                    
-                    <td>explorer.exe</td>
-                    
-                    <td>11800</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11936</td>
-                    
-                    <td>vncserverui.exe</td>
-                    
-                    <td>5592</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>11980</td>
-                    
-                    <td>EpicGamesLauncher.exe</td>
-                    
-                    <td>9020</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>12008</td>
-                    
-                    <td>ShellHost.exe</td>
-                    
-                    <td>10668</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>12160</td>
-                    
-                    <td>CrossDeviceResume.exe</td>
-                    
-                    <td>10668</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>12464</td>
-                    
-                    <td>XboxPcAppFT.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>12504</td>
-                    
-                    <td>CrossDeviceService.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>12804</td>
-                    
-                    <td>NVIDIA Overlay.exe</td>
-                    
-                    <td>11756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>12848</td>
-                    
-                    <td>NVIDIA Overlay.exe</td>
-                    
-                    <td>11756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>12968</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13152</td>
-                    
-                    <td>NVIDIA Overlay.exe</td>
-                    
-                    <td>11756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13352</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13460</td>
-                    
-                    <td>NVIDIA Overlay.exe</td>
-                    
-                    <td>11756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13632</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13720</td>
-                    
-                    <td>GraphicsCardEngine.exe</td>
-                    
-                    <td>12424</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13736</td>
-                    
-                    <td>WidgetBoard.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13864</td>
-                    
-                    <td>SearchHost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13872</td>
-                    
-                    <td>StartMenuExperienceHost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>13988</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>14048</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>14312</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>14636</td>
-                    
-                    <td>msedgewebview2.exe</td>
-                    
-                    <td>13864</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>14720</td>
-                    
-                    <td>msedgewebview2.exe</td>
-                    
-                    <td>14636</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>14740</td>
-                    
-                    <td>Discord.exe</td>
-                    
-                    <td>4764</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15044</td>
-                    
-                    <td>msedgewebview2.exe</td>
-                    
-                    <td>14636</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15064</td>
-                    
-                    <td>audiodg.exe</td>
-                    
-                    <td>3944</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15148</td>
-                    
-                    <td>msedgewebview2.exe</td>
-                    
-                    <td>14636</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15208</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15248</td>
-                    
-                    <td>msedgewebview2.exe</td>
-                    
-                    <td>14636</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15348</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15368</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15604</td>
-                    
-                    <td>EpicWebHelper.exe</td>
-                    
-                    <td>11980</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15608</td>
-                    
-                    <td>msedgewebview2.exe</td>
-                    
-                    <td>14636</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15672</td>
-                    
-                    <td>UserOOBEBroker.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15724</td>
-                    
-                    <td>SearchIndexer.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15856</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>15860</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>22884</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16020</td>
-                    
-                    <td>conhost.exe</td>
-                    
-                    <td>25156</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16052</td>
-                    
-                    <td>WhatsApp.Root.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16076</td>
-                    
-                    <td>BraveCrashHandler.exe</td>
-                    
-                    <td>11000</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16456</td>
-                    
-                    <td>EpicWebHelper.exe</td>
-                    
-                    <td>11980</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16608</td>
-                    
-                    <td>conhost.exe</td>
-                    
-                    <td>3048</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16864</td>
-                    
-                    <td>MicrosoftStartFeedProvider.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16876</td>
-                    
-                    <td>python.exe</td>
-                    
-                    <td>20764</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>16920</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17000</td>
-                    
-                    <td>GBT_DL_LIB.exe</td>
-                    
-                    <td>11020</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17400</td>
-                    
-                    <td>AntigravitySetup-stable-15487b3041e65228cae24980a3f796c905ef582c.tmp</td>
-                    
-                    <td>2664</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17472</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17548</td>
-                    
-                    <td>ctfmon.exe</td>
-                    
-                    <td>4008</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17748</td>
-                    
-                    <td>conhost.exe</td>
-                    
-                    <td>18404</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17804</td>
-                    
-                    <td>RuntimeBroker.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17816</td>
-                    
-                    <td>PhoneExperienceHost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17860</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>22884</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>17956</td>
-                    
-                    <td>Spotify.exe</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18052</td>
-                    
-                    <td>RtkAudUService64.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18336</td>
-                    
-                    <td>BraveCrashHandler64.exe</td>
-                    
-                    <td>11000</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18372</td>
-                    
-                    <td>RuntimeBroker.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18404</td>
-                    
-                    <td>EpicOnlineServicesUserHelper.exe</td>
-                    
-                    <td>2872</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18496</td>
-                    
-                    <td>RiotClientServices.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18600</td>
-                    
-                    <td>AdobeCollabSync.exe</td>
-                    
-                    <td>20472</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18628</td>
-                    
-                    <td>RiotClientCrashHandler.exe</td>
-                    
-                    <td>18496</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18776</td>
-                    
-                    <td>steamwebhelper.exe</td>
-                    
-                    <td>19364</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18844</td>
-                    
-                    <td>lghub_system_tray.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18900</td>
-                    
-                    <td>lghub_agent.exe</td>
-                    
-                    <td>18844</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>18980</td>
-                    
-                    <td>logi_crashpad_handler.exe</td>
-                    
-                    <td>18900</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>19364</td>
-                    
-                    <td>steam.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>19428</td>
-                    
-                    <td>unsecapp.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>19492</td>
-                    
-                    <td>OneDrive.Sync.Service.exe</td>
-                    
-                    <td>25168</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>19600</td>
-                    
-                    <td>steamwebhelper.exe</td>
-                    
-                    <td>18776</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>19716</td>
-                    
-                    <td>logi_crashpad_handler.exe</td>
-                    
-                    <td>5748</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>19828</td>
-                    
-                    <td>steamwebhelper.exe</td>
-                    
-                    <td>18776</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>19948</td>
-                    
-                    <td>steamwebhelper.exe</td>
-                    
-                    <td>18776</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20024</td>
-                    
-                    <td>steamwebhelper.exe</td>
-                    
-                    <td>18776</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20344</td>
-                    
-                    <td>steamwebhelper.exe</td>
-                    
-                    <td>18776</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20472</td>
-                    
-                    <td>AdobeCollabSync.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20512</td>
-                    
-                    <td>Spotify.exe</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20528</td>
-                    
-                    <td>Spotify.exe</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20588</td>
-                    
-                    <td>Spotify.exe</td>
-                    
-                    <td>20596</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20692</td>
-                    
-                    <td>python3.13.exe</td>
-                    
-                    <td>21356</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20696</td>
-                    
-                    <td>AppActions.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20756</td>
-                    
-                    <td>mscopilot.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20796</td>
-                    
-                    <td>mscopilot.exe</td>
-                    
-                    <td>20756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20976</td>
-                    
-                    <td>mscopilot.exe</td>
-                    
-                    <td>20756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>20984</td>
-                    
-                    <td>mscopilot.exe</td>
-                    
-                    <td>20756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>21056</td>
-                    
-                    <td>mscopilot.exe</td>
-                    
-                    <td>20756</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>21344</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>21356</td>
-                    
-                    <td>python.exe</td>
-                    
-                    <td>3792</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>21452</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>21460</td>
-                    
-                    <td>AppleMobileDeviceLauncher.exe</td>
-                    
-                    <td>10668</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>21544</td>
-                    
-                    <td>Spotify.exe</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>21948</td>
-                    
-                    <td>backgroundTaskHost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22020</td>
-                    
-                    <td>RuntimeBroker.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22132</td>
-                    
-                    <td>SpotifyLauncher.exe</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22180</td>
-                    
-                    <td>Spotify.exe</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22196</td>
-                    
-                    <td>crashpad_handler.exe</td>
-                    
-                    <td>22132</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22336</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22444</td>
-                    
-                    <td>AppleMobileDeviceProcess.exe</td>
-                    
-                    <td>21460</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22524</td>
-                    
-                    <td>SWXDAgent.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22588</td>
-                    
-                    <td>ShellExperienceHost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22608</td>
-                    
-                    <td>Spotify.exe</td>
-                    
-                    <td>20588</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22768</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22824</td>
-                    
-                    <td>conhost.exe</td>
-                    
-                    <td>25156</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22880</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22884</td>
-                    
-                    <td>Antigravity.exe</td>
-                    
-                    <td>15208</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>22988</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23028</td>
-                    
-                    <td>AnyDesk.exe</td>
-                    
-                    <td>11896</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23168</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23188</td>
+                    <td>root</td>
                     
-                    <td>brave.exe</td>
+                    <td>sleeping</td>
                     
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23276</td>
-                    
-                    <td>RuntimeBroker.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23376</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23592</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23892</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23960</td>
-                    
-                    <td>conhost.exe</td>
-                    
-                    <td>25156</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>23964</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24008</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24100</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24180</td>
-                    
-                    <td>conhost.exe</td>
-                    
-                    <td>3408</td>
-                    
                 </tr>
                 
                 <tr>
                     
-                    <td>24380</td>
+                    <td>12</td>
                     
-                    <td>brave.exe</td>
+                    <td>ksoftirqd/0</td>
                     
-                    <td>5440</td>
+                    <td>2</td>
                     
-                </tr>
-                
-                <tr>
-                    
-                    <td>24484</td>
-                    
-                    <td>svchost.exe</td>
-                    
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24492</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24520</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24580</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24744</td>
+                    <td>root</td>
                     
-                    <td>svchost.exe</td>
+                    <td>sleeping</td>
                     
-                    <td>1420</td>
-                    
-                </tr>
-                
-                <tr>
-                    
-                    <td>24924</td>
-                    
-                    <td>brave.exe</td>
-                    
-                    <td>5440</td>
-                    
                 </tr>
                 
                 <tr>
                     
-                    <td>25156</td>
+                    <td>450</td>
                     
-                    <td>Antigravity.exe</td>
+                    <td>systemd-journal</td>
                     
-                    <td>15208</td>
+                    <td>1</td>
                     
-                </tr>
-                
-                <tr>
-                    
-                    <td>25364</td>
+                    <td>root</td>
                     
-                    <td>brave.exe</td>
+                    <td>running</td>
                     
-                    <td>5440</td>
-                    
                 </tr>
                 
                 <tr>
-                    
-                    <td>25684</td>
                     
-                    <td>RuntimeBroker.exe</td>
+                    <td>600</td>
                     
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
+                    <td>sshd</td>
                     
-                    <td>25940</td>
+                    <td>1</td>
                     
-                    <td>brave.exe</td>
+                    <td>root</td>
                     
-                    <td>5440</td>
+                    <td>listening</td>
                     
                 </tr>
                 
                 <tr>
-                    
-                    <td>26272</td>
-                    
-                    <td>WindowsPackageManagerServer.exe</td>
                     
-                    <td>1656</td>
+                    <td>1200</td>
                     
-                </tr>
-                
-                <tr>
+                    <td>bash</td>
                     
-                    <td>26328</td>
+                    <td>600</td>
                     
-                    <td>svchost.exe</td>
+                    <td>analyst</td>
                     
-                    <td>1420</td>
+                    <td>running</td>
                     
                 </tr>
                 
                 <tr>
-                    
-                    <td>27016</td>
                     
-                    <td>IntelSoftwareAssetManagerService.exe</td>
+                    <td>1250</td>
                     
-                    <td>2368</td>
+                    <td>python3</td>
                     
-                </tr>
-                
-                <tr>
-                    
-                    <td>27044</td>
+                    <td>1200</td>
                     
-                    <td>mscopilot_proxy.exe</td>
+                    <td>analyst</td>
                     
-                    <td>1656</td>
+                    <td>running</td>
                     
                 </tr>
                 
                 <tr>
                     
-                    <td>27176</td>
+                    <td>1337</td>
                     
-                    <td>dllhost.exe</td>
-                    
-                    <td>1656</td>
-                    
-                </tr>
-                
-                <tr>
+                    <td>nc</td>
                     
-                    <td>27408</td>
+                    <td>1</td>
                     
-                    <td>dllhost.exe</td>
+                    <td>www-data</td>
                     
-                    <td>1656</td>
+                    <td>running</td>
                     
                 </tr>
                 
