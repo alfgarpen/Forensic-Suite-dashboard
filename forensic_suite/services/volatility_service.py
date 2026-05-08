@@ -2,7 +2,7 @@ import importlib
 import pkgutil
 import logging
 from forensic_suite.plugins.base_plugin import BasePlugin
-from forensic_suite.plugins import windows
+from forensic_suite.plugins import windows, linux
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,7 @@ class VolatilityService:
     def _discover_plugins(self):
         """Dynamically loads plugins from the specific namespace/packages."""
         self._load_package(windows)
+        self._load_package(linux)
 
     def _load_package(self, package):
         prefix = package.__name__ + "."

@@ -24,15 +24,16 @@ class ThreatDetector:
 
         # 2. Check for suspicious process names
         plugins_data = engine_results.get("plugins", {})
-        pslist_data = plugins_data.get("windows.pslist", {})
+        pslist_data = plugins_data.get("windows.pslist", plugins_data.get("linux.pslist", {}))
         if pslist_data and "processes" in pslist_data:
-            suspicious_names = ["malware.exe", "nc.exe", "mimikatz.exe", "cmd.exe", "powershell.exe"]
+            suspicious_names = ["malware.exe", "nc.exe", "mimikatz.exe", "cmd.exe", "powershell.exe",
+                                "nc", "netcat", "ncat", "cryptominer", "backdoor", "rootkit", "python-shell"]
             for proc in pslist_data["processes"]:
-                if proc["name"] in suspicious_names:
+                if any(name in proc["name"].lower() for name in suspicious_names):
                     self.alerts.append(f"Suspicious process detected: {proc['name']} (PID: {proc['pid']})")
                     if self.severity != "high":
                         self.severity = "medium"
-                    if proc["name"] in ["malware.exe", "mimikatz.exe", "nc.exe"]:
+                    if any(name in proc["name"].lower() for name in ["malware", "mimikatz", "nc", "cryptominer", "rootkit"]):
                         self.severity = "high"
         
         # 3. YARA matches

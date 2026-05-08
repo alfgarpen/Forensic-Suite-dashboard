@@ -102,6 +102,9 @@
 
         <div class="meta" style="margin-top: 20px;">
             <p>Archivo de Volcado: <span>{{ dump_file }}</span></p>
+            <p>Tamaño: <span>{{ dump_size }} bytes</span></p>
+            <p>MD5: <span>{{ dump_hashes.md5 }}</span></p>
+            <p>SHA256: <span>{{ dump_hashes.sha256 }}</span></p>
             <p>Perfil SO Detectado: <span>{{ os_profile }}</span></p>
             <p>Plugins Ejecutados: <span>{{ plugins_run | join(', ') }}</span></p>
             <p>Generado el: <span>{{ generation_time }}</span></p>

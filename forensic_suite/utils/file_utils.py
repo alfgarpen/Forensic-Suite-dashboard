@@ -35,3 +35,18 @@ class FileUtils:
         except Exception as e:
             logger.error(f"Error ensuring directory {dir_path}: {e}")
             return False
+
+    @staticmethod
+    def is_valid_extension(filename: str) -> bool:
+        allowed = {'.raw', '.mem'}
+        return os.path.splitext(filename)[1].lower() in allowed
+
+    @staticmethod
+    def get_active_dump(data_dir: str) -> dict:
+        state_file = os.path.join(data_dir, 'current_dump.json')
+        return FileUtils.read_json(state_file)
+
+    @staticmethod
+    def set_active_dump(data_dir: str, dump_info: dict) -> bool:
+        state_file = os.path.join(data_dir, 'current_dump.json')
+        return FileUtils.write_json(state_file, dump_info)

@@ -19,18 +19,40 @@ def cli():
 @click.option('--algo', '-a', default='md5', help='Hashing algorithm (md5, sha1, sha256).')
 def acquire(output, algo):
     """Acquire system RAM and generate cryptographic hash."""
+    if not FileUtils.is_valid_extension(output):
+        click.echo("[-] Error: Invalid file extension. Only .raw and .mem are allowed.")
+        return
+
     click.echo("[*] Starting memory acquisition...")
     acq = Acquisition()
     out = acq.acquire_memory(output)
     if out:
-        hash_info = acq.verify_dump(out, algo)
+        # Calculate hashes for the state
+        md5 = acq.verify_dump(out, 'md5')
+        sha1 = acq.verify_dump(out, 'sha1')
+        sha256 = acq.verify_dump(out, 'sha256')
+        
+        from datetime import datetime
+        dump_info = {
+            "path": out,
+            "uploaded_at": datetime.now().isoformat(),
+            "hashes": {
+                "md5": md5['hash'] if md5 else "",
+                "sha1": sha1['hash'] if sha1 else "",
+                "sha256": sha256['hash'] if sha256 else ""
+            },
+            "type": os.path.splitext(out)[1][1:].lower()
+        }
+        FileUtils.set_active_dump('data', dump_info)
+        
         click.echo(f"[+] Acquisition complete. Output saved to {out}")
-        click.echo(f"[+] {algo.upper()}: {hash_info['hash']}")
+        click.echo(f"[+] Registered as active dump.")
+        click.echo(f"[+] {algo.upper()}: {md5['hash'] if algo == 'md5' else (sha1['hash'] if algo == 'sha1' else sha256['hash'])}")
     else:
         click.echo("[-] Acquisition failed.")
 
 @cli.command()
-@click.option('--dump', '-d', default='data/memory.raw', help='Path to the raw memory dump.')
+@click.option('--dump', '-d', help='Path to the raw memory dump.')
 @click.option('--plugins', '-p', multiple=True, help='Plugins to run. E.g., windows.pslist')
 @click.option('--output', '-o', default='data/results.json', help='Path to save JSON results.')
 @click.option('--list-plugins', is_flag=True, help='List available plugins.')
@@ -46,9 +68,16 @@ def analyze(dump, plugins, output, list_plugins):
 
     plugin_list = list(plugins) if plugins else None
     
+    if not dump:
+        active = FileUtils.get_active_dump('data')
+        dump = active.get('path')
+        if not dump:
+             click.echo("[-] Error: No dump provided and no active dump found. Run 'acquire' or provide --dump.")
+             return
+
     click.echo(f"[*] Analyzing dump {dump}")
     if not os.path.exists(dump):
-        click.echo(f"[-] Error: Dump file {dump} not found. Run 'acquire' first.")
+        click.echo(f"[-] Error: Dump file {dump} not found.")
         return
 
     engine = AnalysisEngine(dump)
@@ -64,6 +93,13 @@ def analyze(dump, plugins, output, list_plugins):
     
     if FileUtils.write_json(output, res):
         click.echo(f"[+] Analysis complete. Results saved to {output}")
+        
+        # Link results to active dump in state
+        active = FileUtils.get_active_dump('data')
+        if active.get('path') == dump:
+            active['last_results'] = output
+            FileUtils.set_active_dump('data', active)
+            
         threats = res.get('threats', {})
         if threats.get('alerts'):
              click.secho(f"[!] Warning: Found {len(threats['alerts'])} alerts (Severity: {threats['severity']})", fg="red" if threats['severity'] == "high" else "yellow")
@@ -71,10 +107,14 @@ def analyze(dump, plugins, output, list_plugins):
         click.echo(f"[-] Error saving results to {output}")
 
 @cli.command()
-@click.option('--results', '-r', default='data/results.json', help='Path to analysis results JSON.')
+@click.option('--results', '-r', help='Path to analysis results JSON.')
 @click.option('--output', '-o', default='data/report.html', help='Path to output HTML report.')
 def report(results, output):
     """Generate an HTML report."""
+    if not results:
+        active = FileUtils.get_active_dump('data')
+        results = active.get('last_results', 'data/results.json')
+
     click.echo(f"[*] Generating report from {results}...")
     res_data = FileUtils.read_json(results)
     if not res_data:

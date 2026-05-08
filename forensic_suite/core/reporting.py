@@ -43,8 +43,16 @@ class Reporting:
                 else:
                     findings[p_name] = {"Error": p_data.get("error", "Failed")}
 
+            metadata = results_data.get("metadata", {})
+            dump_path = metadata.get("dump_path", "memory.raw")
+            dump_filename = os.path.basename(dump_path)
+            dump_hashes = metadata.get("hashes", {"md5": "N/A", "sha256": "N/A"})
+            dump_size = metadata.get("dump_size_bytes", 0)
+
             html_content = template.render(
-                dump_file="memory.raw",  # Defaulting locally since we don't store it in results directly now
+                dump_file=dump_filename,
+                dump_hashes=dump_hashes,
+                dump_size=dump_size,
                 os_profile=os_profile.strip(),
                 plugins_run=plugins_run,
                 findings=findings,
