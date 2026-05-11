@@ -3,7 +3,7 @@ import shutil
 import hashlib
 from datetime import datetime
 from forensic_suite.utils.file_utils import FileUtils
-from forensic_suite.utils.os_detector import detect_os_from_dump
+from forensic_suite.utils.os_detector import detect_os_from_dump, get_local_os
 
 class EvidenceManager:
     def __init__(self, data_dir: str, upload_dir: str = 'uploads'):
@@ -23,6 +23,9 @@ class EvidenceManager:
         size = FileUtils.get_file_size(file_path)
         sha256 = self._calculate_sha256(file_path)
         detected_os = detect_os_from_dump(file_path)
+        
+        if detected_os == "unknown" and source == "local_acquisition":
+            detected_os = get_local_os()
         
         evidence_info = {
             "active_memory_dump": file_path,

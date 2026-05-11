@@ -44,7 +44,14 @@ class AnalysisEngine:
                     self.log_callback(f"[+] Advanced detection confirmed: {detected_os}")
                     break
         
-        # 3. Resolve Plugins to run
+        # 3. Final Fallback: use local system info if still unknown
+        if detected_os == "unknown":
+            from forensic_suite.utils.os_detector import get_local_os
+            self.log_callback("[*] Volatility could not detect OS. Falling back to local system info...")
+            detected_os = get_local_os()
+            self.log_callback(f"[+] Fallback detection (Local OS): {detected_os}")
+        
+        # 4. Resolve Plugins to run
         if not plugins:
             # Load default plugins for detected OS
             os_data = get_plugins_for_os(detected_os)
@@ -62,7 +69,7 @@ class AnalysisEngine:
             "artifacts": {}
         }
 
-        # 4. Execute Plugins
+        # 5. Execute Plugins
         for p_name in plugins:
             self.log_callback(f"[+] Executing plugin: {p_name}")
             
@@ -80,13 +87,15 @@ class AnalysisEngine:
             else:
                 self.log_callback(f"[-] {p_name} failed: {res.get('error')}")
                 
-                # 5. Fallback
+                # 6. Fallback
                 fallback_cat = CommandFallback.map_plugin_to_category(p_name)
                 if fallback_cat:
                     self.log_callback(f"[*] Attempting native fallback for {fallback_cat}...")
                     f_res = CommandFallback.run_fallback(fallback_cat)
                     if f_res["status"] == "success":
-                        results["artifacts"][f_name := f"fallback.{fallback_cat}"] = f_res
+                        # Parse the fallback output (it's a string)
+                        parsed_fallback = ArtifactParser.parse(f"fallback.{fallback_cat}", f_res["output"])
+                        results["artifacts"][f"fallback.{fallback_cat}"] = parsed_fallback
                         self.log_callback(f"[+] Fallback for {fallback_cat} successful.")
                     else:
                         self.log_callback(f"[-] Fallback failed: {f_res.get('error')}")

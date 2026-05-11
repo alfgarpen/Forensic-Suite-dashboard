@@ -1,17 +1,62 @@
-# artifact_parser.py
-
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
+class GenericTableParser:
+    """
+    Utility to parse columnar text output (like ps, netstat, tasklist) into a list of dicts.
+    """
+    @staticmethod
+    def parse_text_table(text: str) -> list:
+        lines = [line.strip() for line in text.strip().split('\n') if line.strip()]
+        if not lines:
+            return []
+
+        # Heuristic: First line is usually the header
+        header_line = lines[0]
+        # Split header by multiple spaces
+        headers = re.split(r'\s{2,}', header_line)
+        if len(headers) < 2:
+            # Try splitting by single space if it looks like a simple table
+            headers = header_line.split()
+
+        results = []
+        for line in lines[1:]:
+            # Attempt to split line according to header positions or whitespace
+            # Simple approach: split by whitespace but try to match header count
+            parts = re.split(r'\s+', line, maxsplit=len(headers) - 1)
+            
+            if len(parts) == len(headers):
+                row = {headers[i]: parts[i] for i in range(len(headers))}
+                results.append(row)
+            else:
+                # If splitting fails to match header count, store as raw if necessary or skip
+                # For now, we skip malformed lines in this generic parser
+                pass
+        
+        return results
+
 class ArtifactParser:
     @staticmethod
-    def parse(plugin_name: str, raw_data: list) -> dict:
+    def parse(plugin_name: str, raw_data) -> dict:
         """
-        Normalizes raw Volatility 3 JSON data into a structured format.
+        Normalizes raw Volatility 3 JSON data or fallback text into a structured format.
         """
+        # Handle fallback text output
+        if isinstance(raw_data, str):
+            table_data = GenericTableParser.parse_text_table(raw_data)
+            if table_data:
+                return {
+                    "status": "success",
+                    "type": "table",
+                    "items": table_data,
+                    "count": len(table_data)
+                }
+            return {"status": "success", "output": raw_data}
+
         if not isinstance(raw_data, list):
-            return {"error": "Invalid data format (expected list)"}
+            return {"error": "Invalid data format (expected list or string)"}
 
         if "pslist" in plugin_name:
             return ArtifactParser._parse_pslist(raw_data)

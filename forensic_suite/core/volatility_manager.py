@@ -21,20 +21,28 @@ class VolatilityManager:
 
     def _detect_volatility(self) -> Optional[str]:
         """Attempts to find the Volatility 3 executable or module."""
-        # 1. Check if 'vol.py' exists in current or parent dirs
+        # 1. Check for 'vol' or 'volatility' in the same directory as python (common for venvs)
+        python_bin_dir = os.path.dirname(sys.executable)
+        for cmd_name in ["vol", "volatility", "volatility3"]:
+            cmd_path = os.path.join(python_bin_dir, cmd_name)
+            if os.path.exists(cmd_path):
+                return cmd_path
+
+        # 2. Check if 'vol.py' exists in common locations
         for path in [".", "..", "Volatility3", "../Volatility3"]:
             vol_py = os.path.join(path, "vol.py")
             if os.path.exists(vol_py):
                 return f"{sys.executable} {vol_py}"
 
-        # 2. Check if it's installed as a module
+        # 3. Check if it's installed as a module (using the correct entry point if possible)
         try:
             import volatility3
-            return f"{sys.executable} -m volatility3.cli"
+            # We don't use -m volatility3.cli as it often lacks __main__.py
+            # If we reached here, the package exists, but we prefer finding the executable
         except ImportError:
             pass
 
-        # 3. Check if 'vol' or 'volatility' is in PATH
+        # 4. Check if 'vol' or 'volatility' is in PATH
         for cmd in ["vol", "volatility", "volatility3"]:
             try:
                 subprocess.run([cmd, "--version"], capture_output=True, check=True)

@@ -1,4 +1,17 @@
 import os
+import sys
+
+def get_local_os() -> str:
+    """
+    Returns the current machine's OS as 'windows', 'linux', or 'mac'.
+    """
+    if sys.platform == "win32":
+        return "windows"
+    elif sys.platform.startswith("linux"):
+        return "linux"
+    elif sys.platform == "darwin":
+        return "mac"
+    return "unknown"
 
 def detect_os_from_dump(dump_path: str) -> str:
     """
