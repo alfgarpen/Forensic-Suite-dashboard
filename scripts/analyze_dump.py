@@ -96,23 +96,46 @@ class DumpAnalyzer:
         return results
 
 @click.command()
-@click.option('--dump', '-d', required=True, help='Path to the raw memory dump.')
+@click.option('--dump', '-d', help='Path to the raw memory dump (optional if active evidence exists).')
 @click.option('--plugins', '-p', multiple=True, default=['windows.info.Info', 'windows.pslist.PsList'], help='Volatility plugins to run.')
 @click.option('--output', '-o', default='data/results.json', help='Path to save results.')
 def main(dump, plugins, output):
     """Analyzes a memory dump using Volatility plugins (mocked)."""
     click.echo(f"--- Digital Forensics: Dump Analysis ---")
-    if not os.path.exists(dump):
-        click.echo(f"Error: Dump file {dump} not found.")
+    
+    data_dir = 'data'
+    state_file = os.path.join(data_dir, 'current_dump.json')
+    
+    if not dump:
+        if os.path.exists(state_file):
+            with open(state_file, 'r') as f:
+                state = json.load(f)
+                dump = state.get('active_memory_dump')
+                click.echo(f"Using active evidence: {dump}")
+        
+    if not dump or not os.path.exists(dump):
+        click.echo(f"Error: No memory dump specified and no active evidence found.")
         return
         
     analyzer = DumpAnalyzer(dump)
     analyzer.detect_os()
     res = analyzer.run_plugins(plugins)
     
+    # Add source reference
+    res["source_dump"] = dump
+    
     os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
     with open(output, 'w') as f:
         json.dump(res, f, indent=4)
+        
+    # Update state if it exists
+    if os.path.exists(state_file):
+        with open(state_file, 'r') as f:
+            state = json.load(f)
+        state['last_results'] = output
+        state['status'] = 'analysis_completed'
+        with open(state_file, 'w') as f:
+            json.dump(state, f, indent=4)
         
     click.echo(f"Analysis complete. Results saved to {output}")
 

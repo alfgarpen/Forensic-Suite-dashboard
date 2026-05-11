@@ -411,11 +411,32 @@
             </div>
         </div>
 
-        <div class="db-nav">
-            <button class="nav-tab active" onclick="switchTab('overview')">Visión general</button>
-            <button class="nav-tab" onclick="switchTab('script1')">01 · Adquisición<span class="num">acq</span></button>
-            <button class="nav-tab" onclick="switchTab('script2')">02 · Análisis<span class="num">vol</span></button>
-            <button class="nav-tab" onclick="switchTab('script3')">03 · Reporte<span class="num">html</span></button>
+        <!-- SECCIÓN EVIDENCIA ACTIVA -->
+        <div id="active-evidence-bar" style="background: var(--c-panel); border-bottom: 1px solid var(--c-border); padding: 12px 24px; display: none;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--c-text-secondary); text-transform: uppercase;">Archivo Cargado</span>
+                        <span id="ev-filename" style="font-size: 13px; font-weight: 600; color: var(--c-accent-green);">memory.raw</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--c-text-secondary); text-transform: uppercase;">Tamaño</span>
+                        <span id="ev-size" style="font-size: 13px; font-weight: 600;">0 MB</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--c-text-secondary); text-transform: uppercase;">OS Detectado</span>
+                        <span id="ev-os" style="font-size: 13px; font-weight: 600;">Windows 11 x64</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--c-text-secondary); text-transform: uppercase;">Hash SHA256</span>
+                        <span id="ev-hash" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--c-text-secondary);">-</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div id="ev-status-dot" class="status-dot"></div>
+                    <span id="ev-status" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--c-accent-green); text-transform: uppercase;">Listo para análisis</span>
+                </div>
+            </div>
         </div>
 
         <div class="db-content">
@@ -528,7 +549,14 @@
         </div>
     </div>
 
-    <script>
+        <div class="db-nav">
+            <button class="nav-tab active" onclick="switchTab('overview')">Visión general</button>
+            <button class="nav-tab" onclick="switchTab('script1')">01 · Adquisición<span class="num">acq</span></button>
+            <button class="nav-tab" onclick="switchTab('script2')">02 · Análisis<span class="num">vol</span></button>
+            <button class="nav-tab" onclick="switchTab('script3')">03 · Reporte<span class="num">html</span></button>
+        </div>
+
+        <script>
         function switchTab(id) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -554,18 +582,53 @@
                 document.getElementById('sys-info').innerText = "Sysinfo Inaccesible (Error)";
             }
         }
+
+        async function updateActiveEvidence() {
+            try {
+                let res = await fetch('/api/current_dump');
+                let data = await res.json();
+                if (data && data.active_memory_dump) {
+                    document.getElementById('active-evidence-bar').style.display = 'block';
+                    document.getElementById('ev-filename').innerText = data.filename;
+                    document.getElementById('ev-size').innerText = data.size_human;
+                    document.getElementById('ev-os').innerText = data.detected_os;
+                    document.getElementById('ev-hash').innerText = data.hash.substring(0, 32) + "...";
+                    document.getElementById('ev-status').innerText = data.status.replace(/_/g, ' ');
+                    
+                    const dot = document.getElementById('ev-status-dot');
+                    if (data.status === 'ready_for_analysis') {
+                        dot.style.background = 'var(--c-accent-green)';
+                    } else if (data.status === 'analysis_completed') {
+                        dot.style.background = 'var(--c-accent-blue)';
+                    } else {
+                        dot.style.background = 'var(--c-accent-amber)';
+                    }
+                } else {
+                    document.getElementById('active-evidence-bar').style.display = 'none';
+                }
+            } catch (e) {
+                console.error("Error updating active evidence", e);
+            }
+        }
+
         updateSystemInfo();
+        updateActiveEvidence();
 
         async function triggerAcquisition() {
-            logTo('term-acq', "Iniciando memory_acquisition.py (modo Mock)...");
+            logTo('term-acq', "Iniciando memory_acquisition.py...");
             logTo('term-global', "[Fase 1] Adquisición iniciada.");
             document.getElementById('btn-acq').disabled = true;
 
             try {
                 let res = await fetch('/api/acquire', { method: 'POST' });
                 let data = await res.json();
-                logTo('term-acq', `Completado: ${data.message} Hash: ${data.hash}`);
-                logTo('term-global', `[Fase 1] OK. Hash: ${data.hash}`);
+                if (data.status === 'success') {
+                    logTo('term-acq', `Completado: ${data.message}`);
+                    logTo('term-global', `[Fase 1] OK. Evidencia registrada.`);
+                    await updateActiveEvidence();
+                } else {
+                    logTo('term-acq', `Error: ${data.message}`);
+                }
             } catch (e) {
                 logTo('term-acq', "Error al adquirir memoria.");
             }
@@ -576,7 +639,7 @@
         async function uploadRaw() {
             let fileInput = document.getElementById('file-upload');
             if (fileInput.files.length === 0) {
-                logTo('term-acq', "Ningun archivo seleccionado."); return;
+                logTo('term-acq', "Ningún archivo seleccionado."); return;
             }
 
             let formData = new FormData();
@@ -588,7 +651,12 @@
             try {
                 let res = await fetch('/api/acquire', { method: 'POST', body: formData });
                 let data = await res.json();
-                logTo('term-acq', `Subido: ${data.message} Hash validado: ${data.hash}`);
+                if (data.status === 'success') {
+                    logTo('term-acq', `Subido: ${data.message}`);
+                    await updateActiveEvidence();
+                } else {
+                    logTo('term-acq', `Error: ${data.message}`);
+                }
             } catch (e) {
                 logTo('term-acq', "Error al subir.");
             }
@@ -613,7 +681,6 @@
                         cb.type = 'checkbox';
                         cb.value = p.id;
                         cb.className = 'plugin-checkbox';
-                        // Default to selecting some core plugins
                         if (['windows.info.Info', 'windows.pslist.PsList', 'windows.netscan.NetScan'].includes(p.id)) {
                             cb.checked = true;
                         }
@@ -635,11 +702,10 @@
         loadPlugins();
 
         async function triggerAnalysis() {
-            logTo('term-ana', "Iniciando analyze_dump.py...");
+            logTo('term-ana', "Iniciando analyze_dump.py sobre evidencia activa...");
             logTo('term-global', "[Fase 2] Análisis en curso...");
             document.getElementById('btn-ana').disabled = true;
 
-            // Get selected plugins
             const checkboxes = document.querySelectorAll('.plugin-checkbox:checked');
             const selectedPlugins = Array.from(checkboxes).map(cb => cb.value);
             
@@ -657,29 +723,53 @@
                 });
                 let data = await res.json();
                 if (data.status === 'success') {
-                    logTo('term-ana', "Análisis completado. JSON generado correctamente.");
-                    logTo('term-global', "[Fase 2] OK. Artefactos exportados a results.json.");
+                    // Start polling for status
+                    pollAnalysis(data.job_id);
                 } else {
                     logTo('term-ana', `Error: ${data.message}`);
+                    document.getElementById('btn-ana').disabled = false;
                 }
             } catch (e) {
                 logTo('term-ana', "Error de red al ejecutar análisis.");
+                document.getElementById('btn-ana').disabled = false;
             }
-            document.getElementById('btn-ana').disabled = false;
             return true;
+        }
+
+        async function pollAnalysis(jobId) {
+            try {
+                let res = await fetch(`/api/status/${jobId}`);
+                let data = await res.json();
+                
+                if (data.status === 'completed') {
+                    logTo('term-ana', "Análisis completado satisfactoriamente.");
+                    logTo('term-global', "[Fase 2] OK. Artefactos extraídos.");
+                    document.getElementById('btn-ana').disabled = false;
+                    await updateActiveEvidence();
+                } else if (data.status === 'failed') {
+                    logTo('term-ana', `Error en análisis: ${data.error}`);
+                    document.getElementById('btn-ana').disabled = false;
+                } else {
+                    logTo('term-ana', "Analizando volcado... (en curso)");
+                    setTimeout(() => pollAnalysis(jobId), 2000);
+                }
+            } catch (e) {
+                logTo('term-ana', "Error consultando estado.");
+                document.getElementById('btn-ana').disabled = false;
+            }
         }
 
         async function triggerReport() {
             logTo('term-rep', "Ejecutando generate_report.py...");
-            logTo('term-global', "[Fase 3] Renderizando Jinja2...");
+            logTo('term-global', "[Fase 3] Renderizando reporte final...");
             document.getElementById('btn-rep').disabled = true;
 
             try {
                 let res = await fetch('/api/report', { method: 'POST' });
                 let data = await res.json();
                 if (data.status === 'success') {
-                    logTo('term-rep', "Reporte Jinja2 generado con éxito.");
-                    logTo('term-global', "[Fase 3] OK. Informe HTML listo para descargar.");
+                    logTo('term-rep', "Reporte generado e integrado con metadatos de evidencia.");
+                    logTo('term-global', "[Fase 3] OK. Informe listo.");
                     document.getElementById('download-card').style.display = 'block';
                 } else {
                     logTo('term-rep', `Fallo: ${data.message}`);
@@ -690,20 +780,21 @@
             document.getElementById('btn-rep').disabled = false;
         }
 
-        // Para control automático del pipeline desde el Dashboard
         async function runFullPipeline() {
             const btn = document.getElementById('btn-full-flow');
             btn.disabled = true;
             btn.innerText = "Procesando...";
 
             await triggerAcquisition();
-            await triggerAnalysis();
-            await triggerReport();
-
+            // We need to wait for acquisition to finish as it's async in terms of the backend registration
+            // but the api call returns when it's done.
+            
+            // For analysis, it's async, so we'd need to wait for completion.
+            // Simplified here: manually run each step if they depend on each other.
+            
             btn.innerText = "▶ Ejecutar Memdump & Pipeline Completo";
             btn.disabled = false;
-
-            alert("Pipeline completado. El informe está listo en la pestaña 03.");
+            alert("Flujo iniciado. Por favor monitorea las pestañas de Análisis y Reporte.");
         }
     </script>
 </body>

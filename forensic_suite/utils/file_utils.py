@@ -38,8 +38,25 @@ class FileUtils:
 
     @staticmethod
     def is_valid_extension(filename: str) -> bool:
-        allowed = {'.raw', '.mem'}
+        allowed = {'.raw', '.mem', '.dmp'}
         return os.path.splitext(filename)[1].lower() in allowed
+
+    @staticmethod
+    def get_file_size(file_path: str) -> int:
+        if os.path.exists(file_path):
+            return os.path.getsize(file_path)
+        return 0
+
+    @staticmethod
+    def format_size(size_bytes: int) -> str:
+        if size_bytes == 0:
+            return "0B"
+        size_name = ("B", "KB", "MB", "GB", "TB")
+        import math
+        i = int(math.floor(math.log(size_bytes, 1024)))
+        p = math.pow(1024, i)
+        s = round(size_bytes / p, 2)
+        return "%s %s" % (s, size_name[i])
 
     @staticmethod
     def get_active_dump(data_dir: str) -> dict:

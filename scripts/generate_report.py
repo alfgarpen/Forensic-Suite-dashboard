@@ -7,7 +7,7 @@ class ReportGenerator:
     def __init__(self, templates_dir):
         self.env = Environment(loader=FileSystemLoader(templates_dir))
 
-    def generate(self, results_path, output_html):
+    def generate(self, results_path, output_html, evidence_info=None):
         if not os.path.exists(results_path):
             click.echo(f"Error: Results file {results_path} not found.")
             return False
@@ -20,13 +20,25 @@ class ReportGenerator:
         try:
             template = self.env.get_template('report_template.html')
             
-            # Additional context like generation time could be added here
-            html_content = template.render(
-                dump_file=data.get('dump_file', 'N/A'),
-                os_profile=data.get('os_profile', 'N/A'),
-                plugins_run=data.get('plugins_run', []),
-                findings=data.get('findings', {})
-            )
+            # Prepare context
+            context = {
+                "dump_file": data.get('dump_file', data.get('source_dump', 'N/A')),
+                "os_profile": data.get('os_profile', 'N/A'),
+                "plugins_run": data.get('plugins_run', []),
+                "findings": data.get('findings', {}),
+                "generation_time": data.get('analysis_time', 'N/A')
+            }
+
+            # Add evidence metadata if provided
+            if evidence_info:
+                context.update({
+                    "dump_hashes": {"sha256": evidence_info.get('hash')},
+                    "dump_size": evidence_info.get('size_bytes'),
+                    "acquisition_source": evidence_info.get('source'),
+                    "acquisition_time": evidence_info.get('timestamp')
+                })
+
+            html_content = template.render(**context)
             
             with open(output_html, 'w', encoding='utf-8') as f:
                 f.write(html_content)
@@ -43,10 +55,20 @@ class ReportGenerator:
 def main(results, output, templates):
     """Generates an HTML report from analysis results."""
     click.echo("--- Digital Forensics: Report Generation ---")
+    
+    data_dir = 'data'
+    state_file = os.path.join(data_dir, 'current_dump.json')
+    evidence_info = None
+    
+    if os.path.exists(state_file):
+        with open(state_file, 'r') as f:
+            evidence_info = json.load(f)
+            click.echo(f"Loaded evidence metadata for: {evidence_info.get('filename')}")
+
     generator = ReportGenerator(templates)
     
     os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
-    if generator.generate(results, output):
+    if generator.generate(results, output, evidence_info):
         click.echo(f"Report generated successfully: {output}")
 
 if __name__ == '__main__':

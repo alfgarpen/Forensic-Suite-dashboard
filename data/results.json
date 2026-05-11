@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "dump_path": "/home/alfongp/Documentos/Forensic-Suite-dashboard-1/data/memory.raw",
+        "dump_path": "/home/fermin/Documentos/Forensic-Suite-dashboard/data/memory.raw",
         "dump_filename": "memory.raw",
         "dump_size_bytes": 17408,
         "detected_os": "unknown",
@@ -8,167 +8,125 @@
             "md5": "5d936e54713125488757b186c7c04a34",
             "sha256": "6862bd3d0c5e6cb9b1dc170ad7952e43f99cb68a51e6f0c798c05179411f0346"
         },
-        "analysis_time": "2026-05-08T10:18:24.970378"
+        "analysis_time": "2026-05-11T11:53:44.803070"
     },
     "system_info": {
         "status": "success",
-        "os_version": "Ubuntu 24.04.4 LTS (6.17.0-14-generic)",
+        "os_version": "Kali GNU/Linux Rolling (6.19.11+kali-amd64)",
         "architecture": "x86_64",
         "analyzed_file": "memory.raw",
         "capture_method": "Live Acquisition",
-        "system_time": "2026-05-08 08:18:24 UTC"
+        "system_time": "2026-05-11 09:53:44 UTC"
     },
     "plugins": {
         "linux.info": {
             "status": "success",
-            "os_version": "Ubuntu 24.04.4 LTS (6.17.0-14-generic)",
+            "os_version": "Kali GNU/Linux Rolling (6.19.11+kali-amd64)",
             "architecture": "x86_64",
             "analyzed_file": "memory.raw",
             "capture_method": "Live Acquisition",
-            "system_time": "2026-05-08 08:18:24 UTC"
+            "system_time": "2026-05-11 09:53:44 UTC"
         },
         "linux.netstat": {
             "status": "success",
             "connections": [
                 {
                     "protocol": "TCP",
-                    "local_addr": "127.0.0.1:45639",
-                    "foreign_addr": "127.0.0.1:37766",
+                    "local_addr": "192.168.1.36:47376",
+                    "foreign_addr": "34.107.243.93:443",
                     "state": "ESTABLISHED",
-                    "pid": 21044
+                    "pid": 16599
                 },
                 {
                     "protocol": "TCP",
-                    "local_addr": "127.0.0.1:34473",
-                    "foreign_addr": "127.0.0.1:50550",
-                    "state": "ESTABLISHED",
-                    "pid": 21212
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "127.0.0.1:48330",
+                    "local_addr": "127.0.0.1:38308",
                     "foreign_addr": "127.0.0.1:5001",
                     "state": "TIME_WAIT",
                     "pid": 0
                 },
                 {
                     "protocol": "TCP",
-                    "local_addr": "127.0.0.1:43364",
-                    "foreign_addr": "127.0.0.1:45639",
-                    "state": "ESTABLISHED",
-                    "pid": 21212
+                    "local_addr": "127.0.0.1:38298",
+                    "foreign_addr": "127.0.0.1:5001",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:38324",
+                    "foreign_addr": "127.0.0.1:5001",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:50108",
+                    "foreign_addr": "127.0.0.1:5001",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "UDP",
+                    "local_addr": "192.168.1.36:68",
+                    "foreign_addr": "192.168.1.1:67",
+                    "state": "NONE",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:33196",
+                    "foreign_addr": "127.0.0.1:5001",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:36680",
+                    "foreign_addr": "127.0.0.1:5001",
+                    "state": "TIME_WAIT",
+                    "pid": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "local_addr": "127.0.0.1:50092",
+                    "foreign_addr": "127.0.0.1:5001",
+                    "state": "TIME_WAIT",
+                    "pid": 0
                 },
                 {
                     "protocol": "TCP",
                     "local_addr": "127.0.0.1:5001",
                     "foreign_addr": "0.0.0.0:0",
                     "state": "LISTEN",
-                    "pid": 30854
+                    "pid": 40375
                 },
                 {
                     "protocol": "TCP",
-                    "local_addr": "127.0.0.1:44975",
-                    "foreign_addr": "127.0.0.1:45316",
+                    "local_addr": "192.168.1.36:53524",
+                    "foreign_addr": "151.101.133.91:443",
                     "state": "ESTABLISHED",
-                    "pid": 21044
+                    "pid": 16599
                 },
                 {
                     "protocol": "TCP",
-                    "local_addr": "10.195.157.92:58684",
-                    "foreign_addr": "141.227.128.56:443",
-                    "state": "ESTABLISHED",
-                    "pid": 0
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "10.195.157.92:59728",
-                    "foreign_addr": "34.54.84.110:443",
-                    "state": "TIME_WAIT",
-                    "pid": 0
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "10.195.157.92:60144",
-                    "foreign_addr": "34.54.84.110:443",
-                    "state": "TIME_WAIT",
-                    "pid": 0
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "127.0.0.1:54102",
+                    "local_addr": "127.0.0.1:36682",
                     "foreign_addr": "127.0.0.1:5001",
                     "state": "TIME_WAIT",
                     "pid": 0
                 },
                 {
                     "protocol": "TCP",
-                    "local_addr": "127.0.0.1:48666",
-                    "foreign_addr": "127.0.0.1:45639",
-                    "state": "ESTABLISHED",
-                    "pid": 21212
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "127.0.0.1:34215",
-                    "foreign_addr": "127.0.0.1:36124",
-                    "state": "ESTABLISHED",
-                    "pid": 21212
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": ":::39859",
-                    "foreign_addr": "0.0.0.0:0",
-                    "state": "LISTEN",
-                    "pid": 3659
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "2a02:9130:84a8:8f0d:f8c8:1664:e464:af2c:49970",
-                    "foreign_addr": "2a00:1450:4006:809::200a:443",
-                    "state": "TIME_WAIT",
-                    "pid": 0
-                },
-                {
-                    "protocol": "UDP",
-                    "local_addr": "0.0.0.0:50001",
-                    "foreign_addr": "0.0.0.0:0",
-                    "state": "NONE",
-                    "pid": 0
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "2a02:9130:84a8:8f0d:f8c8:1664:e464:af2c:40712",
-                    "foreign_addr": "2a00:1450:4003:811::200a:443",
-                    "state": "ESTABLISHED",
-                    "pid": 21212
-                },
-                {
-                    "protocol": "UDP",
-                    "local_addr": ":::5353",
-                    "foreign_addr": "0.0.0.0:0",
-                    "state": "NONE",
-                    "pid": 0
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "127.0.0.1:48314",
+                    "local_addr": "127.0.0.1:38284",
                     "foreign_addr": "127.0.0.1:5001",
                     "state": "TIME_WAIT",
                     "pid": 0
                 },
                 {
                     "protocol": "UDP",
-                    "local_addr": "0.0.0.0:5353",
+                    "local_addr": "fe80::a00:27ff:fecd:52f5:546",
                     "foreign_addr": "0.0.0.0:0",
                     "state": "NONE",
                     "pid": 0
-                },
-                {
-                    "protocol": "TCP",
-                    "local_addr": "127.0.0.1:34215",
-                    "foreign_addr": "127.0.0.1:36118",
-                    "state": "ESTABLISHED",
-                    "pid": 21212
                 }
             ]
         },
@@ -243,79 +201,30 @@
         "connections_missing_process": [
             {
                 "protocol": "TCP",
-                "local_addr": "127.0.0.1:45639",
-                "foreign_addr": "127.0.0.1:37766",
+                "local_addr": "192.168.1.36:47376",
+                "foreign_addr": "34.107.243.93:443",
                 "state": "ESTABLISHED",
-                "pid": 21044
-            },
-            {
-                "protocol": "TCP",
-                "local_addr": "127.0.0.1:34473",
-                "foreign_addr": "127.0.0.1:50550",
-                "state": "ESTABLISHED",
-                "pid": 21212
-            },
-            {
-                "protocol": "TCP",
-                "local_addr": "127.0.0.1:43364",
-                "foreign_addr": "127.0.0.1:45639",
-                "state": "ESTABLISHED",
-                "pid": 21212
+                "pid": 16599
             },
             {
                 "protocol": "TCP",
                 "local_addr": "127.0.0.1:5001",
                 "foreign_addr": "0.0.0.0:0",
                 "state": "LISTEN",
-                "pid": 30854
+                "pid": 40375
             },
             {
                 "protocol": "TCP",
-                "local_addr": "127.0.0.1:44975",
-                "foreign_addr": "127.0.0.1:45316",
+                "local_addr": "192.168.1.36:53524",
+                "foreign_addr": "151.101.133.91:443",
                 "state": "ESTABLISHED",
-                "pid": 21044
-            },
-            {
-                "protocol": "TCP",
-                "local_addr": "127.0.0.1:48666",
-                "foreign_addr": "127.0.0.1:45639",
-                "state": "ESTABLISHED",
-                "pid": 21212
-            },
-            {
-                "protocol": "TCP",
-                "local_addr": "127.0.0.1:34215",
-                "foreign_addr": "127.0.0.1:36124",
-                "state": "ESTABLISHED",
-                "pid": 21212
-            },
-            {
-                "protocol": "TCP",
-                "local_addr": ":::39859",
-                "foreign_addr": "0.0.0.0:0",
-                "state": "LISTEN",
-                "pid": 3659
-            },
-            {
-                "protocol": "TCP",
-                "local_addr": "2a02:9130:84a8:8f0d:f8c8:1664:e464:af2c:40712",
-                "foreign_addr": "2a00:1450:4003:811::200a:443",
-                "state": "ESTABLISHED",
-                "pid": 21212
-            },
-            {
-                "protocol": "TCP",
-                "local_addr": "127.0.0.1:34215",
-                "foreign_addr": "127.0.0.1:36118",
-                "state": "ESTABLISHED",
-                "pid": 21212
+                "pid": 16599
             }
         ]
     },
     "threats": {
         "alerts": [
-            "Detected 10 network connections without an associated running process.",
+            "Detected 3 network connections without an associated running process.",
             "Suspicious process detected: nc (PID: 1337)"
         ],
         "severity": "high"
