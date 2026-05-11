@@ -1,161 +1,378 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forensic Analysis Report</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap');
+
+        :root {
+            --c-bg: #0d0f14;
+            --c-surface: #131720;
+            --c-panel: #1a1f2e;
+            --c-border: #252c3d;
+            --c-accent-green: #00e5a0;
+            --c-accent-blue: #3d8ef8;
+            --c-accent-amber: #f5a623;
+            --c-accent-red: #e0484a;
+            --c-accent-purple: #a06eff;
+            --c-text-primary: #e8ecf4;
+            --c-text-secondary: #7a8399;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 20px;
-            color: #333;
+            font-family: 'Syne', sans-serif;
+            background: #000;
+            color: var(--c-text-primary);
+            padding: 30px 20px;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 30px;
+        .report-root {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--c-bg);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 229, 160, 0.08), 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        /* ── HEADER ── */
+        .report-header {
+            background: var(--c-surface);
+            border-bottom: 1px solid var(--c-border);
+            padding: 28px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header-logo {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, var(--c-accent-green), #00b37a);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px; font-weight: 700; color: #000;
+        }
+        .header-title { font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
+        .header-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; color: var(--c-text-secondary); margin-top: 3px;
+        }
+        .header-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; font-weight: 600;
+            padding: 4px 10px; border-radius: 20px;
+            background: rgba(0,229,160,0.1);
+            border: 1px solid rgba(0,229,160,0.25);
+            color: var(--c-accent-green);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ── METADATA GRID ── */
+        .meta-section { padding: 28px 36px; border-bottom: 1px solid var(--c-border); }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .meta-card {
+            background: var(--c-panel);
+            border: 1px solid var(--c-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        .meta-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px; color: var(--c-text-secondary);
+            text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
+        }
+        .meta-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; color: var(--c-accent-green);
+            word-break: break-all; line-height: 1.4;
+        }
+        .meta-value.normal { color: var(--c-text-primary); font-size: 13px; font-family: 'Syne', sans-serif; }
+
+        /* ── EXECUTIVE SUMMARY ── */
+        .exec-section { padding: 28px 36px; border-bottom: 1px solid var(--c-border); }
+        .exec-card {
+            border-radius: 10px; padding: 22px 24px;
+            border-left: 4px solid;
+        }
+        .exec-card.high   { border-color: var(--c-accent-red);    background: rgba(224,72,74,0.07); }
+        .exec-card.medium { border-color: var(--c-accent-amber);  background: rgba(245,166,35,0.07); }
+        .exec-card.low    { border-color: var(--c-accent-green);  background: rgba(0,229,160,0.07); }
+
+        .exec-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .exec-title { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+        .severity-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 600;
+            padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .severity-pill.high   { background: rgba(224,72,74,0.2);   color: var(--c-accent-red);   border: 1px solid rgba(224,72,74,0.4); }
+        .severity-pill.medium { background: rgba(245,166,35,0.2);  color: var(--c-accent-amber); border: 1px solid rgba(245,166,35,0.4); }
+        .severity-pill.low    { background: rgba(0,229,160,0.2);   color: var(--c-accent-green); border: 1px solid rgba(0,229,160,0.4); }
+
+        .threats-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; color: var(--c-text-secondary);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;
+        }
+        .threat-list { list-style: none; }
+        .threat-list li {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 13px; line-height: 1.5;
+        }
+        .threat-list li:last-child { border-bottom: none; }
+        .threat-list li::before { content: '⚠'; color: var(--c-accent-amber); flex-shrink: 0; margin-top: 1px; }
+        .no-threats { color: var(--c-accent-green); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+        /* ── FINDINGS ── */
+        .findings-section { padding: 28px 36px; }
+        .section-heading {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 24px;
+            font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--c-text-secondary);
+        }
+        .section-heading::after {
+            content: ''; flex: 1; height: 1px; background: var(--c-border);
+        }
+
+        .plugin-block { margin-bottom: 36px; }
+        .plugin-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 14px;
+        }
+        .plugin-icon {
+            width: 28px; height: 28px; border-radius: 6px;
+            background: rgba(61,142,248,0.15);
+            border: 1px solid rgba(61,142,248,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+        }
+        .plugin-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px; font-weight: 600; color: var(--c-accent-blue);
+        }
+        .plugin-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; padding: 2px 8px; border-radius: 10px;
+            background: rgba(61,142,248,0.1); color: var(--c-accent-blue);
+            border: 1px solid rgba(61,142,248,0.2);
+        }
+
+        /* ── TABLES ── */
+        .table-wrapper {
+            overflow-x: auto;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--c-border);
         }
-
-        h1 {
-            color: #0056b3;
-            border-bottom: 2px solid #0056b3;
-            padding-bottom: 10px;
-        }
-
-        h2 {
-            color: #333;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-            margin-top: 30px;
-        }
-
-        .meta {
-            background: #eef2f5;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .meta p {
-            margin: 5px 0;
-            font-weight: bold;
-        }
-
-        .meta span {
-            font-weight: normal;
-            font-family: monospace;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
         }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
+        thead tr { background: rgba(61,142,248,0.1); }
         th {
-            background-color: #0056b3;
-            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            color: var(--c-accent-blue);
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid var(--c-border);
+            white-space: nowrap;
+        }
+        td {
+            padding: 9px 14px;
+            border-bottom: 1px solid rgba(37,44,61,0.6);
+            color: var(--c-text-primary);
+            vertical-align: top;
+            line-height: 1.4;
+        }
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.02); }
+        tbody tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+
+        /* key-value table variant */
+        .kv-table thead tr { background: rgba(0,229,160,0.08); }
+        .kv-table th { color: var(--c-accent-green); }
+        .kv-table td:first-child {
+            color: var(--c-text-secondary);
+            font-size: 11px; white-space: nowrap; width: 200px;
+        }
+        .kv-table td:last-child { color: var(--c-text-primary); }
+
+        /* raw/parsed text table */
+        .raw-table thead tr { background: rgba(160,110,255,0.08); }
+        .raw-table th { color: var(--c-accent-purple); }
+
+        /* empty / error states */
+        .empty-state {
+            padding: 20px; text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; color: var(--c-text-secondary);
+            background: var(--c-panel); border-radius: 8px;
+            border: 1px dashed var(--c-border);
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .plugin-section {
-            margin-bottom: 40px;
-        }
-
-        .executive-summary {
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .executive-summary.high { border-left: 5px solid #e0484a; background-color: #faeaea; }
-        .executive-summary.medium { border-left: 5px solid #f5a623; background-color: #fdf5e8; }
-        .executive-summary.low { border-left: 5px solid #00e5a0; background-color: #e6fcf5; }
-        
-        .executive-summary h2 {
-            margin-top: 0;
-            border-bottom: none;
-            color: inherit;
+        /* footer */
+        .report-footer {
+            padding: 20px 36px;
+            border-top: 1px solid var(--c-border);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; color: var(--c-text-secondary);
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Reporte de Análisis Forense</h1>
+<div class="report-root">
 
-        <div class="meta" style="margin-top: 20px;">
-            <p>Archivo de Volcado: <span>memory.raw</span></p>
-            <p>Tamaño: <span>0 bytes</span></p>
-            <p>MD5: <span>N/A</span></p>
-            <p>SHA256: <span>N/A</span></p>
-            <p>Perfil SO Detectado: <span>unknown (via Volatility )</span></p>
-            <p>Plugins Ejecutados: <span>fallback.system, fallback.processes</span></p>
-            <p>Generado el: <span>2026-05-11 14:45:12</span></p>
+    <!-- HEADER -->
+    <div class="report-header">
+        <div class="header-left">
+            <div class="header-logo">▲</div>
+            <div>
+                <div class="header-title">Reporte de Análisis Forense</div>
+                <div class="header-subtitle">Digital Forensics Suite · Memory Analysis Report</div>
+            </div>
         </div>
+        <div class="header-badge">Confidencial</div>
+    </div>
 
-        <div class="executive-summary low">
-            <h2>Executive Summary</h2>
-            <p style="margin-top: 10px;"><strong>Overall Severity:</strong> <span style="text-transform: uppercase;">low</span></p>
-            <h3 style="margin-top: 15px; font-size: 1.1em;">Detected Threats:</h3>
+    <!-- METADATA -->
+    <div class="meta-section">
+        <div class="meta-grid">
+            <div class="meta-card">
+                <div class="meta-label">Archivo de Volcado</div>
+                <div class="meta-value normal">memory.raw</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Tamaño</div>
+                <div class="meta-value normal">0 bytes</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">MD5</div>
+                <div class="meta-value">N/A</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">SHA256</div>
+                <div class="meta-value">N/A</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Perfil SO Detectado</div>
+                <div class="meta-value normal">unknown (via Volatility )</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Plugins Ejecutados</div>
+                <div class="meta-value normal">fallback.system, fallback.processes</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Generado el</div>
+                <div class="meta-value normal">2026-05-11 15:24:35</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="exec-section">
+        <div class="exec-card low">
+            <div class="exec-top">
+                <div class="exec-title">Executive Summary</div>
+                <span class="severity-pill low">low</span>
+            </div>
+            <div class="threats-label">Amenazas Detectadas</div>
             
-            <p>No threats detected.</p>
+            <div class="no-threats">✓ No se detectaron amenazas.</div>
             
         </div>
+    </div>
+
+    <!-- FINDINGS -->
+    <div class="findings-section">
+        <div class="section-heading">Resultados por Plugin</div>
 
         
-        <div class="plugin-section">
-            <h2>Resultados: fallback.system</h2>
+        <div class="plugin-block">
+            <div class="plugin-header">
+                <div class="plugin-icon">⚙</div>
+                <div class="plugin-name">fallback.system</div>
+                
+                    <span class="plugin-count">1 campos</span>
+                
+            </div>
 
             
-            <!-- Dictionary data (e.g. windows.info) -->
-            <table>
-                <tr>
-                    <th>Propiedad</th>
-                    <th>Valor</th>
-                </tr>
+            
                 
-                <tr>
-                    <td>Raw Output</td>
-                    <td><code>Linux kali 6.19.11+kali-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.19.11-1kali1 (2026-04-09) x86_64 GNU/Linux
-</code></td>
-                </tr>
+                <div class="table-wrapper">
+                    <table class="kv-table">
+                        <thead>
+                            <tr><th>Propiedad</th><th>Valor</th></tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                <td>Raw Output</td>
+                                <td>
+                                    
+                                    
+                                        Linux kali 6.19.11+kali-amd64 #1 SMP PREEMPT_DYNAMIC Kali 6.19.11-1kali1 (2026-04-09) x86_64 GNU/Linux
+
+                                    
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
                 
-            </table>
+
+            
             
         </div>
         
-        <div class="plugin-section">
-            <h2>Resultados: fallback.processes</h2>
+        <div class="plugin-block">
+            <div class="plugin-header">
+                <div class="plugin-icon">⚙</div>
+                <div class="plugin-name">fallback.processes</div>
+                
+                    <span class="plugin-count">1 campos</span>
+                
+            </div>
 
             
-            <!-- Dictionary data (e.g. windows.info) -->
-            <table>
-                <tr>
-                    <th>Propiedad</th>
-                    <th>Valor</th>
-                </tr>
+            
                 
-                <tr>
-                    <td>Raw Output</td>
-                    <td><code>USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root           1  0.0  0.0  24692 15296 ?        Ss   14:26   0:00 /sbin/init splash
+                <div class="table-wrapper">
+                    <table class="kv-table">
+                        <thead>
+                            <tr><th>Propiedad</th><th>Valor</th></tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                <td>Raw Output</td>
+                                <td>
+                                    
+                                    
+                                        USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0  24692 15336 ?        Ss   14:26   0:00 /sbin/init splash
 root           2  0.0  0.0      0     0 ?        S    14:26   0:00 [kthreadd]
 root           3  0.0  0.0      0     0 ?        S    14:26   0:00 [pool_workqueue_release]
 root           4  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-rcu_gp]
@@ -175,9 +392,9 @@ root          20  0.0  0.0      0     0 ?        S    14:26   0:00 [cpuhp/0]
 root          21  0.0  0.0      0     0 ?        S    14:26   0:00 [cpuhp/1]
 root          22  0.0  0.0      0     0 ?        S    14:26   0:00 [idle_inject/1]
 root          23  0.0  0.0      0     0 ?        S    14:26   0:00 [migration/1]
-root          24  0.0  0.0      0     0 ?        S    14:26   0:00 [ksoftirqd/1]
+root          24  0.0  0.0      0     0 ?        S    14:26   0:01 [ksoftirqd/1]
 root          26  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/1:0H-events_highpri]
-root          30  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u10:1-iou_exit]
+root          30  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u10:1-flush-8:0]
 root          31  0.0  0.0      0     0 ?        S    14:26   0:00 [kdevtmpfs]
 root          32  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-inet_frag_wq]
 root          33  0.0  0.0      0     0 ?        I    14:26   0:00 [rcu_tasks_kthread]
@@ -186,9 +403,8 @@ root          35  0.0  0.0      0     0 ?        I    14:26   0:00 [rcu_tasks_tr
 root          36  0.0  0.0      0     0 ?        S    14:26   0:00 [kauditd]
 root          37  0.0  0.0      0     0 ?        S    14:26   0:00 [khungtaskd]
 root          38  0.0  0.0      0     0 ?        S    14:26   0:00 [oom_reaper]
-root          39  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u9:1-events_unbound]
 root          40  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-writeback]
-root          41  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u9:2-writeback]
+root          41  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u9:2-ext4-rsv-conversion]
 root          42  0.0  0.0      0     0 ?        S    14:26   0:00 [kcompactd0]
 root          43  0.0  0.0      0     0 ?        SN   14:26   0:00 [ksmd]
 root          44  0.0  0.0      0     0 ?        SN   14:26   0:00 [khugepaged]
@@ -206,7 +422,6 @@ root          56  0.0  0.0      0     0 ?        I    14:26   0:00 [kdamond.0]
 root          59  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-kthrotld]
 root          60  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-acpi_thermal_pm]
 root          61  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-mld]
-root          62  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/1:2-cgroup_free]
 root          63  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-ipv6_addrconf]
 root          64  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/1:1H-kblockd]
 root          65  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-kstrp]
@@ -214,7 +429,7 @@ root          66  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u8:1
 root          73  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/u11:0]
 root          74  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/u12:0-ttm]
 root          75  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/u13:0-ttm]
-root         105  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u10:3-ext4-rsv-conversion]
+root         105  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u10:3-events_unbound]
 root         206  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-ata_sff]
 root         207  0.0  0.0      0     0 ?        S    14:26   0:00 [scsi_eh_0]
 root         208  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-scsi_tmf_0]
@@ -226,14 +441,14 @@ root         213  0.0  0.0      0     0 ?        S    14:26   0:00 [scsi_eh_3]
 root         214  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-scsi_tmf_3]
 root         215  0.0  0.0      0     0 ?        S    14:26   0:00 [scsi_eh_4]
 root         216  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-scsi_tmf_4]
-root         217  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u10:4-kvfree_rcu_reclaim]
+root         217  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u10:4-writeback]
 root         220  0.0  0.0      0     0 ?        S    14:26   0:00 [irq/18-vmwgfx]
 root         221  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-ttm]
 root         225  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/0:2H-kblockd]
 root         268  0.0  0.0      0     0 ?        S    14:26   0:00 [jbd2/sda1-8]
 root         269  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-ext4-rsv-conversion]
-root         331  0.0  0.1  50356 18300 ?        Ss   14:26   0:00 /usr/lib/systemd/systemd-journald
-root         337  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u9:3-kvfree_rcu_reclaim]
+root         331  0.0  0.1  50356 16536 ?        Ss   14:26   0:00 /usr/lib/systemd/systemd-journald
+root         337  0.0  0.0      0     0 ?        I    14:26   0:00 [kworker/u9:3-events_unbound]
 root         363  0.0  0.0  39352 12816 ?        Ss   14:26   0:00 /usr/lib/systemd/systemd-udevd
 root         372  0.0  0.0  16072  6408 ?        Ss   14:26   0:00 /usr/lib/systemd/systemd-userdbd
 root         379  0.0  0.0      0     0 ?        S    14:26   0:00 [psimon]
@@ -241,12 +456,12 @@ root         380  0.0  0.0      0     0 ?        S    14:26   0:00 [psimon]
 systemd+     450  0.0  0.0  90120  7416 ?        Ssl  14:26   0:00 /usr/lib/systemd/systemd-timesyncd
 root         481  0.0  0.0   8388  5380 ?        Ss   14:26   0:00 /usr/sbin/haveged --Foreground --verbose=1
 root         493  0.0  0.0 309356  7992 ?        Ssl  14:26   0:00 /usr/libexec/accounts-daemon
-message+     496  0.0  0.0  10340  7252 ?        Ss   14:26   0:00 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+message+     496  0.0  0.0  10340  7256 ?        Ss   14:26   0:00 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
 polkitd      499  0.0  0.0 382884 10876 ?        Ssl  14:26   0:00 /usr/lib/polkit-1/polkitd --no-debug --log-level=notice
 root         503  0.0  0.0  17944  9040 ?        Ss   14:26   0:00 /usr/lib/systemd/systemd-logind
-root         552  0.0  0.1 336916 19920 ?        Ssl  14:26   0:00 /usr/sbin/NetworkManager --no-daemon
-root         568  0.0  0.0 391360 12940 ?        Ssl  14:26   0:00 /usr/sbin/ModemManager
-root         598  0.0  0.0 352936  3052 ?        Sl   14:26   0:00 /usr/bin/VBoxDRMClient
+root         552  0.0  0.1 336916 19924 ?        Ssl  14:26   0:00 /usr/sbin/NetworkManager --no-daemon
+root         568  0.0  0.0 391360 12932 ?        Ssl  14:26   0:00 /usr/sbin/ModemManager
+root         598  0.0  0.0 352936  3052 ?        Sl   14:26   0:01 /usr/bin/VBoxDRMClient
 root         606  0.0  0.0 291752  3776 ?        Sl   14:26   0:00 /usr/sbin/VBoxService
 root         617  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-rpciod]
 root         618  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/R-xprtiod]
@@ -254,27 +469,27 @@ root         632  0.0  0.0   6876  2988 ?        Ss   14:26   0:00 /usr/sbin/cro
 root         650  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/u13:1]
 root         653  0.0  0.0 381040  7668 ?        SLsl 14:26   0:00 /usr/sbin/lightdm
 root         670  0.0  0.0      0     0 ?        I<   14:26   0:00 [kworker/u12:1]
-root         672 15.6  1.1 468664 187812 tty7    Rsl+ 14:26   2:54 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
-root         673  0.0  0.0   8160  2828 tty1     Ss+  14:26   0:00 /usr/sbin/agetty --noreset --noclear - linux
+root         672 14.8  1.1 475016 194168 tty7    Ssl+ 14:26   8:34 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+root         673  0.0  0.0   8160  2820 tty1     Ss+  14:26   0:00 /usr/sbin/agetty --noreset --noclear - linux
 root         725  0.0  0.0      0     0 ?        S    14:26   0:00 [psimon]
-rtkit        763  0.0  0.0  21536  3396 ?        SNsl 14:26   0:00 /usr/libexec/rtkit-daemon
+rtkit        763  0.0  0.0  21536  3388 ?        SNsl 14:26   0:00 /usr/libexec/rtkit-daemon
 root         891  0.0  0.0 171332  9340 ?        Sl   14:26   0:00 lightdm --session-child 13 24
 fermin       917  0.0  0.0  23260 13572 ?        Ss   14:26   0:00 /usr/lib/systemd/systemd --user
 fermin       919  0.0  0.0  23560  4300 ?        S    14:26   0:00 (sd-pam)
-fermin       940  0.0  0.0   9336  6404 ?        Ss   14:26   0:00 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
-fermin       941  0.0  0.0 102900 13528 ?        S<sl 14:26   0:00 /usr/bin/pipewire
+fermin       940  0.0  0.0   9336  6412 ?        Ss   14:26   0:00 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+fermin       941  0.0  0.0 102900 13580 ?        S<sl 14:26   0:00 /usr/bin/pipewire
 fermin       943  0.0  0.0 183680 10824 ?        SLsl 14:26   0:00 /usr/bin/gnome-keyring-daemon --foreground --components=pkcs11,secrets --control-directory=/run/user/1000/keyring
-fermin       944  0.0  0.0   7244  3996 ?        Ss   14:26   0:00 /usr/bin/mpris-proxy
-fermin       945  0.0  0.1 481760 19948 ?        S<sl 14:26   0:00 /usr/bin/wireplumber
+fermin       944  0.0  0.0   7244  3984 ?        Ss   14:26   0:00 /usr/bin/mpris-proxy
+fermin       945  0.0  0.1 481760 19936 ?        S<sl 14:26   0:00 /usr/bin/wireplumber
 fermin       947  0.0  0.0  84748  5456 ?        Ssl  14:26   0:00 /usr/bin/pipewire -c filter-chain.conf
 fermin       950  0.0  0.0 100696 10456 ?        S<sl 14:26   0:00 /usr/bin/pipewire-pulse
-fermin       961  0.0  0.2 766120 43332 ?        Ssl  14:26   0:00 xfce4-session
+fermin       961  0.0  0.2 766120 43468 ?        Ssl  14:26   0:01 xfce4-session
 fermin      1033  0.0  0.0  16744  1916 ?        S    14:26   0:00 /usr/bin/VBoxClient --clipboard
 fermin      1035  0.0  0.0 215568  4656 ?        Sl   14:26   0:00 /usr/bin/VBoxClient --clipboard
 fermin      1042  0.0  0.0  16744  1832 ?        S    14:26   0:00 /usr/bin/VBoxClient --seamless
-fermin      1044  0.0  0.0 214900  3364 ?        Sl   14:26   0:00 /usr/bin/VBoxClient --seamless
+fermin      1044  0.0  0.0 214900  3364 ?        Sl   14:26   0:01 /usr/bin/VBoxClient --seamless
 fermin      1050  0.0  0.0  16744  1872 ?        S    14:26   0:00 /usr/bin/VBoxClient --draganddrop
-fermin      1051  0.1  0.0 215416  3396 ?        Sl   14:26   0:01 /usr/bin/VBoxClient --draganddrop
+fermin      1051  0.1  0.0 215416  3396 ?        Sl   14:26   0:05 /usr/bin/VBoxClient --draganddrop
 fermin      1061  0.0  0.0  16744  1804 ?        S    14:26   0:00 /usr/bin/VBoxClient --vmsvga-session
 fermin      1063  0.0  0.0 215088  3624 ?        Sl   14:26   0:00 /usr/bin/VBoxClient --vmsvga-session
 fermin      1084  0.0  0.0 381256  8116 ?        Ssl  14:26   0:00 /usr/libexec/at-spi-bus-launcher
@@ -282,34 +497,34 @@ fermin      1091  0.0  0.0   8788  5320 ?        S    14:26   0:00 /usr/bin/dbus
 fermin      1101  0.0  0.0 168872  7952 ?        Sl   14:26   0:00 /usr/libexec/at-spi2-registryd --use-gnome-session
 fermin      1109  0.0  0.0  10788  1996 ?        Ss   14:26   0:00 /usr/bin/ssh-agent -s
 fermin      1118  0.0  0.0  90072  3932 ?        SLsl 14:26   0:00 /usr/bin/gpg-agent --supervised
-fermin      1121  4.1  0.8 1097244 137572 ?      Rl   14:26   0:45 xfwm4
-fermin      1126  0.0  0.0 313448  8864 ?        Ssl  14:26   0:00 /usr/libexec/gvfsd
-fermin      1132  0.0  0.0 324948  7860 ?        Sl   14:26   0:00 /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -f
+fermin      1121  4.2  0.8 1097244 137852 ?      Rl   14:26   2:27 xfwm4
+fermin      1126  0.0  0.0 313448  8872 ?        Ssl  14:26   0:00 /usr/libexec/gvfsd
+fermin      1132  0.0  0.0 324948  7864 ?        Sl   14:26   0:00 /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -f
 fermin      1159  0.0  0.1 353380 29592 ?        Sl   14:26   0:00 xfsettingsd
-fermin      1165  0.0  0.0 165308  6212 ?        Ssl  14:26   0:00 /usr/libexec/dconf-service
-fermin      1169  0.1  0.4 1065852 69536 ?       Sl   14:26   0:01 xfce4-panel
-fermin      1175  0.1  0.2 1123848 46924 ?       Sl   14:26   0:01 Thunar --daemon
-fermin      1183  0.1  0.3 1192852 63616 ?       Sl   14:26   0:01 xfdesktop
-fermin      1188  0.0  0.2 914992 46400 ?        Sl   14:26   0:00 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libwhiskermenu.so 1 25165831 whiskermenu Menú Whisker Mostrar un menú para acceder fácilmente a las aplicaciones instaladas
-fermin      1209  0.0  0.0 169160  7148 ?        Ssl  14:26   0:00 /usr/libexec/gvfsd-metadata
-fermin      1228  0.4  0.3 301576 51588 ?        Sl   14:26   0:05 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libcpugraph.so 13 25165836 cpugraph Gráfico del procesador Gráfico de la carga del procesador
+fermin      1165  0.0  0.0 165308  6240 ?        Ssl  14:26   0:00 /usr/libexec/dconf-service
+fermin      1169  0.0  0.4 1065852 69540 ?       Sl   14:26   0:01 xfce4-panel
+fermin      1175  0.0  0.2 1123848 46940 ?       Sl   14:26   0:01 Thunar --daemon
+fermin      1183  0.0  0.3 1192852 63620 ?       Sl   14:26   0:01 xfdesktop
+fermin      1188  0.0  0.2 914992 46400 ?        Sl   14:26   0:01 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libwhiskermenu.so 1 25165831 whiskermenu Menú Whisker Mostrar un menú para acceder fácilmente a las aplicaciones instaladas
+fermin      1209  0.0  0.0 169160  7156 ?        Ssl  14:26   0:00 /usr/libexec/gvfsd-metadata
+fermin      1228  0.4  0.3 301576 51580 ?        Sl   14:26   0:14 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libcpugraph.so 13 25165836 cpugraph Gráfico del procesador Gráfico de la carga del procesador
 fermin      1229  0.0  0.1 433668 29532 ?        Sl   14:26   0:00 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libsystray.so 14 25165837 systray Bandeja de estado Proporciona notificaciones de estado (indicadores de aplicación) y elementos de la bandeja del sistema heredada
-fermin      1230  0.2  0.1 277868 31192 ?        Sl   14:26   0:02 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libgenmon.so 15 25165838 genmon Monitor genérico Muestra la salida de una orden
+fermin      1230  0.2  0.1 277868 31192 ?        Sl   14:26   0:07 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libgenmon.so 15 25165838 genmon Monitor genérico Muestra la salida de una orden
 fermin      1231  0.0  0.2 964484 41392 ?        Sl   14:26   0:00 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libpulseaudio-plugin.so 16 25165839 pulseaudio PulseAudio Ajusta el volumen del sistema de sonido PulseAudio
 fermin      1232  0.0  0.2 961416 38728 ?        Sl   14:26   0:00 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libnotification-plugin.so 17 25165840 notification-plugin Notificaciones Notificaciones para el panel de Xfce
 fermin      1233  0.0  0.2 754748 38720 ?        Sl   14:26   0:00 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libxfce4powermanager.so 18 25165841 power-manager-plugin Gestor de energía Muestra los niveles de la batería de los dispositivos y controla el brillo de la pantalla
 fermin      1238  0.0  0.2 961716 39036 ?        Sl   14:26   0:00 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libactions.so 22 25165842 actions Botones de acción Cerrar sesión, bloquear sesión u otras acciones del sistema
 fermin      1306  0.0  0.1 429312 23592 ?        Ssl  14:26   0:00 /usr/lib/x86_64-linux-gnu/xfce4/notifyd/xfce4-notifyd
 root        1308  0.0  0.0 319176 10912 ?        Ssl  14:26   0:00 /usr/libexec/upowerd
-fermin      1496  0.0  0.1 410872 21384 ?        Sl   14:26   0:00 xfce4-power-manager
+fermin      1496  0.0  0.1 410872 21388 ?        Sl   14:26   0:00 xfce4-power-manager
 fermin      1497  0.0  0.0 464032  9424 ?        Sl   14:26   0:00 xiccd
 fermin      1498  0.0  0.0   5992  3548 ?        S    14:26   0:00 xautoresize
 fermin      1502  0.0  0.0 314948  8412 ?        Sl   14:26   0:00 /usr/libexec/geoclue-2.0/demos/agent
-colord      1507  0.0  0.0 316572 15468 ?        Ssl  14:26   0:00 /usr/libexec/colord
+colord      1507  0.0  0.0 316572 15432 ?        Ssl  14:26   0:00 /usr/libexec/colord
 fermin      1517  0.0  0.1 270292 20148 ?        Sl   14:26   0:00 /usr/libexec/polkit-mate-authentication-agent-1
 fermin      1521  0.0  0.0  12440  1936 ?        Ssl  14:26   0:00 xcape -e Super_L Control_L Escape
 fermin      1524  0.0  0.3 611416 64820 ?        Sl   14:26   0:00 /usr/bin/python3 /usr/bin/blueman-applet
-fermin      1535  0.0  0.2 760476 42156 ?        Sl   14:26   0:00 xfce4-screensaver
+fermin      1535  0.0  0.2 760476 42300 ?        Sl   14:26   0:00 xfce4-screensaver
 fermin      1541  0.0  0.2  71224 42940 ?        S    14:26   0:00 /usr/bin/python3 /usr/share/system-config-printer/applet.py
 fermin      1547  0.0  0.2 1123588 44788 ?       Sl   14:26   0:00 nm-applet
 pcscd       1567  0.0  0.0 331124  7924 ?        Ssl  14:26   0:00 /usr/sbin/pcscd --foreground --auto-exit
@@ -317,77 +532,88 @@ fermin      1728  0.0  0.0 391084 11868 ?        Ssl  14:26   0:00 /usr/libexec/
 root        1734  0.0  0.0 478456 14152 ?        Ssl  14:26   0:00 /usr/libexec/udisks2/udisksd
 fermin      1744  0.0  0.0 309060  7716 ?        Ssl  14:26   0:00 /usr/libexec/gvfs-gphoto2-volume-monitor
 fermin      1753  0.0  0.0 390256  8992 ?        Ssl  14:26   0:00 /usr/libexec/gvfs-afc-volume-monitor
-fermin      1759  0.0  0.0 308064  7032 ?        Ssl  14:26   0:00 /usr/libexec/gvfs-goa-volume-monitor
-fermin      1764  0.0  0.0 308092  7184 ?        Ssl  14:26   0:00 /usr/libexec/gvfs-mtp-volume-monitor
-fermin      1775  0.0  0.0 534888  9952 ?        Sl   14:26   0:00 /usr/libexec/gvfsd-trash --spawner :1.24 /org/gtk/gvfs/exec_spaw/0
+fermin      1759  0.0  0.0 308064  7036 ?        Ssl  14:26   0:00 /usr/libexec/gvfs-goa-volume-monitor
+fermin      1764  0.0  0.0 308092  7176 ?        Ssl  14:26   0:00 /usr/libexec/gvfs-mtp-volume-monitor
+fermin      1775  0.0  0.0 534888  9996 ?        Sl   14:26   0:00 /usr/libexec/gvfsd-trash --spawner :1.24 /org/gtk/gvfs/exec_spaw/0
 fermin      1780  0.0  0.1 380360 19792 ?        Ssl  14:26   0:00 /usr/libexec/bluetooth/obexd
-fermin      2046  0.0  0.1 705324 21300 ?        Ssl  14:27   0:00 /usr/libexec/xdg-desktop-portal
-fermin      2053  0.0  0.0 308948  6952 ?        Ssl  14:27   0:00 /usr/libexec/xdg-permission-store
+fermin      2046  0.0  0.1 705324 21304 ?        Ssl  14:27   0:00 /usr/libexec/xdg-desktop-portal
+fermin      2053  0.0  0.0 308948  6944 ?        Ssl  14:27   0:00 /usr/libexec/xdg-permission-store
 fermin      2066  0.0  0.0 540140  7792 ?        Ssl  14:27   0:00 /usr/libexec/xdg-document-portal
 root        2072  0.0  0.0   2592  1980 ?        Ss   14:27   0:00 fusermount3 -o rw,nosuid,nodev,fsname=portal,auto_unmount,subtype=portal -- /run/user/1000/doc
 fermin      2077  0.0  0.1 484844 21468 ?        Ssl  14:27   0:00 /usr/libexec/xdg-desktop-portal-gtk
-fermin      2731  1.8  1.7 1461553588 284512 ?   SLl  14:27   0:19 /usr/share/antigravity/antigravity
+fermin      2731  1.0  1.7 1461553588 290984 ?   SLl  14:27   0:34 /usr/share/antigravity/antigravity
 fermin      2742  0.0  0.3 33825180 55512 ?      S    14:27   0:00 /usr/share/antigravity/antigravity --type=zygote --no-zygote-sandbox
 fermin      2743  0.0  0.3 33825172 55664 ?      S    14:27   0:00 /usr/share/antigravity/antigravity --type=zygote
 fermin      2745  0.0  0.0 33825196 14396 ?      S    14:27   0:00 /usr/share/antigravity/antigravity --type=zygote
 fermin      2760  0.0  0.0 33567840 3676 ?       Sl   14:27   0:00 /usr/share/antigravity/chrome_crashpad_handler --monitor-self-annotation=ptype=crashpad-handler --no-rate-limit --database=/home/fermin/.config/Antigravity/Crashpad --annotation=_companyName=Google --annotation=_productName=Antigravity --annotation=_version=1.107.0 --annotation=lsb-release=Kali GNU/Linux Rolling --annotation=plat=Linux --annotation=prod=Electron --annotation=ver=39.2.3 --initial-client-fd=45 --shared-client-connection
-fermin      2795  6.4  1.0 34149524 177536 ?     Sl   14:27   1:07 /usr/share/antigravity/antigravity --type=zygote --no-zygote-sandbox
-fermin      2805  0.0  0.5 33885860 85708 ?      Sl   14:27   0:00 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
-fermin      2843 15.0  2.7 1461371364 451324 ?   Sl   14:27   2:39 /usr/share/antigravity/antigravity --type=zygote
-fermin      2863  0.1  1.0 1459583420 172460 ?   Sl   14:27   0:01 /usr/share/antigravity/antigravity --type=zygote
-fermin      2890  2.6  1.5 3776408 249320 ?      Sl   14:27   0:27 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --csrf_token f0f14fad-070f-4d6d-94fd-75544f64c44d --extension_server_port 45011 --extension_server_csrf_token 625d93fc-802b-4e63-9c8f-f0ee0f4c5ca7 --app_data_dir antigravity --cloud_code_endpoint https://cloudcode-pa.googleapis.com
-fermin      2932  0.0  0.4 33957380 67140 ?      Sl   14:27   0:00 /proc/self/exe --type=utility --utility-sub-type=audio.mojom.AudioService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708991934122588
-fermin      2944  0.1  0.7 1461335804 124012 ?   Sl   14:27   0:02 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708994745248135
-fermin      2950  0.6  0.9 1461355272 150396 ?   Sl   14:27   0:06 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708995682289984
-fermin      2966  1.7  1.5 1461339280 247084 ?   Sl   14:27   0:18 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --dns-result-order=ipv4first --experimental-network-inspection --inspect-port=0 --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708996619331833
-fermin      3063  0.2  0.7 1461355324 125260 ?   Sl   14:27   0:03 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708997556373682
+fermin      2795  6.1  1.0 34149172 176328 ?     Sl   14:27   3:32 /usr/share/antigravity/antigravity --type=zygote --no-zygote-sandbox
+fermin      2805  0.0  0.5 33885860 85104 ?      Sl   14:27   0:01 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
+fermin      2843 10.9  2.8 1461371420 473620 ?   Sl   14:27   6:15 /usr/share/antigravity/antigravity --type=zygote
+fermin      2863  0.0  1.0 1459583420 173156 ?   Sl   14:27   0:01 /usr/share/antigravity/antigravity --type=zygote
+fermin      2890  2.3  1.3 3776984 220204 ?      Sl   14:27   1:21 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --csrf_token f0f14fad-070f-4d6d-94fd-75544f64c44d --extension_server_port 45011 --extension_server_csrf_token 625d93fc-802b-4e63-9c8f-f0ee0f4c5ca7 --app_data_dir antigravity --cloud_code_endpoint https://cloudcode-pa.googleapis.com
+fermin      2932  0.0  0.4 33957380 67148 ?      Sl   14:27   0:00 /proc/self/exe --type=utility --utility-sub-type=audio.mojom.AudioService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708991934122588
+fermin      2944  0.0  0.7 1461335804 124164 ?   Sl   14:27   0:02 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708994745248135
+fermin      2950  0.3  0.9 1461355272 150352 ?   Sl   14:27   0:12 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708995682289984
+fermin      2966  1.0  1.5 1461339280 246336 ?   Sl   14:27   0:36 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --dns-result-order=ipv4first --experimental-network-inspection --inspect-port=0 --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708996619331833
+fermin      3063  0.2  0.7 1461355324 126272 ?   Sl   14:27   0:07 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=2760 --enable-crash-reporter=156deafb-4808-4ed2-9bd1-7f5944491e90,no_channel --user-data-dir=/home/fermin/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15694791600108891116,4324261594909011948,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708997556373682
 fermin      3115  0.0  0.0  10216  6448 pts/1    Ss+  14:27   0:00 /usr/bin/zsh -i
-fermin      3205  2.2  1.1 4750088 185940 ?      Sl   14:27   0:23 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --enable_lsp --csrf_token c8a5a533-c49b-43a7-a840-81412731aebc --extension_server_port 42509 --extension_server_csrf_token 405cc5db-5b01-409f-ac05-e74189042ed6 --workspace_id file_home_fermin_Documentos_Forensic_Suite_dashboard --cloud_code_endpoint https://daily-cloudcode-pa.googleapis.com --app_data_dir antigravity --parent_pipe_path /tmp/server_b48373df67bdebe0
-fermin      4326  0.0  0.5 1459534904 95948 ?    Sl   14:29   0:00 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=2966
-fermin      4689  0.0  0.5 1459534840 91216 ?    Sl   14:30   0:00 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=2966
-fermin      4690  0.2  1.2 380808 209524 ?       Sl   14:30   0:02 /home/fermin/.antigravity/extensions/meta.pyrefly-0.64.1-linux-x64/bin/pyrefly lsp
-root        5843  0.0  0.0      0     0 ?        I    14:32   0:00 [kworker/0:0-ata_sff]
-fermin      5988  0.4  0.9 1459534840 151672 ?   Sl   14:33   0:03 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/html-language-features/server/dist/node/htmlServerMain --node-ipc --clientProcessId=2966
-fermin      7850  0.3  0.4 661536 67356 ?        Sl   14:35   0:01 /usr/bin/qterminal
+fermin      3205  2.1  1.1 4750088 185592 ?      Sl   14:27   1:13 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --enable_lsp --csrf_token c8a5a533-c49b-43a7-a840-81412731aebc --extension_server_port 42509 --extension_server_csrf_token 405cc5db-5b01-409f-ac05-e74189042ed6 --workspace_id file_home_fermin_Documentos_Forensic_Suite_dashboard --cloud_code_endpoint https://daily-cloudcode-pa.googleapis.com --app_data_dir antigravity --parent_pipe_path /tmp/server_b48373df67bdebe0
+fermin      4326  0.0  0.5 1459534904 96172 ?    Sl   14:29   0:00 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=2966
+fermin      4689  0.0  0.5 1459534840 91564 ?    Sl   14:30   0:00 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/json-language-features/server/dist/node/jsonServerMain --node-ipc --clientProcessId=2966
+fermin      4690  0.1  1.7 511880 289048 ?       Sl   14:30   0:03 /home/fermin/.antigravity/extensions/meta.pyrefly-0.64.1-linux-x64/bin/pyrefly lsp
+fermin      5988  0.1  0.9 1459534840 163156 ?   Sl   14:33   0:03 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/html-language-features/server/dist/node/htmlServerMain --node-ipc --clientProcessId=2966
+fermin      7850  0.0  0.4 661536 67204 ?        Sl   14:35   0:02 /usr/bin/qterminal
 fermin      7865  0.0  0.0  13984  7972 pts/2    Ss   14:35   0:00 /usr/bin/zsh
-fermin      8346 18.5  2.6 11456732 426460 ?     Sl   14:36   1:36 x-www-browser http://127.0.0.1:5001
+fermin      8346  5.2  2.7 3181892 449300 ?      Sl   14:36   2:31 x-www-browser http://127.0.0.1:5001
 fermin      8352  0.0  0.0  21008  3312 ?        Sl   14:36   0:00 /usr/lib/firefox-esr/crashhelper 8346 9 /tmp/ 11
 fermin      8424  0.0  0.2 240400 46372 ?        Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -parentBuildID 20260403140708 -prefsHandle 0:33901 -prefMapHandle 1:271786 -sandboxReporter 2 -chrootClient 3 -ipcHandle 4 -initialChannelId {4d2a3e46-387c-4965-a975-5b855fce8cdd} -parentPid 8346 -crashReporter 5 -crashHelper 6 -appDir /usr/lib/firefox-esr/browser 1 socket
-fermin      8462  2.2  0.8 2483168 132816 ?      Sl   14:36   0:11 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:31375 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {c05d264e-df37-4093-a515-3b8f65a58aa0} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 2 tab
+fermin      8462  0.4  0.8 2482144 132592 ?      Sl   14:36   0:12 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:31375 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {c05d264e-df37-4093-a515-3b8f65a58aa0} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 2 tab
 fermin      8469  0.0  0.3 383144 54444 ?        Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -parentBuildID 20260403140708 -prefsHandle 0:34042 -prefMapHandle 1:271786 -sandboxReporter 2 -chrootClient 3 -ipcHandle 4 -initialChannelId {62812593-67bb-4039-b8e2-34dc7db7bcc1} -parentPid 8346 -crashReporter 5 -crashHelper 6 -appDir /usr/lib/firefox-esr/browser 3 rdd
-fermin      8550  0.1  0.6 2466988 112104 ?      Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42551 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {a7388592-b19e-4f94-ac02-4e8978f4a7d9} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 4 tab
-root        8602  0.0  0.0      0     0 ?        I    14:36   0:00 [kworker/1:0-events]
+fermin      8550  0.0  0.6 2466988 112164 ?      Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42551 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {a7388592-b19e-4f94-ac02-4e8978f4a7d9} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 4 tab
 fermin      8630  0.0  0.2 237932 42912 ?        Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -parentBuildID 20260403140708 -sandboxingKind 0 -prefsHandle 0:42693 -prefMapHandle 1:271786 -sandboxReporter 2 -chrootClient 3 -ipcHandle 4 -initialChannelId {8d44015f-b47e-423f-bc40-8314500d02a8} -parentPid 8346 -crashReporter 5 -crashHelper 6 -appDir /usr/lib/firefox-esr/browser 5 utility
-fermin      8643  0.2  0.8 19257448 132048 ?     Sl   14:36   0:01 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:39969 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {9cfe284b-ecc3-4c7b-a916-fa48312e49c1} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 6 tab
-fermin      8658  0.0  0.5 2434440 84236 ?       Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:39969 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {78387572-0376-4893-8d79-21f50ad48129} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 7 tab
-fermin      8674  0.0  0.5 2434440 83804 ?       Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:39969 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {3cf9a7f4-4075-4564-92a7-46965ceb063e} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 8 tab
-fermin      8705  0.1  0.8 2484184 145112 ?      Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42693 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {11a0b0fc-f612-46b7-8f3f-b61f62d1c9e1} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 9 tab
-root        9495  0.0  0.0      0     0 ?        I    14:37   0:00 [kworker/0:1-events]
-fermin     10359  0.1  0.7 2479072 120200 ?      Sl   14:39   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42693 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {89d2d133-b5a1-4a51-ba91-80fa1d56a74f} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 11 tab
-root       11592  0.0  0.0      0     0 ?        I    14:41   0:00 [kworker/1:1]
-root       11877  0.0  0.0  16528  6468 ?        S    14:42   0:00 systemd-userwork: waiting...
-root       12074  0.0  0.0  16528  6480 ?        S    14:42   0:00 systemd-userwork: waiting...
-root       12108  0.0  0.0  16528  6464 ?        S    14:42   0:00 systemd-userwork: waiting...
-root       12280  0.0  0.0      0     0 ?        I    14:43   0:00 [kworker/0:2-ata_sff]
+fermin      8643  0.2  0.8 2481416 137324 ?      Sl   14:36   0:08 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:39969 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {9cfe284b-ecc3-4c7b-a916-fa48312e49c1} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 6 tab
+fermin      8658  0.0  0.5 2434440 83616 ?       Sl   14:36   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:39969 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {78387572-0376-4893-8d79-21f50ad48129} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 7 tab
+fermin      8674  0.0  0.5 2434440 83244 ?       Sl   14:36   0:01 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:39969 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {3cf9a7f4-4075-4564-92a7-46965ceb063e} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 8 tab
+fermin      8705  0.0  0.9 2490312 153892 ?      Sl   14:36   0:02 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42693 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {11a0b0fc-f612-46b7-8f3f-b61f62d1c9e1} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 9 tab
+fermin     10359  0.1  0.7 2483356 129584 ?      Sl   14:39   0:04 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42693 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {89d2d133-b5a1-4a51-ba91-80fa1d56a74f} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 11 tab
 fermin     13111  0.0  0.0   7372  3788 pts/2    S+   14:44   0:00 /bin/bash ./restart.sh
-root       13122  0.0  0.0      0     0 ?        I    14:44   0:00 [kworker/u9:0-events_unbound]
+root       13122  0.0  0.0      0     0 ?        I    14:44   0:00 [kworker/u9:0-flush-8:0]
 fermin     13648  0.0  0.0   7372  3696 pts/2    S+   14:44   0:00 bash run.sh
-fermin     13651  0.7  0.2  44048 34232 pts/2    S+   14:44   0:00 python3 app.py
-fermin     13652  1.3  0.2 413848 35712 pts/2    Sl+  14:44   0:00 /home/fermin/Documentos/Forensic-Suite-dashboard/.venv/bin/python3 app.py
-fermin     13763  1.1  0.5 2435088 82080 ?       Sl   14:45   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:40468 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {c82240c2-cfcf-4aa8-b389-cad5efff6428} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 12 tab
-fermin     13874  0.0  0.0   9808  4688 pts/2    R+   14:45   0:00 ps aux
-</code></td>
-                </tr>
+fermin     13651  0.0  0.2  45072 34236 pts/2    S+   14:44   0:00 python3 app.py
+fermin     13763  0.0  0.5 2435072 82672 ?       Sl   14:45   0:01 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:40468 -prefMapHandle 1:271786 -jsInitHandle 2:242716 -parentBuildID 20260403140708 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {c82240c2-cfcf-4aa8-b389-cad5efff6428} -parentPid 8346 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 12 tab
+fermin     15092  0.0  0.0 461572  9844 ?        Sl   14:46   0:00 /usr/libexec/gvfsd-network --spawner :1.24 /org/gtk/gvfs/exec_spaw/1
+fermin     15103  0.0  0.0 388832  9736 ?        Sl   14:46   0:00 /usr/libexec/gvfsd-dnssd --spawner :1.24 /org/gtk/gvfs/exec_spaw/2
+root       15419  0.0  0.0      0     0 ?        I    14:47   0:00 [kworker/1:2-events]
+root       22845  0.0  0.0      0     0 ?        I    15:02   0:00 [kworker/1:0]
+fermin     23578  0.2  0.2 487716 36208 pts/2    Sl+  15:03   0:02 /home/fermin/Documentos/Forensic-Suite-dashboard/.venv/bin/python3 app.py
+root       26069  0.0  0.0      0     0 ?        I    15:08   0:00 [kworker/0:0-ata_sff]
+root       28624  0.0  0.0      0     0 ?        I    15:14   0:00 [kworker/0:1-ata_sff]
+root       31121  0.0  0.0  16528  6488 ?        S    15:19   0:00 systemd-userwork: waiting...
+root       31146  0.0  0.0      0     0 ?        I    15:19   0:00 [kworker/0:2-events_power_efficient]
+root       31339  0.0  0.0  16528  6460 ?        S    15:19   0:00 systemd-userwork: waiting...
+root       31356  0.0  0.0  16528  6468 ?        S    15:19   0:00 systemd-userwork: waiting...
+fermin     33672  0.0  0.0   9808  4652 pts/2    R+   15:24   0:00 ps aux
+
+                                    
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
                 
-            </table>
+
+            
             
         </div>
         
-
-        <p style="text-align: center; color: #777; margin-top: 50px; font-size: 0.9em;">
-            Generado automáticamente por Digital Forensics Suite
-        </p>
     </div>
-</body>
 
+    <!-- FOOTER -->
+    <div class="report-footer">
+        Generado automáticamente por Digital Forensics Suite · 2026-05-11 15:24:35
+    </div>
+
+</div>
+</body>
 </html>

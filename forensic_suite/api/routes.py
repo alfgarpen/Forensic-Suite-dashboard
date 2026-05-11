@@ -103,3 +103,17 @@ def download_report():
     if os.path.exists(report_path):
         return send_file(report_path, as_attachment=True)
     return "Report not found", 404
+
+@api_bp.route('/api/results', methods=['GET'])
+def get_results():
+    """Returns the latest analysis results JSON for inline table preview."""
+    import json
+    results_path = os.path.join(DATA_DIR, 'results.json')
+    if not os.path.exists(results_path):
+        return jsonify({'status': 'error', 'message': 'No results found'}), 404
+    try:
+        with open(results_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500

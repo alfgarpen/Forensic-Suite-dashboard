@@ -393,6 +393,81 @@
             border: 1px solid var(--c-border);
             margin-top: 20px;
         }
+
+        /* ── REPORT PREVIEW TABLES ── */
+        .preview-section {
+            margin-top: 24px;
+            border: 1px solid var(--c-border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .preview-section-header {
+            background: var(--c-panel);
+            border-bottom: 1px solid var(--c-border);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .preview-section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--c-accent-amber);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .preview-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(245,166,35,0.1);
+            color: var(--c-accent-amber);
+            border: 1px solid rgba(245,166,35,0.2);
+        }
+        .preview-table-wrap { overflow-x: auto; }
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+        }
+        .preview-table thead tr { background: rgba(245,166,35,0.07); }
+        .preview-table th {
+            padding: 8px 12px;
+            text-align: left;
+            color: var(--c-accent-amber);
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid var(--c-border);
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        .preview-table td {
+            padding: 7px 12px;
+            border-bottom: 1px solid rgba(37,44,61,0.5);
+            color: var(--c-text-primary);
+            vertical-align: top;
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .preview-table tr:last-child td { border-bottom: none; }
+        .preview-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .preview-kv-table thead tr { background: rgba(0,229,160,0.07); }
+        .preview-kv-table th { color: var(--c-accent-green); }
+        .preview-kv-table td:first-child { color: var(--c-text-secondary); width: 180px; }
+        .preview-empty {
+            padding: 16px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--c-text-secondary);
+        }
+        #preview-container { display: none; margin-top: 20px; }
     </style>
 </head>
 
@@ -552,6 +627,16 @@
                     </div>
                 </div>
                 <div class="terminal-box" id="term-rep">Esperando generación...&#10;</div>
+
+                <!-- PREVIEW INLINE DE FINDINGS -->
+                <div id="preview-container">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; margin-top:4px;">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--c-accent-amber);text-transform:uppercase;letter-spacing:0.08em;">Vista previa de Resultados</span>
+                        <span style="flex:1;height:1px;background:var(--c-border);"></span>
+                        <button class="btn" style="font-size:10px;padding:5px 10px;" onclick="document.getElementById('preview-container').style.display='none'">✕ Cerrar</button>
+                    </div>
+                    <div id="preview-findings"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -825,6 +910,7 @@
                     logTo('term-global', "[Fase 3] OK. Informe generado.");
                     document.getElementById('download-card').style.display = 'block';
                     document.getElementById('btn-rep').disabled = false;
+                    await renderFindingsPreview();
                     return true;
                 } else {
                     logTo('term-rep', `Fallo: ${data.message}`);
@@ -835,6 +921,113 @@
                 logTo('term-rep', "Error en el pipeline de reporte.");
                 document.getElementById('btn-rep').disabled = false;
                 return false;
+            }
+        }
+
+        async function renderFindingsPreview() {
+            try {
+                const res = await fetch('/api/results');
+                if (!res.ok) return;
+                const results = await res.json();
+                const findings = results.findings || results.artifacts || {};
+                const container = document.getElementById('preview-findings');
+                container.innerHTML = '';
+
+                if (Object.keys(findings).length === 0) {
+                    container.innerHTML = '<div class="preview-empty">Sin resultados para mostrar.</div>';
+                    document.getElementById('preview-container').style.display = 'block';
+                    return;
+                }
+
+                for (const [plugin, data] of Object.entries(findings)) {
+                    const block = document.createElement('div');
+                    block.className = 'preview-section';
+
+                    // Normalise: if data has .items use that, if .data use that
+                    let rows = data;
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        if (data.items) rows = data.items;
+                        else if (data.data) rows = data.data;
+                    }
+
+                    // Header
+                    const hdr = document.createElement('div');
+                    hdr.className = 'preview-section-header';
+                    const count = Array.isArray(rows) ? rows.length : (rows && typeof rows === 'object' ? Object.keys(rows).length : '-');
+                    hdr.innerHTML = `
+                        <span class="preview-section-title">⛙ ${plugin}</span>
+                        <span class="preview-count">${count} entrada${count !== 1 ? 's' : ''}</span>`;
+                    block.appendChild(hdr);
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'preview-table-wrap';
+
+                    if (Array.isArray(rows) && rows.length > 0 && typeof rows[0] === 'object') {
+                        // ── List of dicts → columnar table ──
+                        const headers = Object.keys(rows[0]);
+                        const table = document.createElement('table');
+                        table.className = 'preview-table';
+                        table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>`;
+                        const tbody = document.createElement('tbody');
+                        rows.forEach(row => {
+                            const tr = document.createElement('tr');
+                            headers.forEach(h => {
+                                const td = document.createElement('td');
+                                td.title = String(row[h] ?? '');
+                                td.textContent = String(row[h] ?? '');
+                                tr.appendChild(td);
+                            });
+                            tbody.appendChild(tr);
+                        });
+                        table.appendChild(tbody);
+                        wrap.appendChild(table);
+
+                    } else if (rows && typeof rows === 'object' && !Array.isArray(rows)) {
+                        // ── Dict → key/value table ──
+                        const table = document.createElement('table');
+                        table.className = 'preview-table preview-kv-table';
+                        table.innerHTML = '<thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>';
+                        const tbody = document.createElement('tbody');
+                        Object.entries(rows).forEach(([k, v]) => {
+                            const tr = document.createElement('tr');
+                            const tdKey = document.createElement('td');
+                            tdKey.textContent = k;
+                            const tdVal = document.createElement('td');
+                            tdVal.textContent = typeof v === 'object' ? JSON.stringify(v) : String(v ?? '');
+                            tr.appendChild(tdKey);
+                            tr.appendChild(tdVal);
+                            tbody.appendChild(tr);
+                        });
+                        table.appendChild(tbody);
+                        wrap.appendChild(table);
+
+                    } else if (typeof rows === 'string') {
+                        // ── Raw string → numbered lines table ──
+                        const lines = rows.split('\n').filter(l => l.trim());
+                        const table = document.createElement('table');
+                        table.className = 'preview-table';
+                        table.innerHTML = '<thead><tr><th>#</th><th>Salida</th></tr></thead>';
+                        const tbody = document.createElement('tbody');
+                        lines.forEach((line, i) => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `<td style="color:var(--c-text-secondary);text-align:right;width:40px;">${i+1}</td>
+                                           <td style="white-space:pre-wrap;word-break:break-all;max-width:none;">${line}</td>`;
+                            tbody.appendChild(tr);
+                        });
+                        table.appendChild(tbody);
+                        wrap.appendChild(table);
+
+                    } else {
+                        wrap.innerHTML = '<div class="preview-empty">Sin datos estructurados.</div>';
+                    }
+
+                    block.appendChild(wrap);
+                    container.appendChild(block);
+                }
+
+                document.getElementById('preview-container').style.display = 'block';
+            } catch (e) {
+                console.error('Error rendering findings preview:', e);
             }
         }
 
