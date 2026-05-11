@@ -629,14 +629,18 @@
                     logTo('term-acq', `Completado: ${data.message}`);
                     logTo('term-global', `[Fase 1] OK. Evidencia registrada.`);
                     await updateActiveEvidence();
+                    document.getElementById('btn-acq').disabled = false;
+                    return true;
                 } else {
                     logTo('term-acq', `Error: ${data.message}`);
+                    document.getElementById('btn-acq').disabled = false;
+                    return false;
                 }
             } catch (e) {
                 logTo('term-acq', "Error al adquirir memoria.");
+                document.getElementById('btn-acq').disabled = false;
+                return false;
             }
-            document.getElementById('btn-acq').disabled = false;
-            return true;
         }
 
         async function uploadRaw() {
@@ -684,7 +688,8 @@
                         cb.type = 'checkbox';
                         cb.value = p.id;
                         cb.className = 'plugin-checkbox';
-                        if (['windows.info.Info', 'windows.pslist.PsList', 'windows.netscan.NetScan'].includes(p.id)) {
+                        // Seleccionar por defecto plugins básicos (info, pslist) independientemente del OS
+                        if (p.id.endsWith('.info') || p.id.endsWith('.pslist') || p.id.endsWith('.netstat') || p.id.endsWith('.netscan')) {
                             cb.checked = true;
                         }
 
@@ -706,18 +711,25 @@
 
         async function triggerAnalysis() {
             logTo('term-ana', "Iniciando analyze_dump.py sobre evidencia activa...");
-            logTo('term-global', "[Fase 2] Análisis en curso...");
+            logTo('term-global', "[Fase 2] Preparando análisis...");
             document.getElementById('btn-ana').disabled = true;
 
             const checkboxes = document.querySelectorAll('.plugin-checkbox:checked');
             const selectedPlugins = Array.from(checkboxes).map(cb => cb.value);
             
             if (selectedPlugins.length === 0) {
-                logTo('term-ana', "Error: Debes seleccionar al menos un plugin.");
+                const totalPlugins = document.querySelectorAll('.plugin-checkbox').length;
+                let errorMsg = "Error: Debes seleccionar al menos un plugin.";
+                if (totalPlugins === 0) {
+                    errorMsg = "Error: No se han cargado los plugins. Por favor espera o recarga la página.";
+                }
+                logTo('term-ana', errorMsg);
+                logTo('term-global', `[Fase 2] ${errorMsg}`);
                 document.getElementById('btn-ana').disabled = false;
-                return false;
+                return null;
             }
 
+            logTo('term-global', "[Fase 2] Análisis en curso (Volatility 3)...");
             try {
                 let res = await fetch('/api/analyze', {
                     method: 'POST',
@@ -726,40 +738,50 @@
                 });
                 let data = await res.json();
                 if (data.status === 'success') {
-                    // Start polling for status
-                    pollAnalysis(data.job_id);
+                    return data.job_id;
                 } else {
-                    logTo('term-ana', `Error: ${data.message}`);
+                    logTo('term-ana', `Error del servidor: ${data.message}`);
+                    logTo('term-global', `[Fase 2] Error: ${data.message}`);
                     document.getElementById('btn-ana').disabled = false;
+                    return null;
                 }
             } catch (e) {
-                logTo('term-ana', "Error de red al ejecutar análisis.");
+                logTo('term-ana', `Error de red: ${e.message}`);
+                logTo('term-global', `[Fase 2] Error de red.`);
                 document.getElementById('btn-ana').disabled = false;
+                return null;
             }
-            return true;
         }
 
         async function pollAnalysis(jobId) {
-            try {
-                let res = await fetch(`/api/status/${jobId}`);
-                let data = await res.json();
-                
-                if (data.status === 'completed') {
-                    logTo('term-ana', "Análisis completado satisfactoriamente.");
-                    logTo('term-global', "[Fase 2] OK. Artefactos extraídos.");
-                    document.getElementById('btn-ana').disabled = false;
-                    await updateActiveEvidence();
-                } else if (data.status === 'failed') {
-                    logTo('term-ana', `Error en análisis: ${data.error}`);
-                    document.getElementById('btn-ana').disabled = false;
-                } else {
-                    logTo('term-ana', "Analizando volcado... (en curso)");
-                    setTimeout(() => pollAnalysis(jobId), 2000);
-                }
-            } catch (e) {
-                logTo('term-ana', "Error consultando estado.");
-                document.getElementById('btn-ana').disabled = false;
-            }
+            return new Promise((resolve, reject) => {
+                const checkStatus = async () => {
+                    try {
+                        let res = await fetch(`/api/status/${jobId}`);
+                        let data = await res.json();
+                        
+                        if (data.status === 'completed') {
+                            logTo('term-ana', "Análisis completado satisfactoriamente.");
+                            logTo('term-global', "[Fase 2] OK. Artefactos extraídos.");
+                            document.getElementById('btn-ana').disabled = false;
+                            await updateActiveEvidence();
+                            resolve(true);
+                        } else if (data.status === 'failed') {
+                            logTo('term-ana', `Error en análisis: ${data.error}`);
+                            document.getElementById('btn-ana').disabled = false;
+                            reject(new Error(data.error));
+                        } else {
+                            logTo('term-ana', "Analizando volcado... (en curso)");
+                            setTimeout(checkStatus, 2000);
+                        }
+                    } catch (e) {
+                        logTo('term-ana', "Error consultando estado.");
+                        document.getElementById('btn-ana').disabled = false;
+                        reject(e);
+                    }
+                };
+                checkStatus();
+            });
         }
 
         async function triggerReport() {
@@ -774,30 +796,49 @@
                     logTo('term-rep', "Reporte generado e integrado con metadatos de evidencia.");
                     logTo('term-global', "[Fase 3] OK. Informe listo.");
                     document.getElementById('download-card').style.display = 'block';
+                    document.getElementById('btn-rep').disabled = false;
+                    return true;
                 } else {
                     logTo('term-rep', `Fallo: ${data.message}`);
+                    document.getElementById('btn-rep').disabled = false;
+                    return false;
                 }
             } catch (e) {
                 logTo('term-rep', "Error en la generación del reporte.");
+                document.getElementById('btn-rep').disabled = false;
+                return false;
             }
-            document.getElementById('btn-rep').disabled = false;
         }
 
         async function runFullPipeline() {
             const btn = document.getElementById('btn-full-flow');
             btn.disabled = true;
-            btn.innerText = "Procesando...";
+            btn.innerText = "Pipeline en curso...";
 
-            await triggerAcquisition();
-            // We need to wait for acquisition to finish as it's async in terms of the backend registration
-            // but the api call returns when it's done.
-            
-            // For analysis, it's async, so we'd need to wait for completion.
-            // Simplified here: manually run each step if they depend on each other.
-            
+            try {
+                // Fase 1: Adquisición
+                logTo('term-global', ">>> INICIANDO PIPELINE AUTOMATIZADO <<<");
+                const acqSuccess = await triggerAcquisition();
+                if (!acqSuccess) throw new Error("Fallo en Fase 1: Adquisición");
+
+                // Fase 2: Análisis
+                const jobId = await triggerAnalysis();
+                if (!jobId) throw new Error("Fallo al iniciar Fase 2: Análisis");
+                await pollAnalysis(jobId);
+
+                // Fase 3: Reporte
+                const repSuccess = await triggerReport();
+                if (!repSuccess) throw new Error("Fallo en Fase 3: Reporte");
+
+                logTo('term-global', ">>> PIPELINE COMPLETADO CON ÉXITO <<<");
+                alert("Pipeline completado. El reporte ya está disponible.");
+            } catch (e) {
+                logTo('term-global', `!!! ERROR EN PIPELINE: ${e.message}`);
+                alert(`Error en el flujo: ${e.message}`);
+            }
+
             btn.innerText = "▶ Ejecutar Memdump & Pipeline Completo";
             btn.disabled = false;
-            alert("Flujo iniciado. Por favor monitorea las pestañas de Análisis y Reporte.");
         }
     </script>
 </body>
