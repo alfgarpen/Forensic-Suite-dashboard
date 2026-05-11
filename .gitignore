@@ -1,7 +1,24 @@
 .venv/
-data/
 __pycache__/
 *.pyc
 .DS_Store
 *.swp
 *.bak
+
+# Forensic Evidence & Dumps
+*.raw
+*.mem
+*.dmp
+*.img
+*.bin
+*.elf
+*.vmem
+*.vmsn
+*.vmsd
+
+# Data, Uploads and Outputs
+uploads/
+data/
+results/
+reports/
+logs/
