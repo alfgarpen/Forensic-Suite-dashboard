@@ -20,18 +20,34 @@ def system_info():
 
 @api_bp.route('/api/plugins', methods=['GET'])
 def get_plugins():
-    vol_service = VolatilityService()
-    plugins_list = vol_service.get_available_plugins()
-    # Format required by the frontend: list of dicts with 'id', 'name', and 'description'
-    plugins = []
-    for p in plugins_list:
-        plugin_instance = vol_service.get_plugin(p)
-        plugins.append({
-            'id': p,
-            'name': plugin_instance.name,
-            'description': f"{p} module via dynamic engine"
-        })
-    return jsonify({'status': 'success', 'plugins': plugins})
+    from forensic_suite.core.plugin_registry import PLUGIN_REGISTRY
+    from forensic_suite.utils.file_utils import FileUtils
+    
+    active = FileUtils.get_active_dump(DATA_DIR)
+    detected_os = active.get('detected_os', 'windows') if active else 'windows'
+    
+    # Get plugins for detected OS or windows as default
+    os_plugins = PLUGIN_REGISTRY.get(detected_os.lower(), PLUGIN_REGISTRY['windows'])
+    
+    formatted_categories = []
+    for cat_name, plugins in os_plugins.items():
+        category = {
+            'name': cat_name,
+            'plugins': []
+        }
+        for p_id, p_desc in plugins.items():
+            category['plugins'].append({
+                'id': p_id,
+                'name': p_id.split('.')[-1].capitalize(),
+                'description': p_desc
+            })
+        formatted_categories.append(category)
+        
+    return jsonify({
+        'status': 'success', 
+        'categories': formatted_categories,
+        'detected_os': detected_os
+    })
 
 @api_bp.route('/api/acquire', methods=['POST'])
 def acquire_memory():

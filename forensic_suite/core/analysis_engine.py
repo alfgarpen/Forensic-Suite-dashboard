@@ -1,126 +1,95 @@
+# analysis_engine.py
+
 import logging
-from datetime import datetime
-from forensic_suite.services.volatility_service import VolatilityService
-from forensic_suite.services.yara_service import YaraService
-from forensic_suite.detection.threat_detector import ThreatDetector
-from forensic_suite.utils.file_utils import FileUtils
-from forensic_suite.services.hash_service import HashService
-from forensic_suite.utils.os_detector import detect_os_from_dump
 import os
+from datetime import datetime
+from typing import List, Optional, Callable
+
+from forensic_suite.core.volatility_manager import VolatilityManager
+from forensic_suite.core.plugin_registry import get_plugins_for_os, is_plugin_compatible
+from forensic_suite.core.artifact_parser import ArtifactParser
+from forensic_suite.core.command_fallback import CommandFallback
+from forensic_suite.utils.os_detector import detect_os_from_dump
+from forensic_suite.services.hash_service import HashService
 
 logger = logging.getLogger(__name__)
 
 class AnalysisEngine:
-    def __init__(self, dump_path: str):
+    def __init__(self, dump_path: str, log_callback: Optional[Callable[[str], None]] = None):
         self.dump_path = dump_path
-        self.vol_service = VolatilityService()
-        self.yara_service = YaraService()
-        self.threat_detector = ThreatDetector()
-        
-    def run_analysis(self, plugins: list = None, run_yara: bool = True) -> dict:
-        """
-        Executes requested plugins and YARA rules.
-        """
-        # Calculate file stats for the report
-        file_size = os.path.getsize(self.dump_path) if os.path.exists(self.dump_path) else 0
-        md5 = HashService.calculate_hash(self.dump_path, 'md5') if os.path.exists(self.dump_path) else None
-        sha256 = HashService.calculate_hash(self.dump_path, 'sha256') if os.path.exists(self.dump_path) else None
-        detected_os = detect_os_from_dump(self.dump_path)
+        self.vol_manager = VolatilityManager()
+        self.log_callback = log_callback or (lambda x: logger.info(x))
+        self.artifacts_dir = os.path.join(os.path.dirname(dump_path), "artifacts")
+        os.makedirs(self.artifacts_dir, exist_ok=True)
 
+    def run_analysis(self, plugins: List[str] = None) -> dict:
+        """
+        Main analysis loop. Performs OS detection, executes plugins, 
+        normalizes results, and handles fallback.
+        """
+        self.log_callback(f"[!] Starting forensic analysis for: {os.path.basename(self.dump_path)}")
+        
+        # 1. Basic Metadata
+        detected_os = detect_os_from_dump(self.dump_path)
+        self.log_callback(f"[+] Initial OS detection: {detected_os}")
+        
+        # 2. Refine OS Detection if unknown using Volatility
+        if detected_os == "unknown" and self.vol_manager.is_installed:
+            self.log_callback("[*] Attempting advanced OS detection via Volatility banners...")
+            # Try windows.info or linux.banner
+            for probe in ["windows.info", "linux.banner"]:
+                res = self.vol_manager.execute_plugin(self.dump_path, probe)
+                if res["status"] == "success":
+                    detected_os = "windows" if "windows" in probe else "linux"
+                    self.log_callback(f"[+] Advanced detection confirmed: {detected_os}")
+                    break
+        
+        # 3. Resolve Plugins to run
+        if not plugins:
+            # Load default plugins for detected OS
+            os_data = get_plugins_for_os(detected_os)
+            plugins = []
+            for category in os_data.values():
+                plugins.extend(category.keys())
+        
         results = {
             "metadata": {
                 "dump_path": self.dump_path,
-                "dump_filename": os.path.basename(self.dump_path),
-                "dump_size_bytes": file_size,
                 "detected_os": detected_os,
-                "hashes": {
-                    "md5": md5['hash'] if md5 else "N/A",
-                    "sha256": sha256['hash'] if sha256 else "N/A"
-                },
-                "analysis_time": datetime.now().isoformat()
+                "analysis_time": datetime.now().isoformat(),
+                "volatility_version": self.vol_manager.get_version()
             },
-            "system_info": {},
-            "plugins": {},
-            "yara": {},
-            "correlations": {},
-            "threats": {}
+            "artifacts": {}
         }
-        
-        if plugins is None:
-            all_plugins = self.vol_service.get_available_plugins()
-            if detected_os != "unknown":
-                # Filter plugins to match detected OS (e.g. windows.pslist)
-                plugins = [p for p in all_plugins if p.startswith(detected_os)]
-                if not plugins: # Fallback if no specific plugins found
-                    plugins = all_plugins
-            else:
-                plugins = all_plugins
-            
-        logger.info(f"Running Analysis on {self.dump_path} (OS: {detected_os}) with plugins: {plugins}")
 
-        # Extract system info if available
-        # Prioritize info plugin that matches detected OS
-        info_order = []
-        if detected_os == "windows":
-            info_order = ["windows.info", "linux.info"]
-        elif detected_os == "linux":
-            info_order = ["linux.info", "windows.info"]
-        else:
-            info_order = ["windows.info", "linux.info"]
-
-        for info_plugin_name in info_order:
-            info_plugin = self.vol_service.get_plugin(info_plugin_name)
-            if info_plugin and (info_plugin_name in plugins):
-                results["system_info"] = info_plugin.run(self.dump_path)
-                break
-            
-        # Run specific plugins
+        # 4. Execute Plugins
         for p_name in plugins:
-            plugin = self.vol_service.get_plugin(p_name)
-            if plugin:
-                try:
-                    results["plugins"][p_name] = plugin.run(self.dump_path)
-                except Exception as e:
-                    logger.error(f"Plugin {p_name} failed: {e}")
-                    results["plugins"][p_name] = {"error": str(e)}
-            else:
-                results["plugins"][p_name] = {"error": "Plugin not found"}
-
-        # Run YARA
-        if run_yara:
-            results["yara"] = self.yara_service.scan_dump(self.dump_path)
+            self.log_callback(f"[+] Executing plugin: {p_name}")
             
-        # Correlate findings
-        results["correlations"] = self.correlate(results["plugins"])
-        
-        # Detect Threats
-        results["threats"] = self.threat_detector.analyze(results)
-        
-        return results
+            # Check compatibility
+            if not is_plugin_compatible(p_name, detected_os):
+                self.log_callback(f"[!] Warning: Plugin {p_name} might not be compatible with {detected_os}")
 
-    def correlate(self, plugins_results: dict) -> dict:
-        """
-        Correlates processes and connections.
-        """
-        correlations = {}
-        
-        # Try Windows then Linux
-        pslist_res = plugins_results.get("windows.pslist", plugins_results.get("linux.pslist", {}))
-        netscan_res = plugins_results.get("windows.netscan", plugins_results.get("linux.netstat", {}))
-        
-        active_pids = set()
-        if pslist_res.get("status") == "success":
-            for proc in pslist_res.get("processes", []):
-                active_pids.add(proc.get("pid"))
+            # Try Volatility
+            res = self.vol_manager.execute_plugin(self.dump_path, p_name, log_callback=self.log_callback)
+            
+            if res["status"] == "success":
+                parsed = ArtifactParser.parse(p_name, res["data"])
+                results["artifacts"][p_name] = parsed
+                self.log_callback(f"[+] {p_name} completed successfully. Artifacts found: {parsed.get('count', 'N/A')}")
+            else:
+                self.log_callback(f"[-] {p_name} failed: {res.get('error')}")
                 
-        if netscan_res.get("status") == "success":
-            missing_process_for_conn = []
-            for conn in netscan_res.get("connections", []):
-                pid = conn.get("pid")
-                if pid and pid not in active_pids and pid != 0:
-                    missing_process_for_conn.append(conn)
-                    
-            if missing_process_for_conn:
-                correlations["connections_missing_process"] = missing_process_for_conn
+                # 5. Fallback
+                fallback_cat = CommandFallback.map_plugin_to_category(p_name)
+                if fallback_cat:
+                    self.log_callback(f"[*] Attempting native fallback for {fallback_cat}...")
+                    f_res = CommandFallback.run_fallback(fallback_cat)
+                    if f_res["status"] == "success":
+                        results["artifacts"][f_name := f"fallback.{fallback_cat}"] = f_res
+                        self.log_callback(f"[+] Fallback for {fallback_cat} successful.")
+                    else:
+                        self.log_callback(f"[-] Fallback failed: {f_res.get('error')}")
                 
-        return correlations
+        self.log_callback("[!] Analysis completed.")
+        return results

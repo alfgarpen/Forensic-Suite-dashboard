@@ -520,17 +520,18 @@
                     Analizar archivo guardado localmente (data/memory.raw)</p>
 
                 <div id="plugin-selection" style="margin-bottom: 20px; background: var(--c-panel); border: 1px solid var(--c-border); padding: 15px; border-radius: 8px;">
-                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--c-text-primary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Plugins de Volatility 3</div>
-                    <div id="plugins-list" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--c-text-primary); text-transform: uppercase; letter-spacing: 0.05em;">Plugins de Volatility 3</div>
+                        <div id="detected-os-badge" class="section-badge badge-blue" style="font-size: 9px;">OS: Unknown</div>
+                    </div>
+                    <div id="plugins-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
                         <span style="color: var(--c-text-secondary); font-size: 12px;">Cargando plugins...</span>
                     </div>
                 </div>
 
-                <button class="btn btn-blue" onclick="triggerAnalysis()" id="btn-ana">Ejecutar Análisis Volatility
-                    3</button>
+                <button class="btn btn-blue" onclick="triggerAnalysis()" id="btn-ana">Ejecutar Análisis Volatility 3</button>
 
-                <div class="terminal-box" id="term-ana" style="margin-top: 20px;">Esperando instrucciones del
-                    analista...&#10;</div>
+                <div class="terminal-box" id="term-ana" style="margin-top: 20px; height: 300px; border-color: var(--c-accent-blue);">Analista esperando...&#10;</div>
             </div>
 
             <!-- SCRIPT 3 -->
@@ -543,14 +544,11 @@
                 <div class="info-grid">
                     <div class="info-card">
                         <div class="info-card-label">Generar Reporte</div>
-                        <button class="btn btn-amber" onclick="triggerReport()" id="btn-rep">Procesar JSON y Exportar
-                            HTML</button>
+                        <button class="btn btn-amber" onclick="triggerReport()" id="btn-rep">Procesar JSON y Exportar HTML</button>
                     </div>
-                    <div class="info-card" id="download-card"
-                        style="display:none; text-align: center; border-color: var(--c-accent-green);">
+                    <div class="info-card" id="download-card" style="display:none; text-align: center; border-color: var(--c-accent-green);">
                         <div class="info-card-label" style="color:var(--c-accent-green);">Resultados listos</div>
-                        <a href="/download/report" target="_blank" class="btn btn-green"
-                            style="text-decoration:none;">Descargar Final Report</a>
+                        <a href="/download/report" target="_blank" class="btn btn-green" style="text-decoration:none;">Descargar Final Report</a>
                     </div>
                 </div>
                 <div class="terminal-box" id="term-rep">Esperando generación...&#10;</div>
@@ -559,13 +557,17 @@
     </div>
 
 
-        <script>
+    <script>
         function switchTab(id) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + id).classList.add('active');
             const tabs = { overview: 0, script1: 1, script2: 2, script3: 3 };
             document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+            
+            if (id === 'script2') {
+                loadPlugins();
+            }
         }
 
         function logTo(termId, msg) {
@@ -605,6 +607,12 @@
                         dot.style.background = 'var(--c-accent-blue)';
                     } else {
                         dot.style.background = 'var(--c-accent-amber)';
+                    }
+                    
+                    // Update OS badge in analysis tab
+                    const badge = document.getElementById('detected-os-badge');
+                    if (badge) {
+                        badge.innerText = `OS: ${data.detected_os.toUpperCase()}`;
                     }
                 } else {
                     document.getElementById('active-evidence-bar').style.display = 'none';
@@ -677,28 +685,49 @@
                 if(data.status === 'success') {
                     const list = document.getElementById('plugins-list');
                     list.innerHTML = '';
-                    data.plugins.forEach(p => {
-                        const label = document.createElement('label');
-                        label.style.display = 'flex';
-                        label.style.alignItems = 'center';
-                        label.style.gap = '8px';
-                        label.style.cursor = 'pointer';
+                    
+                    data.categories.forEach(cat => {
+                        const catDiv = document.createElement('div');
+                        catDiv.style.background = 'rgba(255,255,255,0.03)';
+                        catDiv.style.borderRadius = '6px';
+                        catDiv.style.padding = '10px';
                         
-                        const cb = document.createElement('input');
-                        cb.type = 'checkbox';
-                        cb.value = p.id;
-                        cb.className = 'plugin-checkbox';
-                        // Seleccionar por defecto plugins básicos (info, pslist) independientemente del OS
-                        if (p.id.endsWith('.info') || p.id.endsWith('.pslist') || p.id.endsWith('.netstat') || p.id.endsWith('.netscan')) {
-                            cb.checked = true;
-                        }
+                        const catTitle = document.createElement('div');
+                        catTitle.style.fontFamily = 'JetBrains Mono, monospace';
+                        catTitle.style.fontSize = '10px';
+                        catTitle.style.color = 'var(--c-accent-blue)';
+                        catTitle.style.marginBottom = '8px';
+                        catTitle.style.textTransform = 'uppercase';
+                        catTitle.innerText = cat.name;
+                        catDiv.appendChild(catTitle);
 
-                        const text = document.createElement('span');
-                        text.innerHTML = `<strong style="color: var(--c-text-primary); font-size: 13px;">${p.name}</strong> <span style="color: var(--c-text-secondary); font-size: 12px;">- ${p.description}</span>`;
-                        
-                        label.appendChild(cb);
-                        label.appendChild(text);
-                        list.appendChild(label);
+                        cat.plugins.forEach(p => {
+                            const label = document.createElement('label');
+                            label.style.display = 'flex';
+                            label.style.alignItems = 'flex-start';
+                            label.style.gap = '8px';
+                            label.style.cursor = 'pointer';
+                            label.style.marginBottom = '6px';
+                            
+                            const cb = document.createElement('input');
+                            cb.type = 'checkbox';
+                            cb.value = p.id;
+                            cb.className = 'plugin-checkbox';
+                            cb.style.marginTop = '3px';
+                            
+                            if (p.id.includes('.info') || p.id.includes('.pslist')) {
+                                cb.checked = true;
+                            }
+
+                            const text = document.createElement('div');
+                            text.innerHTML = `<div style="color: var(--c-text-primary); font-size: 12px; font-weight: 600;">${p.name}</div>
+                                             <div style="color: var(--c-text-secondary); font-size: 10px; line-height: 1.2;">${p.description}</div>`;
+                            
+                            label.appendChild(cb);
+                            label.appendChild(text);
+                            catDiv.appendChild(label);
+                        });
+                        list.appendChild(catDiv);
                     });
                 }
             } catch (e) {
@@ -710,26 +739,21 @@
         loadPlugins();
 
         async function triggerAnalysis() {
-            logTo('term-ana', "Iniciando analyze_dump.py sobre evidencia activa...");
-            logTo('term-global', "[Fase 2] Preparando análisis...");
+            const term = document.getElementById('term-ana');
+            term.innerHTML = ">>> INICIANDO MOTOR DE ANÁLISIS VOLATILITY 3 <<<&#10;";
+            logTo('term-global', "[Fase 2] Preparando análisis modular...");
             document.getElementById('btn-ana').disabled = true;
 
             const checkboxes = document.querySelectorAll('.plugin-checkbox:checked');
             const selectedPlugins = Array.from(checkboxes).map(cb => cb.value);
             
             if (selectedPlugins.length === 0) {
-                const totalPlugins = document.querySelectorAll('.plugin-checkbox').length;
-                let errorMsg = "Error: Debes seleccionar al menos un plugin.";
-                if (totalPlugins === 0) {
-                    errorMsg = "Error: No se han cargado los plugins. Por favor espera o recarga la página.";
-                }
-                logTo('term-ana', errorMsg);
-                logTo('term-global', `[Fase 2] ${errorMsg}`);
+                const msg = "Error: Debes seleccionar al menos un plugin.";
+                logTo('term-ana', msg);
                 document.getElementById('btn-ana').disabled = false;
                 return null;
             }
 
-            logTo('term-global', "[Fase 2] Análisis en curso (Volatility 3)...");
             try {
                 let res = await fetch('/api/analyze', {
                     method: 'POST',
@@ -738,63 +762,67 @@
                 });
                 let data = await res.json();
                 if (data.status === 'success') {
+                    pollAnalysis(data.job_id);
                     return data.job_id;
                 } else {
-                    logTo('term-ana', `Error del servidor: ${data.message}`);
-                    logTo('term-global', `[Fase 2] Error: ${data.message}`);
+                    logTo('term-ana', `Error: ${data.message}`);
                     document.getElementById('btn-ana').disabled = false;
                     return null;
                 }
             } catch (e) {
                 logTo('term-ana', `Error de red: ${e.message}`);
-                logTo('term-global', `[Fase 2] Error de red.`);
                 document.getElementById('btn-ana').disabled = false;
                 return null;
             }
         }
 
+        let lastLogIndex = 0;
         async function pollAnalysis(jobId) {
-            return new Promise((resolve, reject) => {
-                const checkStatus = async () => {
-                    try {
-                        let res = await fetch(`/api/status/${jobId}`);
-                        let data = await res.json();
-                        
-                        if (data.status === 'completed') {
-                            logTo('term-ana', "Análisis completado satisfactoriamente.");
-                            logTo('term-global', "[Fase 2] OK. Artefactos extraídos.");
-                            document.getElementById('btn-ana').disabled = false;
-                            await updateActiveEvidence();
-                            resolve(true);
-                        } else if (data.status === 'failed') {
-                            logTo('term-ana', `Error en análisis: ${data.error}`);
-                            document.getElementById('btn-ana').disabled = false;
-                            reject(new Error(data.error));
-                        } else {
-                            logTo('term-ana', "Analizando volcado... (en curso)");
-                            setTimeout(checkStatus, 2000);
+            const checkStatus = async () => {
+                try {
+                    let res = await fetch(`/api/status/${jobId}`);
+                    let data = await res.json();
+                    
+                    // Update logs
+                    if (data.logs && data.logs.length > lastLogIndex) {
+                        for (let i = lastLogIndex; i < data.logs.length; i++) {
+                            logTo('term-ana', data.logs[i]);
                         }
-                    } catch (e) {
-                        logTo('term-ana', "Error consultando estado.");
-                        document.getElementById('btn-ana').disabled = false;
-                        reject(e);
+                        lastLogIndex = data.logs.length;
                     }
-                };
-                checkStatus();
-            });
+                    
+                    if (data.status === 'completed') {
+                        logTo('term-ana', ">>> ANÁLISIS FINALIZADO CORRECTAMENTE <<<");
+                        logTo('term-global', "[Fase 2] OK. Artefactos procesados.");
+                        document.getElementById('btn-ana').disabled = false;
+                        lastLogIndex = 0;
+                        await updateActiveEvidence();
+                    } else if (data.status === 'failed') {
+                        logTo('term-ana', `!!! ERROR CRÍTICO: ${data.error}`);
+                        document.getElementById('btn-ana').disabled = false;
+                        lastLogIndex = 0;
+                    } else {
+                        setTimeout(checkStatus, 1000);
+                    }
+                } catch (e) {
+                    logTo('term-ana', "Error consultando estado del motor.");
+                    document.getElementById('btn-ana').disabled = false;
+                }
+            };
+            checkStatus();
         }
 
         async function triggerReport() {
-            logTo('term-rep', "Ejecutando generate_report.py...");
-            logTo('term-global', "[Fase 3] Renderizando reporte final...");
+            logTo('term-rep', "Generando reporte profesional...");
+            logTo('term-global', "[Fase 3] Renderizando informe HTML...");
             document.getElementById('btn-rep').disabled = true;
 
             try {
                 let res = await fetch('/api/report', { method: 'POST' });
                 let data = await res.json();
                 if (data.status === 'success') {
-                    logTo('term-rep', "Reporte generado e integrado con metadatos de evidencia.");
-                    logTo('term-global', "[Fase 3] OK. Informe listo.");
+                    logTo('term-rep', "Reporte generado. Artefactos normalizados incluidos.");
+                    logTo('term-global', "[Fase 3] OK. Informe generado.");
                     document.getElementById('download-card').style.display = 'block';
                     document.getElementById('btn-rep').disabled = false;
                     return true;
@@ -804,7 +832,7 @@
                     return false;
                 }
             } catch (e) {
-                logTo('term-rep', "Error en la generación del reporte.");
+                logTo('term-rep', "Error en el pipeline de reporte.");
                 document.getElementById('btn-rep').disabled = false;
                 return false;
             }
@@ -816,25 +844,33 @@
             btn.innerText = "Pipeline en curso...";
 
             try {
-                // Fase 1: Adquisición
-                logTo('term-global', ">>> INICIANDO PIPELINE AUTOMATIZADO <<<");
+                logTo('term-global', ">>> INICIANDO PIPELINE FORENSE HÍBRIDO <<<");
                 const acqSuccess = await triggerAcquisition();
-                if (!acqSuccess) throw new Error("Fallo en Fase 1: Adquisición");
+                if (!acqSuccess) throw new Error("Fallo en Adquisición");
 
-                // Fase 2: Análisis
                 const jobId = await triggerAnalysis();
-                if (!jobId) throw new Error("Fallo al iniciar Fase 2: Análisis");
-                await pollAnalysis(jobId);
+                if (!jobId) throw new Error("Fallo al iniciar Análisis");
+                
+                // Wait for analysis to complete
+                await new Promise((resolve, reject) => {
+                    const check = async () => {
+                        let res = await fetch(`/api/status/${jobId}`);
+                        let data = await res.json();
+                        if (data.status === 'completed') resolve();
+                        else if (data.status === 'failed') reject(new Error(data.error));
+                        else setTimeout(check, 2000);
+                    };
+                    check();
+                });
 
-                // Fase 3: Reporte
                 const repSuccess = await triggerReport();
-                if (!repSuccess) throw new Error("Fallo en Fase 3: Reporte");
+                if (!repSuccess) throw new Error("Fallo en Reporte");
 
-                logTo('term-global', ">>> PIPELINE COMPLETADO CON ÉXITO <<<");
-                alert("Pipeline completado. El reporte ya está disponible.");
+                logTo('term-global', ">>> PIPELINE COMPLETADO <<<");
+                alert("Pipeline finalizado con éxito.");
             } catch (e) {
-                logTo('term-global', `!!! ERROR EN PIPELINE: ${e.message}`);
-                alert(`Error en el flujo: ${e.message}`);
+                logTo('term-global', `!!! ERROR: ${e.message}`);
+                alert(`Error: ${e.message}`);
             }
 
             btn.innerText = "▶ Ejecutar Memdump & Pipeline Completo";

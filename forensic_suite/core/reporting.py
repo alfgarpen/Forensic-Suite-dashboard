@@ -24,26 +24,30 @@ class Reporting:
             alerts = results_data.get("threats", {}).get("alerts", [])
             severity = results_data.get("threats", {}).get("severity", "low")
             
-            # Map new JSON structure to original Jinja logic
-            plugins_dict = results_data.get("plugins", {})
-            plugins_run = list(plugins_dict.keys())
+            # Use 'artifacts' instead of 'plugins'
+            artifacts_dict = results_data.get("artifacts", results_data.get("plugins", {}))
+            plugins_run = list(artifacts_dict.keys())
             
-            os_info = results_data.get("system_info", {})
-            os_profile = os_info.get("os_version", "Unknown") + " " + os_info.get("architecture", "Unknown")
+            # Handle metadata
+            metadata = results_data.get("metadata", {})
+            detected_os = metadata.get("detected_os", "Unknown")
+            vol_ver = metadata.get("volatility_version", "N/A")
+            os_profile = f"{detected_os} (via Volatility {vol_ver})"
             
             findings = {}
-            for p_name, p_data in plugins_dict.items():
+            for p_name, p_data in artifacts_dict.items():
                 if p_data.get("status") == "success":
-                    if "processes" in p_data:
-                        findings[p_name] = p_data["processes"]
-                    elif "connections" in p_data:
-                        findings[p_name] = p_data["connections"]
+                    if "items" in p_data:
+                        findings[p_name] = p_data["items"]
+                    elif "data" in p_data:
+                        findings[p_name] = p_data["data"]
+                    elif "output" in p_data: # Fallback output
+                        findings[p_name] = {"Raw Output": p_data["output"]}
                     else:
                         findings[p_name] = {k: v for k, v in p_data.items() if k != "status"}
                 else:
                     findings[p_name] = {"Error": p_data.get("error", "Failed")}
 
-            metadata = results_data.get("metadata", {})
             dump_path = metadata.get("dump_path", "memory.raw")
             dump_filename = os.path.basename(dump_path)
             dump_hashes = metadata.get("hashes", {"md5": "N/A", "sha256": "N/A"})
