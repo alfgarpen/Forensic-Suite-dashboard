@@ -38,7 +38,7 @@ class FileUtils:
 
     @staticmethod
     def is_valid_extension(filename: str) -> bool:
-        allowed = {'.raw', '.mem', '.dmp'}
+        allowed = {'.raw', '.mem', '.dmp', '.lime'}
         return os.path.splitext(filename)[1].lower() in allowed
 
     @staticmethod

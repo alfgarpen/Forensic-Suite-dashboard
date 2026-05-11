@@ -50,7 +50,7 @@ class EvidenceManager:
             raise ValueError("No file uploaded.")
 
         if not FileUtils.is_valid_extension(file_obj.filename):
-            raise ValueError("Invalid file extension. Supported: .raw, .mem, .dmp")
+            raise ValueError("Invalid file extension. Supported: .raw, .mem, .dmp, .lime")
 
         target_path = os.path.join(self.upload_dir, file_obj.filename)
         file_obj.save(target_path)

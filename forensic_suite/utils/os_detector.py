@@ -40,6 +40,8 @@ def detect_os_from_dump(dump_path: str) -> str:
             ext = os.path.splitext(dump_path)[1].lower()
             if ext == '.mem':
                 return "windows"
+            elif ext == '.lime':
+                return "linux"
             elif ext == '.raw':
                 return "unknown" # Could be either
                 

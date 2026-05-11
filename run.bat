@@ -1,15 +1,33 @@
 @echo off
-echo [*] Iniciando Forensic Suite Dashboard...
+title Forensic Suite Dashboard
+setlocal enabledelayedexpansion
+
+echo ========================================================
+echo   INICIANDO FORENSIC SUITE DASHBOARD
+echo ========================================================
 echo.
 
-IF NOT EXIST ".venv\Scripts\activate.bat" (
-    echo [!] El entorno virtual no existe.
-    echo Por favor, ejecuta install.bat primero.
+:: Verificar si existe el entorno
+if not exist ".venv\Scripts\activate.bat" (
+    echo [!] ERROR: No se encuentra el entorno virtual.
+    echo Por favor, ejecuta 'install.bat' primero.
     pause
-    exit /b
+    exit /b 1
 )
 
+:: Activar y ejecutar
+echo [*] Activando entorno virtual...
 call .venv\Scripts\activate.bat
+
+echo [*] Lanzando servidor Flask...
+echo [!] El dashboard estara disponible en: http://127.0.0.1:5000
+echo.
+
+:: Ejecutar Flask
 python app.py
 
-pause
+if %ERRORLEVEL% neq 0 (
+    echo.
+    echo [!] El servidor se ha detenido de forma inesperada (Codigo: %ERRORLEVEL%).
+    pause
+)

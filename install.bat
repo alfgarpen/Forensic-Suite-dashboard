@@ -1,44 +1,65 @@
 @echo off
+setlocal enabledelayedexpansion
+
+:: Colores (aproximados en CMD)
+set "HEADER_COLOR=0B"
+set "NORMAL_COLOR=07"
+
+color !HEADER_COLOR!
 echo ========================================================
-echo   Instalador de Forensic Suite Dashboard
+echo   FORENSIC SUITE DASHBOARD - INSTALADOR
 echo ========================================================
 echo.
+color !NORMAL_COLOR!
 
-:: Verificar si Python esta instalado
+:: 1. Verificar Python
+echo [*] Verificando instalacion de Python...
 python --version >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo [!] Python no esta instalado o no esta en el PATH.
-    echo Por favor, instala Python 3 (preferiblemente 3.10+) y vuelve a probar.
+if %ERRORLEVEL% neq 0 (
+    echo [!] ERROR: Python no esta instalado o no esta en el PATH.
+    echo Por favor, instala Python 3.10 o superior: https://www.python.org/
     pause
-    exit /b
+    exit /b 1
 )
 
-:: Crear entorno virtual si no existe
-IF NOT EXIST ".venv" (
+:: 2. Crear directorios base
+echo [*] Configurando estructura de directorios...
+if not exist "data" mkdir data
+if not exist "uploads" mkdir uploads
+if not exist "data\artifacts" mkdir data\artifacts
+
+:: 3. Entorno Virtual
+if not exist ".venv" (
     echo [*] Creando entorno virtual (.venv)...
     python -m venv .venv
-    IF %ERRORLEVEL% NEQ 0 (
-        echo [!] Hubo un error creando el entorno virtual.
+    if !ERRORLEVEL! neq 0 (
+        echo [!] ERROR: No se pudo crear el entorno virtual.
         pause
-        exit /b
+        exit /b 1
     )
-) ELSE (
-    echo [*] El entorno virtual ya existe.
+) else (
+    echo [OK] Entorno virtual ya existe.
 )
 
-:: Activar el entorno e instalar las dependencias
-echo [*] Instalando dependencias desde requirements.txt...
+:: 4. Instalacion de dependencias
+echo [*] Instalando dependencias (esto puede tardar unos minutos)...
 call .venv\Scripts\activate.bat
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip >nul
 pip install -r requirements.txt
+if !ERRORLEVEL! neq 0 (
+    echo [!] ERROR: La instalacion de dependencias fallo.
+    pause
+    exit /b 1
+)
 
 echo.
+color 0A
 echo ========================================================
-echo   Instalacion completada correctamente!
+echo   INSTALACION COMPLETADA EXITOSAMENTE
 echo ========================================================
-echo Puedes ejecutar el dashboard usando: run.bat
-echo O bien, puedes ejecutar la CLI manualmente usando: 
-echo   call .venv\Scripts\activate.bat
-echo   python cli.py --help
 echo.
+echo Para iniciar el dashboard: run.bat
+echo Para reiniciar si hay problemas: restart.bat
+echo.
+color !NORMAL_COLOR!
 pause

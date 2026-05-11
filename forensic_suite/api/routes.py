@@ -92,7 +92,7 @@ def current_dump():
         return jsonify({'status': 'error', 'message': f'Invalid path: {path}'}), 400
     
     if not FileUtils.is_valid_extension(path):
-        return jsonify({'status': 'error', 'message': 'Invalid extension. Only .raw and .mem are allowed.'}), 400
+        return jsonify({'status': 'error', 'message': 'Invalid extension. Supported: .raw, .mem, .dmp, .lime'}), 400
         
     dump_info = ApiController._update_active_dump(path, DATA_DIR)
     return jsonify({'status': 'success', 'message': 'Active dump updated.', 'active_dump': dump_info})

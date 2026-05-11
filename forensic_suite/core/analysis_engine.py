@@ -94,8 +94,9 @@ class AnalysisEngine:
                     f_res = CommandFallback.run_fallback(fallback_cat)
                     if f_res["status"] == "success":
                         # Parse the fallback output (it's a string)
-                        parsed_fallback = ArtifactParser.parse(f"fallback.{fallback_cat}", f_res["output"])
-                        results["artifacts"][f"fallback.{fallback_cat}"] = parsed_fallback
+                        # We use the original plugin name as key so they don't overwrite each other
+                        parsed_fallback = ArtifactParser.parse(p_name, f_res["output"])
+                        results["artifacts"][p_name] = parsed_fallback
                         self.log_callback(f"[+] Fallback for {fallback_cat} successful.")
                     else:
                         self.log_callback(f"[-] Fallback failed: {f_res.get('error')}")

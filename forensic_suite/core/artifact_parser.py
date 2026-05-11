@@ -9,6 +9,7 @@ class GenericTableParser:
     """
     @staticmethod
     def parse_text_table(text: str) -> list:
+        import os
         lines = [line.strip() for line in text.strip().split('\n') if line.strip()]
         if not lines:
             return []
@@ -24,16 +25,25 @@ class GenericTableParser:
         results = []
         for line in lines[1:]:
             # Attempt to split line according to header positions or whitespace
-            # Simple approach: split by whitespace but try to match header count
             parts = re.split(r'\s+', line, maxsplit=len(headers) - 1)
             
             if len(parts) == len(headers):
                 row = {headers[i]: parts[i] for i in range(len(headers))}
+                
+                # Logic to add a friendly 'Nombre' column for process lists
+                cmd_key = None
+                if "COMMAND" in row: cmd_key = "COMMAND"
+                elif "Image Name" in row: cmd_key = "Image Name"
+                
+                if cmd_key and "Nombre" not in row:
+                    cmd_val = row[cmd_key]
+                    if cmd_val:
+                        # Extract basename (e.g. /usr/bin/python -> python)
+                        # We split by space first to handle arguments
+                        exe_path = cmd_val.split()[0]
+                        row["Nombre"] = os.path.basename(exe_path)
+                
                 results.append(row)
-            else:
-                # If splitting fails to match header count, store as raw if necessary or skip
-                # For now, we skip malformed lines in this generic parser
-                pass
         
         return results
 
@@ -58,13 +68,13 @@ class ArtifactParser:
         if not isinstance(raw_data, list):
             return {"error": "Invalid data format (expected list or string)"}
 
-        if "pslist" in plugin_name:
+        if "pslist" in plugin_name or "psaux" in plugin_name:
             return ArtifactParser._parse_pslist(raw_data)
-        elif "netscan" in plugin_name or "netstat" in plugin_name:
+        elif any(x in plugin_name for x in ["netscan", "netstat", "sockstat"]):
             return ArtifactParser._parse_network(raw_data)
         elif "malfind" in plugin_name:
             return ArtifactParser._parse_malfind(raw_data)
-        elif "info" in plugin_name:
+        elif "info" in plugin_name or "banners" in plugin_name:
             return ArtifactParser._parse_info(raw_data)
         
         # Default: return raw data wrapped in a success status
