@@ -29,7 +29,9 @@
             padding: 20px;
             background: #000;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
         }
 
         * {
@@ -411,6 +413,13 @@
             </div>
         </div>
 
+        <div class="db-nav">
+            <button class="nav-tab active" onclick="switchTab('overview')">Visión general</button>
+            <button class="nav-tab" onclick="switchTab('script1')">01 · Adquisición<span class="num">acq</span></button>
+            <button class="nav-tab" onclick="switchTab('script2')">02 · Análisis<span class="num">vol</span></button>
+            <button class="nav-tab" onclick="switchTab('script3')">03 · Reporte<span class="num">html</span></button>
+        </div>
+
         <!-- SECCIÓN EVIDENCIA ACTIVA -->
         <div id="active-evidence-bar" style="background: var(--c-panel); border-bottom: 1px solid var(--c-border); padding: 12px 24px; display: none;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -549,12 +558,6 @@
         </div>
     </div>
 
-        <div class="db-nav">
-            <button class="nav-tab active" onclick="switchTab('overview')">Visión general</button>
-            <button class="nav-tab" onclick="switchTab('script1')">01 · Adquisición<span class="num">acq</span></button>
-            <button class="nav-tab" onclick="switchTab('script2')">02 · Análisis<span class="num">vol</span></button>
-            <button class="nav-tab" onclick="switchTab('script3')">03 · Reporte<span class="num">html</span></button>
-        </div>
 
         <script>
         function switchTab(id) {
