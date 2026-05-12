@@ -1,0 +1,16 @@
+[Unit]
+Description=Forensic Suite Dashboard - Web Interface
+After=network.target
+
+[Service]
+Type=simple
+User=hackerguarro
+Group=hackerguarro
+WorkingDirectory=/home/hackerguarro/Documentos/Forensic-Suite-dashboard
+Environment="PATH=/home/hackerguarro/Documentos/Forensic-Suite-dashboard/.venv/bin"
+ExecStart=/home/hackerguarro/Documentos/Forensic-Suite-dashboard/.venv/bin/python app.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
