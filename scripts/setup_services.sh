@@ -7,7 +7,7 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-PROJECT_DIR="/home/hackerguarro/Documentos/Forensic-Suite-dashboard"
+PROJECT_DIR="/usr/local/Forensic-Suite-dashboard"
 SYSTEMD_DIR="/etc/systemd/system"
 
 echo "[*] Instalando servicios en $SYSTEMD_DIR..."

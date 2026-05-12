@@ -6,9 +6,9 @@ After=network.target
 Type=simple
 User=hackerguarro
 Group=hackerguarro
-WorkingDirectory=/home/hackerguarro/Documentos/Forensic-Suite-dashboard
-Environment="PATH=/home/hackerguarro/Documentos/Forensic-Suite-dashboard/.venv/bin"
-ExecStart=/home/hackerguarro/Documentos/Forensic-Suite-dashboard/.venv/bin/python app.py
+WorkingDirectory=/usr/local/Forensic-Suite-dashboard
+Environment="PATH=/usr/local/Forensic-Suite-dashboard/.venv/bin"
+ExecStart=/usr/local/Forensic-Suite-dashboard/.venv/bin/python app.py
 Restart=always
 RestartSec=5
 

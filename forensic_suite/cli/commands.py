@@ -137,7 +137,11 @@ def pipeline(output_dir, profile):
     
     dump_path = os.path.join(output_dir, 'memory.raw')
     results_path = os.path.join(output_dir, 'results.json')
-    report_path = os.path.join(output_dir, 'report.html')
+    
+    # Generar nombre de reporte único con fecha y hora
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    report_name = f"reporte_{timestamp}.html"
+    report_path = os.path.join(output_dir, report_name)
     
     # 1. Acquire
     click.echo("\n--- Phase 1: Acquisition ---")

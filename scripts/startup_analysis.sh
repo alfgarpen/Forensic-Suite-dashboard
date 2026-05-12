@@ -3,7 +3,7 @@
 # Generado por Antigravity
 
 # Navegar al directorio del proyecto
-cd /home/hackerguarro/Documentos/Forensic-Suite-dashboard
+cd /usr/local/Forensic-Suite-dashboard
 
 # Activar el entorno virtual
 source .venv/bin/activate
