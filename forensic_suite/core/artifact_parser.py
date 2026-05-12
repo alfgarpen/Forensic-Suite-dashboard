@@ -76,11 +76,25 @@ class ArtifactParser:
             return ArtifactParser._parse_malfind(raw_data)
         elif "info" in plugin_name or "banners" in plugin_name:
             return ArtifactParser._parse_info(raw_data)
+        elif "pstree" in plugin_name:
+            return ArtifactParser._parse_pstree(raw_data)
         elif "bash" in plugin_name:
             return ArtifactParser._parse_history(raw_data)
         
         # Default: return raw data wrapped in a success status
         return {"status": "success", "data": raw_data}
+
+    @staticmethod
+    def _parse_pstree(data) -> dict:
+        if isinstance(data, str):
+            return {
+                "status": "success",
+                "type": "text",
+                "output": data
+            }
+        # If it's Volatility data (list of dicts), we'd need a complex tree builder.
+        # For now, let's treat it as success data.
+        return {"status": "success", "data": data}
 
     @staticmethod
     def _parse_history(data) -> dict:

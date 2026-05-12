@@ -18,12 +18,15 @@ class CommandFallback:
         
         commands = {
             "processes": ["tasklist"] if is_windows else ["ps", "aux"],
+            "pstree": ["tasklist"] if is_windows else ["pstree", "-apn"],
             "network": ["netstat", "-ano"] if is_windows else ["ss", "-atunp"],
             "system": ["systeminfo"] if is_windows else ["uname", "-a"],
             "services": ["sc", "query"] if is_windows else ["systemctl", "list-units", "--type=service"],
-            "users": ["net", "user"] if is_windows else ["who"],
+            "users": ["whoami", "/all"] if is_windows else ["who"],
             "history": [] if is_windows else ["cat", os.path.expanduser("~/.bash_history")],
-            "kernel": ["driverquery"] if is_windows else ["lsmod"]
+            "kernel": ["driverquery"] if is_windows else ["lsmod"],
+            "environment": ["set"] if is_windows else ["env"],
+            "registry": ["reg", "query", "HKLM\\Software"] if is_windows else []
         }
         
         # Special handling for Linux bash/zsh history to find more users
@@ -92,7 +95,7 @@ class CommandFallback:
             return {"status": "error", "error": f"No fallback command for category: {category}"}
             
         try:
-            # Special handling for empty commands (like history on Windows)
+            # Special handling for empty commands
             if not cmd:
                 return {"status": "error", "error": f"Category {category} not supported on this platform."}
 
@@ -113,7 +116,9 @@ class CommandFallback:
     def map_plugin_to_category(plugin_name: str) -> Optional[str]:
         """Maps a Volatility plugin name to a fallback category."""
         p = plugin_name.lower()
-        if any(x in p for x in ["pslist", "pstree", "psaux"]):
+        if "pstree" in p:
+            return "pstree"
+        elif any(x in p for x in ["pslist", "psaux", "cmdline", "dlllist", "handles"]):
             return "processes"
         elif any(x in p for x in ["netscan", "netstat", "sockstat"]):
             return "network"
@@ -123,8 +128,12 @@ class CommandFallback:
             return "services"
         elif "bash" in p:
             return "history"
-        elif "lsmod" in p or "check_modules" in p:
+        elif any(x in p for x in ["lsmod", "check_modules", "ldrmodules"]):
             return "kernel"
-        elif any(x in p for x in ["users", "whoami"]):
+        elif any(x in p for x in ["users", "whoami", "getsids"]):
             return "users"
+        elif "envars" in p:
+            return "environment"
+        elif "registry" in p or "hivelist" in p or "printkey" in p:
+            return "registry"
         return None
