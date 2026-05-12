@@ -230,14 +230,23 @@
             border: 1px dashed var(--c-border);
         }
 
-        /* footer */
-        .report-footer {
-            padding: 20px 36px;
-            border-top: 1px solid var(--c-border);
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px; color: var(--c-text-secondary);
+        /* interaction */
+        .plugin-header { cursor: pointer; transition: background 0.2s; border-radius: 8px; padding: 4px 8px; margin-left: -8px; }
+        .plugin-header:hover { background: rgba(255,255,255,0.05); }
+        .collapse-btn {
+            margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 14px;
+            color: var(--c-text-secondary); transition: transform 0.3s;
         }
+        .plugin-block.collapsed .collapse-btn { transform: rotate(-90deg); }
+        .plugin-block.collapsed .plugin-content { display: none; }
+
+        th.sortable { cursor: pointer; user-select: none; position: relative; padding-right: 25px; }
+        th.sortable:hover { color: var(--c-text-primary); background: rgba(61,142,248,0.2); }
+        th.sortable::after {
+            content: '↕'; position: absolute; right: 8px; opacity: 0.3; font-size: 10px;
+        }
+        th.sort-asc::after { content: '↑'; opacity: 1; }
+        th.sort-desc::after { content: '↓'; opacity: 1; }
     </style>
 </head>
 <body>
@@ -284,7 +293,7 @@
             </div>
             <div class="meta-card">
                 <div class="meta-label">Generado el</div>
-                <div class="meta-value normal">2026-05-12 09:31:21</div>
+                <div class="meta-value normal">2026-05-12 09:44:06</div>
             </div>
         </div>
     </div>
@@ -308,14 +317,17 @@
         <div class="section-heading">Resultados por Plugin</div>
 
         
-        <div class="plugin-block">
-            <div class="plugin-header">
+        <div class="plugin-block" id="plugin-1">
+            <div class="plugin-header" onclick="togglePlugin('plugin-1')">
                 <div class="plugin-icon">⚙</div>
                 <div class="plugin-name">banners.Banners</div>
                 
                     <span class="plugin-count">1 campos</span>
                 
+                <div class="collapse-btn">▼</div>
             </div>
+
+            <div class="plugin-content">
 
             
             
@@ -345,16 +357,20 @@
 
             
             
+            </div> <!-- end plugin-content -->
         </div>
         
-        <div class="plugin-block">
-            <div class="plugin-header">
+        <div class="plugin-block" id="plugin-2">
+            <div class="plugin-header" onclick="togglePlugin('plugin-2')">
                 <div class="plugin-icon">⚙</div>
                 <div class="plugin-name">linux.pslist.PsList</div>
                 
-                    <span class="plugin-count">425 entradas</span>
+                    <span class="plugin-count">435 entradas</span>
                 
+                <div class="collapse-btn">▼</div>
             </div>
+
+            <div class="plugin-content">
 
             
             
@@ -364,17 +380,17 @@
                         <thead>
                             <tr>
                                 
-                                <th>USER</th>
+                                <th class="sortable" onclick="sortTable(this, 0)">USER</th>
                                 
-                                <th>PID %CPU %MEM</th>
+                                <th class="sortable" onclick="sortTable(this, 1)">PID %CPU %MEM</th>
                                 
-                                <th>VSZ</th>
+                                <th class="sortable" onclick="sortTable(this, 2)">VSZ</th>
                                 
-                                <th>RSS TTY</th>
+                                <th class="sortable" onclick="sortTable(this, 3)">RSS TTY</th>
                                 
-                                <th>STAT START</th>
+                                <th class="sortable" onclick="sortTable(this, 4)">STAT START</th>
                                 
-                                <th>TIME COMMAND</th>
+                                <th class="sortable" onclick="sortTable(this, 5)">TIME COMMAND</th>
                                 
                             </tr>
                         </thead>
@@ -568,7 +584,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    08:31   0:01 [rcu_preempt]</td>
+                                <td>0 ?        I    08:31   0:02 [rcu_preempt]</td>
                                 
                             </tr>
                             
@@ -1856,22 +1872,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>112</td>
-                                
-                                <td>0.2</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        D    08:31   0:07 [kworker/u64:1+events_unbound]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>118</td>
                                 
                                 <td>0.2</td>
@@ -1880,7 +1880,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    08:31   0:07 [kworker/u64:7-kvfree_rcu_reclaim]</td>
+                                <td>0 ?        D    08:31   0:09 [kworker/u64:7+events_unbound]</td>
                                 
                             </tr>
                             
@@ -2928,22 +2928,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>394</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:31   0:00 [kworker/15:2-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>397</td>
                                 
                                 <td>0.0</td>
@@ -3800,7 +3784,7 @@
                                 
                                 <td>382544</td>
                                 
-                                <td>10236 ?        Ssl  08:31   0:00 /usr/lib/polkit-1/polkitd --no-debug --log-level=notice</td>
+                                <td>10244 ?        Ssl  08:31   0:00 /usr/lib/polkit-1/polkitd --no-debug --log-level=notice</td>
                                 
                             </tr>
                             
@@ -3928,7 +3912,7 @@
                                 
                                 <td>18392</td>
                                 
-                                <td>11552 ?        Ss   08:31   0:02 /usr/sbin/wpa_supplicant -u -s -O DIR=/run/wpa_supplicant GROUP=netdev</td>
+                                <td>11552 ?        Ss   08:31   0:03 /usr/sbin/wpa_supplicant -u -s -O DIR=/run/wpa_supplicant GROUP=netdev</td>
                                 
                             </tr>
                             
@@ -3960,7 +3944,7 @@
                                 
                                 <td>1107364</td>
                                 
-                                <td>149296 tty7   Ssl+ 08:31   1:28 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch</td>
+                                <td>149296 tty7   Ssl+ 08:31   1:45 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch</td>
                                 
                             </tr>
                             
@@ -4184,7 +4168,7 @@
                                 
                                 <td>765904</td>
                                 
-                                <td>42940 ?        Ssl  08:36   0:00 xfce4-session</td>
+                                <td>42944 ?        Ssl  08:36   0:00 xfce4-session</td>
                                 
                             </tr>
                             
@@ -4280,7 +4264,7 @@
                                 
                                 <td>2171004</td>
                                 
-                                <td>119432 ?      Sl   08:36   0:40 xfwm4</td>
+                                <td>119432 ?      Sl   08:36   0:48 xfwm4</td>
                                 
                             </tr>
                             
@@ -4440,7 +4424,7 @@
                                 
                                 <td>401916</td>
                                 
-                                <td>150856 ?       Sl   08:36   0:03 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libcpugraph.so 13 16777228 cpugraph Gráfico del procesador Gráfico de la carga del procesador</td>
+                                <td>150856 ?       Sl   08:36   0:04 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libcpugraph.so 13 16777228 cpugraph Gráfico del procesador Gráfico de la carga del procesador</td>
                                 
                             </tr>
                             
@@ -4472,7 +4456,7 @@
                                 
                                 <td>277900</td>
                                 
-                                <td>30676 ?        Sl   08:36   0:04 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libgenmon.so 15 16777230 genmon Monitor genérico Muestra la salida de una orden</td>
+                                <td>30676 ?        Sl   08:36   0:05 /usr/lib/x86_64-linux-gnu/xfce4/panel/wrapper-2.0 /usr/lib/x86_64-linux-gnu/xfce4/panel/plugins/libgenmon.so 15 16777230 genmon Monitor genérico Muestra la salida de una orden</td>
                                 
                             </tr>
                             
@@ -4750,22 +4734,6 @@
                             
                             <tr>
                                 
-                                <td>root</td>
-                                
-                                <td>2735</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:36   0:00 [kworker/10:3-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
                                 <td>hackerg+</td>
                                 
                                 <td>2749</td>
@@ -4894,33 +4862,17 @@
                             
                             <tr>
                                 
-                                <td>root</td>
-                                
-                                <td>3532</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:37   0:00 [kworker/4:5-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
                                 <td>hackerg+</td>
                                 
                                 <td>3623</td>
                                 
-                                <td>5.4</td>
+                                <td>5.5</td>
                                 
-                                <td>3.5</td>
+                                <td>3.6</td>
                                 
-                                <td>3676836</td>
+                                <td>3701536</td>
                                 
-                                <td>545568 ?      Sl   08:37   2:53 /usr/lib/firefox-esr/firefox-esr</td>
+                                <td>558428 ?      Sl   08:37   3:40 /usr/lib/firefox-esr/firefox-esr</td>
                                 
                             </tr>
                             
@@ -5044,11 +4996,11 @@
                                 
                                 <td>0.0</td>
                                 
-                                <td>1.1</td>
+                                <td>1.2</td>
                                 
-                                <td>2544328</td>
+                                <td>2547400</td>
                                 
-                                <td>183560 ?      Sl   08:37   0:01 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:34143 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {800eed71-37eb-40dc-913b-cfbd49068dce} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 2 tab</td>
+                                <td>185520 ?      Sl   08:37   0:01 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:34143 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {800eed71-37eb-40dc-913b-cfbd49068dce} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 2 tab</td>
                                 
                             </tr>
                             
@@ -5080,7 +5032,7 @@
                                 
                                 <td>2485336</td>
                                 
-                                <td>110504 ?      Sl   08:37   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42716 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {15740f62-1640-4797-aefb-16bf1563577c} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 5 tab</td>
+                                <td>110536 ?      Sl   08:37   0:00 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:42716 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {15740f62-1640-4797-aefb-16bf1563577c} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 5 tab</td>
                                 
                             </tr>
                             
@@ -5108,11 +5060,11 @@
                                 
                                 <td>0.1</td>
                                 
-                                <td>1.0</td>
+                                <td>1.1</td>
                                 
                                 <td>2643840</td>
                                 
-                                <td>169748 ?      Sl   08:37   0:05 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:40317 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {7cdd614d-f90e-4962-a10d-969cd9205e16} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 9 tab</td>
+                                <td>170116 ?      Sl   08:37   0:06 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:40317 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {7cdd614d-f90e-4962-a10d-969cd9205e16} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 9 tab</td>
                                 
                             </tr>
                             
@@ -5128,7 +5080,7 @@
                                 
                                 <td>1461541444</td>
                                 
-                                <td>273700 ?   SLl  08:40   0:14 /usr/share/antigravity/antigravity</td>
+                                <td>273932 ?   SLl  08:40   0:17 /usr/share/antigravity/antigravity</td>
                                 
                             </tr>
                             
@@ -5186,13 +5138,13 @@
                                 
                                 <td>15859</td>
                                 
-                                <td>2.2</td>
+                                <td>1.9</td>
                                 
                                 <td>1.2</td>
                                 
-                                <td>51392692</td>
+                                <td>51386548</td>
                                 
-                                <td>199084 ?     Sl   08:40   1:09 /usr/share/antigravity/antigravity --type=zygote --no-zygote-sandbox</td>
+                                <td>198840 ?     Sl   08:40   1:15 /usr/share/antigravity/antigravity --type=zygote --no-zygote-sandbox</td>
                                 
                             </tr>
                             
@@ -5208,7 +5160,7 @@
                                 
                                 <td>33910364</td>
                                 
-                                <td>89536 ?      Sl   08:40   0:00 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041</td>
+                                <td>89596 ?      Sl   08:40   0:00 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041</td>
                                 
                             </tr>
                             
@@ -5218,13 +5170,13 @@
                                 
                                 <td>15947</td>
                                 
-                                <td>4.0</td>
+                                <td>3.8</td>
                                 
-                                <td>3.0</td>
+                                <td>3.2</td>
                                 
-                                <td>1465110980</td>
+                                <td>1463407044</td>
                                 
-                                <td>478348 ?   Sl   08:40   2:04 /usr/share/antigravity/antigravity --type=zygote</td>
+                                <td>499288 ?   Sl   08:40   2:27 /usr/share/antigravity/antigravity --type=zygote</td>
                                 
                             </tr>
                             
@@ -5240,7 +5192,7 @@
                                 
                                 <td>1459924904</td>
                                 
-                                <td>178304 ?   Sl   08:40   0:01 /usr/share/antigravity/antigravity --type=zygote</td>
+                                <td>178500 ?   Sl   08:40   0:01 /usr/share/antigravity/antigravity --type=zygote</td>
                                 
                             </tr>
                             
@@ -5252,11 +5204,11 @@
                                 
                                 <td>0.2</td>
                                 
-                                <td>1.4</td>
+                                <td>1.3</td>
                                 
-                                <td>4891360</td>
+                                <td>4891488</td>
                                 
-                                <td>219984 ?      Sl   08:40   0:07 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --csrf_token d542165e-e59f-449e-8534-32883c63bd15 --extension_server_port 45465 --extension_server_csrf_token dd85038b-aea0-4a75-9dde-6d7841a474dd --app_data_dir antigravity --cloud_code_endpoint https://cloudcode-pa.googleapis.com</td>
+                                <td>209600 ?      Sl   08:40   0:09 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --csrf_token d542165e-e59f-449e-8534-32883c63bd15 --extension_server_port 45465 --extension_server_csrf_token dd85038b-aea0-4a75-9dde-6d7841a474dd --app_data_dir antigravity --cloud_code_endpoint https://cloudcode-pa.googleapis.com</td>
                                 
                             </tr>
                             
@@ -5272,7 +5224,7 @@
                                 
                                 <td>1461343916</td>
                                 
-                                <td>164372 ?   Sl   08:40   0:04 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708991934122588</td>
+                                <td>164668 ?   Sl   08:40   0:04 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708991934122588</td>
                                 
                             </tr>
                             
@@ -5288,7 +5240,7 @@
                                 
                                 <td>1461371632</td>
                                 
-                                <td>126304 ?   Sl   08:40   0:02 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708994745248135</td>
+                                <td>126272 ?   Sl   08:40   0:03 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708994745248135</td>
                                 
                             </tr>
                             
@@ -5310,22 +5262,6 @@
                             
                             <tr>
                                 
-                                <td>root</td>
-                                
-                                <td>17064</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:41   0:00 [kworker/2:8-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
                                 <td>hackerg+</td>
                                 
                                 <td>17950</td>
@@ -5334,9 +5270,9 @@
                                 
                                 <td>0.9</td>
                                 
-                                <td>2509480</td>
+                                <td>2511532</td>
                                 
-                                <td>144768 ?      Sl   08:42   0:30 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:40917 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {f9a45d2d-6c21-46b2-ae32-b7cd760d9656} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 20 tab</td>
+                                <td>145968 ?      Sl   08:42   0:38 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:40917 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {f9a45d2d-6c21-46b2-ae32-b7cd760d9656} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 20 tab</td>
                                 
                             </tr>
                             
@@ -5410,13 +5346,13 @@
                                 
                                 <td>20400</td>
                                 
-                                <td>0.1</td>
+                                <td>0.0</td>
                                 
                                 <td>0.9</td>
                                 
                                 <td>1461371516</td>
                                 
-                                <td>151512 ?   Sl   08:42   0:03 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190709002241582927</td>
+                                <td>151704 ?   Sl   08:42   0:03 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190709002241582927</td>
                                 
                             </tr>
                             
@@ -5428,11 +5364,11 @@
                                 
                                 <td>0.4</td>
                                 
-                                <td>1.6</td>
+                                <td>1.5</td>
                                 
                                 <td>1461347328</td>
                                 
-                                <td>249164 ?   Sl   08:42   0:12 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --dns-result-order=ipv4first --experimental-network-inspection --inspect-port=0 --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190709003178624776</td>
+                                <td>244464 ?   Sl   08:42   0:14 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --dns-result-order=ipv4first --experimental-network-inspection --inspect-port=0 --enable-crash-reporter=c4be31c3-a52f-4142-80df-79756ba352ad,no_channel --user-data-dir=/home/hackerguarro/.config/Antigravity --standard-schemes=vscode-webview,vscode-file --enable-sandbox --secure-schemes=vscode-webview,vscode-file --cors-schemes=vscode-webview,vscode-file --fetch-schemes=vscode-webview,vscode-file --service-worker-schemes=vscode-webview --code-cache-schemes=vscode-webview,vscode-file --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,15531881210101249353,533458096460921117,262144 --enable-features=DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync,PdfUseShowSaveFilePicker --disable-features=CalculateNativeWinOcclusion,LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190709003178624776</td>
                                 
                             </tr>
                             
@@ -5464,7 +5400,7 @@
                                 
                                 <td>4758596</td>
                                 
-                                <td>162428 ?      Sl   08:42   0:05 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --enable_lsp --csrf_token 3260ef6c-dd96-4bd9-9f17-d89a75de2b35 --extension_server_port 36389 --extension_server_csrf_token a3e3285e-7a42-4463-98a7-2f8f5b60043d --workspace_id file_home_hackerguarro_Documentos_Forensic_Suite_dashboard --cloud_code_endpoint https://daily-cloudcode-pa.googleapis.com --app_data_dir antigravity --parent_pipe_path /tmp/server_fa177c98385ac4a2</td>
+                                <td>160784 ?      Sl   08:42   0:07 /usr/share/antigravity/resources/app/extensions/antigravity/bin/language_server_linux_x64 --enable_lsp --csrf_token 3260ef6c-dd96-4bd9-9f17-d89a75de2b35 --extension_server_port 36389 --extension_server_csrf_token a3e3285e-7a42-4463-98a7-2f8f5b60043d --workspace_id file_home_hackerguarro_Documentos_Forensic_Suite_dashboard --cloud_code_endpoint https://daily-cloudcode-pa.googleapis.com --app_data_dir antigravity --parent_pipe_path /tmp/server_fa177c98385ac4a2</td>
                                 
                             </tr>
                             
@@ -5616,54 +5552,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>25299</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:50   0:00 [kworker/5:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>25951</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:51   0:00 [kworker/7:2-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>26049</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:51   0:00 [kworker/6:5-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>26713</td>
                                 
                                 <td>0.1</td>
@@ -5672,39 +5560,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    08:52   0:03 [kworker/u64:0-gfx_0.0.0]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>28816</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:57   0:00 [kworker/13:1-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>28835</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:57   0:00 [kworker/4:6-events]</td>
+                                <td>0 ?        I    08:52   0:04 [kworker/u64:0-comp_1.0.1]</td>
                                 
                             </tr>
                             
@@ -5728,22 +5584,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>29728</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:58   0:00 [kworker/1:6-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>29917</td>
                                 
                                 <td>0.0</td>
@@ -5753,22 +5593,6 @@
                                 <td>0</td>
                                 
                                 <td>0 ?        I    08:59   0:00 [kworker/5:4-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>30307</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    08:59   0:00 [kworker/6:1-events]</td>
                                 
                             </tr>
                             
@@ -5784,7 +5608,7 @@
                                 
                                 <td>1459534772</td>
                                 
-                                <td>94212 ?    Sl   09:00   0:00 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=20415</td>
+                                <td>94224 ?    Sl   09:00   0:00 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=20415</td>
                                 
                             </tr>
                             
@@ -5816,23 +5640,7 @@
                                 
                                 <td>523024</td>
                                 
-                                <td>237868 ?       Sl   09:01   0:00 /home/hackerguarro/.antigravity/extensions/meta.pyrefly-0.64.1-linux-x64/bin/pyrefly lsp</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>32263</td>
-                                
-                                <td>0.1</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:03   0:01 [kworker/11:7-events]</td>
+                                <td>236616 ?       Sl   09:01   0:00 /home/hackerguarro/.antigravity/extensions/meta.pyrefly-0.64.1-linux-x64/bin/pyrefly lsp</td>
                                 
                             </tr>
                             
@@ -5848,7 +5656,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:03   0:00 [kworker/8:4-mm_percpu_wq]</td>
+                                <td>0 ?        I    09:03   0:00 [kworker/8:4-events]</td>
                                 
                             </tr>
                             
@@ -5865,38 +5673,6 @@
                                 <td>0</td>
                                 
                                 <td>0 ?        I    09:03   0:00 [kworker/8:6-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>32600</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:04   0:00 [kworker/1:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>hackerg+</td>
-                                
-                                <td>32920</td>
-                                
-                                <td>0.2</td>
-                                
-                                <td>1.0</td>
-                                
-                                <td>2553372</td>
-                                
-                                <td>154612 ?      Sl   09:04   0:04 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:43849 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {145ee658-2be3-4765-87ff-0831ffc11c6f} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 25 tab</td>
                                 
                             </tr>
                             
@@ -5936,54 +5712,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>35181</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:09   0:00 [kworker/15:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>35561</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:09   0:00 [kworker/2:1-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>35603</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:09   0:00 [kworker/13:4-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>35628</td>
                                 
                                 <td>0.0</td>
@@ -6008,39 +5736,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:11   0:00 [kworker/9:1-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>36322</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:11   0:00 [kworker/4:2-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>37374</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:12   0:00 [kworker/9:2-events]</td>
+                                <td>0 ?        I    09:11   0:00 [kworker/9:1-mm_percpu_wq]</td>
                                 
                             </tr>
                             
@@ -6072,23 +5768,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:18   0:00 [kworker/0:1-events_power_efficient]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>40573</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:18   0:00 [kworker/3:2-mm_percpu_wq]</td>
+                                <td>0 ?        I    09:18   0:00 [kworker/0:1-events]</td>
                                 
                             </tr>
                             
@@ -6136,7 +5816,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:19   0:00 [kworker/14:4-mm_percpu_wq]</td>
+                                <td>0 ?        I    09:19   0:00 [kworker/14:4-events]</td>
                                 
                             </tr>
                             
@@ -6160,70 +5840,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>41180</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:19   0:00 [kworker/5:1-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>41312</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:20   0:00 [kworker/3:3-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>41313</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:20   0:00 [kworker/3:4-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>41351</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I<   09:20   0:00 [kworker/u65:3-ttm]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>41929</td>
                                 
                                 <td>0.0</td>
@@ -6240,22 +5856,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>41971</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:21   0:00 [kworker/15:3-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>41980</td>
                                 
                                 <td>0.0</td>
@@ -6264,7 +5864,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:21   0:00 [kworker/1:1-mm_percpu_wq]</td>
+                                <td>0 ?        I    09:21   0:00 [kworker/1:1-events]</td>
                                 
                             </tr>
                             
@@ -6280,7 +5880,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:21   0:01 [kworker/u64:5-gfx_0.0.0]</td>
+                                <td>0 ?        I    09:21   0:02 [kworker/u64:5-gfx_0.0.0]</td>
                                 
                             </tr>
                             
@@ -6336,22 +5936,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>42914</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:23   0:00 [kworker/5:3-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>43322</td>
                                 
                                 <td>0.0</td>
@@ -6361,38 +5945,6 @@
                                 <td>0</td>
                                 
                                 <td>0 ?        I    09:24   0:00 [kworker/1:2-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>43665</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:24   0:00 [kworker/9:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>43993</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:25   0:00 [kworker/9:3]</td>
                                 
                             </tr>
                             
@@ -6432,38 +5984,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>44220</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/4:1-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44221</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/4:3]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>44298</td>
                                 
                                 <td>0.0</td>
@@ -6473,54 +5993,6 @@
                                 <td>0</td>
                                 
                                 <td>0 ?        I    09:26   0:00 [kworker/13:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44356</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/1:3-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44453</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/6:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44478</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/6:2-events]</td>
                                 
                             </tr>
                             
@@ -6560,118 +6032,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>44481</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/6:6-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44482</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/6:7-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44483</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:26   0:00 [kworker/6:8]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44764</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/5:5-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44765</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/5:6]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44782</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/12:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44807</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/14:0]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>44930</td>
                                 
                                 <td>0.0</td>
@@ -6680,7 +6040,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:27   0:00 [kworker/15:1-mm_percpu_wq]</td>
+                                <td>0 ?        I    09:27   0:00 [kworker/15:1-events]</td>
                                 
                             </tr>
                             
@@ -6704,38 +6064,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>44932</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/15:5]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44941</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/13:2-mm_percpu_wq]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>44942</td>
                                 
                                 <td>0.0</td>
@@ -6745,102 +6073,6 @@
                                 <td>0</td>
                                 
                                 <td>0 ?        I    09:27   0:00 [kworker/13:3-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>44979</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/12:3]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>45024</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/u64:2-gfx_0.0.0]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>45025</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/u64:3-gfx_0.0.0]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>45361</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/3:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>45362</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/3:1-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>45363</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:27   0:00 [kworker/3:5]</td>
                                 
                             </tr>
                             
@@ -6864,54 +6096,6 @@
                                 
                                 <td>root</td>
                                 
-                                <td>45814</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:28   0:00 [kworker/10:2]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46091</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I<   09:29   0:00 [kworker/u65:1]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46092</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:29   0:00 [kworker/1:4]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
                                 <td>46149</td>
                                 
                                 <td>0.0</td>
@@ -6920,7 +6104,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:29   0:00 [kworker/0:0]</td>
+                                <td>0 ?        I    09:29   0:00 [kworker/0:0-events]</td>
                                 
                             </tr>
                             
@@ -6936,55 +6120,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:29   0:00 [kworker/9:4]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46175</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:29   0:00 [kworker/2:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46235</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>16552</td>
-                                
-                                <td>6832 ?        S    09:29   0:00 systemd-userwork: waiting...</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46255</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:29   0:00 [kworker/13:5]</td>
+                                <td>0 ?        I    09:29   0:00 [kworker/9:4-events]</td>
                                 
                             </tr>
                             
@@ -6994,61 +6130,13 @@
                                 
                                 <td>46318</td>
                                 
-                                <td>0.2</td>
+                                <td>0.1</td>
                                 
                                 <td>0.2</td>
                                 
-                                <td>413744</td>
+                                <td>481412</td>
                                 
-                                <td>34564 pts/3    Sl+  09:29   0:00 /home/hackerguarro/Documentos/Forensic-Suite-dashboard/.venv/bin/python3 app.py</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46366</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>16552</td>
-                                
-                                <td>6828 ?        S    09:29   0:00 systemd-userwork: waiting...</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46466</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>16552</td>
-                                
-                                <td>6848 ?        S    09:29   0:00 systemd-userwork: waiting...</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46627</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:30   0:00 [kworker/7:1]</td>
+                                <td>44828 pts/3    Sl+  09:29   0:01 /home/hackerguarro/Documentos/Forensic-Suite-dashboard/.venv/bin/python3 app.py</td>
                                 
                             </tr>
                             
@@ -7064,87 +6152,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:30   0:00 [kworker/11:0-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46947</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:30   0:00 [kworker/11:2-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46948</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:30   0:00 [kworker/11:3-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46949</td>
-                                
-                                <td>0.1</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:30   0:00 [kworker/11:4-events]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>46950</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:30   0:00 [kworker/11:5]</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>root</td>
-                                
-                                <td>47015</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0.0</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0 ?        I    09:31   0:00 [kworker/2:2-events]</td>
+                                <td>0 ?        I    09:30   0:00 [kworker/11:0-inode_switch_wbs]</td>
                                 
                             </tr>
                             
@@ -7160,7 +6168,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0 ?        I    09:31   0:00 [kworker/2:3]</td>
+                                <td>0 ?        I    09:31   0:00 [kworker/2:3-events]</td>
                                 
                             </tr>
                             
@@ -7168,7 +6176,1175 @@
                                 
                                 <td>root</td>
                                 
-                                <td>47035</td>
+                                <td>47166</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:31   0:00 [kworker/4:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>48400</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:33   0:00 [kworker/2:4-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>48424</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:33   0:00 [kworker/3:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>48425</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:33   0:00 [kworker/3:3-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>48687</td>
+                                
+                                <td>0.2</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:34   0:01 [kworker/u64:2-kvfree_rcu_reclaim]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>49336</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:35   0:00 [kworker/1:0-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>49630</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:36   0:00 [kworker/5:0-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>49787</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:36   0:00 [kworker/1:3-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>49985</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:36   0:00 [kworker/0:3-events_power_efficient]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>50070</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I<   09:36   0:00 [kworker/u65:1-ttm]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>50079</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:37   0:00 [kworker/6:0-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>50245</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:37   0:00 [kworker/4:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>50246</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:37   0:00 [kworker/4:3-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>50247</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:37   0:00 [kworker/4:4-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>50519</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:37   0:00 [kworker/u64:3-gfx_0.0.0]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51200</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/9:0-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51269</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/11:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51270</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/11:3-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51271</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/11:4-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51339</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I<   09:39   0:00 [kworker/u65:2-ttm]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51340</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I<   09:39   0:00 [kworker/u65:3-ttm]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51341</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/3:0-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51342</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/3:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51343</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/3:4-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51344</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/3:5-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51345</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/3:6-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51346</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/3:7]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51355</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/0:4-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51388</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/2:0-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>hackerg+</td>
+                                
+                                <td>51469</td>
+                                
+                                <td>0.3</td>
+                                
+                                <td>0.9</td>
+                                
+                                <td>1459534836</td>
+                                
+                                <td>153324 ?   Sl   09:39   0:01 /usr/share/antigravity/antigravity /usr/share/antigravity/resources/app/extensions/html-language-features/server/dist/node/htmlServerMain --node-ipc --clientProcessId=20415</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51677</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:39   0:00 [kworker/7:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51734</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:40   0:00 [kworker/0:5]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51807</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>16552</td>
+                                
+                                <td>6816 ?        S    09:40   0:00 systemd-userwork: waiting...</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>51920</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>16552</td>
+                                
+                                <td>6828 ?        S    09:40   0:00 systemd-userwork: waiting...</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52025</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>16552</td>
+                                
+                                <td>6800 ?        S    09:40   0:00 systemd-userwork: waiting...</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52191</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:40   0:00 [kworker/15:0]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52232</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/8:0]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52267</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/9:2]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52338</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/10:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52339</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/10:3-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52340</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/10:4]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52382</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/1:4]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52526</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/4:5-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52543</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/6:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52643</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/7:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52644</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/7:3-mm_percpu_wq]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52645</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/7:4-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52646</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:41   0:00 [kworker/7:5]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52647</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I<   09:41   0:00 [kworker/u65:6-ttm]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52648</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I<   09:41   0:00 [kworker/u65:7]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52837</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/13:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52838</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/13:2]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52917</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/2:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52918</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/2:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52919</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/2:5]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52983</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/6:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52984</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/6:5-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>52985</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/6:6]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>hackerg+</td>
+                                
+                                <td>53033</td>
+                                
+                                <td>2.9</td>
+                                
+                                <td>0.8</td>
+                                
+                                <td>2522228</td>
+                                
+                                <td>136200 ?      Sl   09:42   0:02 /usr/lib/firefox-esr/firefox-esr -contentproc -isForBrowser -prefsHandle 0:43850 -prefMapHandle 1:271802 -jsInitHandle 2:242716 -parentBuildID 20260217105505 -sandboxReporter 3 -chrootClient 4 -ipcHandle 5 -initialChannelId {65cfb047-f376-4d16-bae3-73c25e046916} -parentPid 3623 -crashReporter 6 -crashHelper 7 -greomni /usr/lib/firefox-esr/omni.ja -appomni /usr/lib/firefox-esr/browser/omni.ja -appDir /usr/lib/firefox-esr/browser 26 tab</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53085</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/4:6-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53086</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/4:7-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53087</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/4:8]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53104</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/5:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53105</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/5:3-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53106</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/5:5-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53107</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/5:6-events_freezable]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53108</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/5:7-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53109</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:42   0:00 [kworker/5:8]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53614</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:43   0:00 [kworker/14:0-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53615</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:43   0:00 [kworker/14:1-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53616</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:43   0:00 [kworker/14:2-events]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53617</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:43   0:00 [kworker/14:3-mm_percpu_wq]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53618</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0.0</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0 ?        I    09:43   0:00 [kworker/14:6]</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>root</td>
+                                
+                                <td>53885</td>
                                 
                                 <td>0.0</td>
                                 
@@ -7176,7 +7352,7 @@
                                 
                                 <td>9788</td>
                                 
-                                <td>4716 pts/3    R+   09:31   0:00 ps aux</td>
+                                <td>4760 pts/3    R+   09:44   0:00 ps aux</td>
                                 
                             </tr>
                             
@@ -7187,16 +7363,20 @@
 
             
             
+            </div> <!-- end plugin-content -->
         </div>
         
-        <div class="plugin-block">
-            <div class="plugin-header">
+        <div class="plugin-block" id="plugin-3">
+            <div class="plugin-header" onclick="togglePlugin('plugin-3')">
                 <div class="plugin-icon">⚙</div>
                 <div class="plugin-name">linux.sockstat.Sockstat</div>
                 
-                    <span class="plugin-count">72 entradas</span>
+                    <span class="plugin-count">73 entradas</span>
                 
+                <div class="collapse-btn">▼</div>
             </div>
+
+            <div class="plugin-content">
 
             
             
@@ -7206,13 +7386,13 @@
                         <thead>
                             <tr>
                                 
-                                <th>Netid State</th>
+                                <th class="sortable" onclick="sortTable(this, 0)">Netid State</th>
                                 
-                                <th>Recv-Q Send-Q</th>
+                                <th class="sortable" onclick="sortTable(this, 1)">Recv-Q Send-Q</th>
                                 
-                                <th>Local Address:Port</th>
+                                <th class="sortable" onclick="sortTable(this, 2)">Local Address:Port</th>
                                 
-                                <th>Peer Address:Port Process</th>
+                                <th class="sortable" onclick="sortTable(this, 3)">Peer Address:Port Process</th>
                                 
                             </tr>
                         </thead>
@@ -7342,18 +7522,6 @@
                                 
                                 <td>tcp</td>
                                 
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0                127.0.0.1:36389       127.0.0.1:60080</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
                                 <td>ESTAB</td>
                                 
                                 <td>0</td>
@@ -7406,7 +7574,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:40329       127.0.0.1:45960</td>
+                                <td>0                127.0.0.1:36389       127.0.0.1:46910</td>
                                 
                             </tr>
                             
@@ -7442,7 +7610,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:40329       127.0.0.1:59256</td>
+                                <td>0                127.0.0.1:45465       127.0.0.1:42438</td>
                                 
                             </tr>
                             
@@ -7454,19 +7622,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:39994 185.199.110.133:443   users:(("antigravity",pid=15866,fd=23))</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0           172.29.230.191:45186  216.239.34.223:443</td>
+                                <td>0           172.29.230.191:39840 142.251.142.131:443   users:(("firefox-esr",pid=3623,fd=94))</td>
                                 
                             </tr>
                             
@@ -7478,7 +7634,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:47210  216.239.34.223:443   users:(("language_server",pid=16040,fd=39))</td>
+                                <td>0           172.29.230.191:40408   34.107.243.93:443   users:(("firefox-esr",pid=3623,fd=63))</td>
                                 
                             </tr>
                             
@@ -7558,11 +7714,11 @@
                                 
                                 <td>tcp</td>
                                 
-                                <td>ESTAB</td>
+                                <td>TIME-WAIT</td>
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:38297       127.0.0.1:43210 users:(("language_server",pid=16040,fd=32))</td>
+                                <td>0                127.0.0.1:40329       127.0.0.1:51866</td>
                                 
                             </tr>
                             
@@ -7574,7 +7730,19 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:51524   34.107.243.93:443   users:(("firefox-esr",pid=3623,fd=63))</td>
+                                <td>0           172.29.230.191:38368 150.171.110.114:443   users:(("antigravity",pid=15866,fd=26))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0                127.0.0.1:38297       127.0.0.1:43210 users:(("language_server",pid=16040,fd=32))</td>
                                 
                             </tr>
                             
@@ -7594,23 +7762,11 @@
                                 
                                 <td>tcp</td>
                                 
-                                <td>TIME-WAIT</td>
+                                <td>ESTAB</td>
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:34638  216.58.205.106:443</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0           172.29.230.191:46830  216.58.204.202:443</td>
+                                <td>0           172.29.230.191:42940   199.232.33.91:443   users:(("firefox-esr",pid=3623,fd=90))</td>
                                 
                             </tr>
                             
@@ -7622,7 +7778,31 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:49924    216.58.206.1:443   users:(("language_server",pid=16040,fd=147))</td>
+                                <td>0           172.29.230.191:37896     34.143.72.2:443   users:(("antigravity",pid=15866,fd=23))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:37532 142.251.140.234:443   users:(("language_server",pid=16040,fd=22))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:56358   199.232.33.91:443   users:(("firefox-esr",pid=3623,fd=43))</td>
                                 
                             </tr>
                             
@@ -7634,7 +7814,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:45465       127.0.0.1:48062</td>
+                                <td>0                127.0.0.1:40329       127.0.0.1:54086</td>
                                 
                             </tr>
                             
@@ -7642,11 +7822,35 @@
                                 
                                 <td>tcp</td>
                                 
-                                <td>TIME-WAIT</td>
+                                <td>ESTAB</td>
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:48528 142.251.140.234:443</td>
+                                <td>0           172.29.230.191:49728  172.217.20.234:443   users:(("language_server",pid=16040,fd=34))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:35620  216.239.36.223:443   users:(("language_server",pid=16040,fd=150))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:43436    20.189.173.7:443   users:(("antigravity",pid=15866,fd=20))</td>
                                 
                             </tr>
                             
@@ -7659,6 +7863,18 @@
                                 <td>0</td>
                                 
                                 <td>0                127.0.0.1:45465       127.0.0.1:51140 users:(("antigravity",pid=15719,fd=179))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:56250 142.251.209.110:443   users:(("firefox-esr",pid=3623,fd=65))</td>
                                 
                             </tr>
                             
@@ -7718,7 +7934,43 @@
                                 
                                 <td>0</td>
                                 
+                                <td>0                127.0.0.1:36389       127.0.0.1:51416 users:(("antigravity",pid=20415,fd=84))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:55518  216.239.36.223:443   users:(("language_server",pid=16040,fd=39))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
                                 <td>0                127.0.0.1:45465       127.0.0.1:51136 users:(("antigravity",pid=15719,fd=178))</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:37316 142.251.209.106:443   users:(("firefox-esr",pid=3623,fd=98))</td>
                                 
                             </tr>
                             
@@ -7742,43 +7994,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:33220    13.69.239.78:443   users:(("antigravity",pid=15866,fd=20))</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>ESTAB</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0           172.29.230.191:35626  216.58.204.170:443   users:(("language_server",pid=20604,fd=17))</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>ESTAB</td>
-                                
-                                <td>0</td>
-                                
                                 <td>0                127.0.0.1:32934       127.0.0.1:38297 users:(("antigravity",pid=15866,fd=28))</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0           172.29.230.191:32832    34.54.84.110:443</td>
                                 
                             </tr>
                             
@@ -7791,18 +8007,6 @@
                                 <td>0</td>
                                 
                                 <td>0                127.0.0.1:45465       127.0.0.1:51154 users:(("antigravity",pid=15719,fd=180))</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0           172.29.230.191:34754    34.54.84.110:443</td>
                                 
                             </tr>
                             
@@ -7874,42 +8078,6 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:42944   216.58.206.10:443   users:(("language_server",pid=16040,fd=35))</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0                127.0.0.1:34352       127.0.0.1:5001</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0                127.0.0.1:34362       127.0.0.1:5001</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>ESTAB</td>
-                                
-                                <td>0</td>
-                                
                                 <td>0           172.29.230.191:45930  216.58.205.170:443   users:(("language_server",pid=16040,fd=43))</td>
                                 
                             </tr>
@@ -7922,7 +8090,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:59638   216.58.205.42:443</td>
+                                <td>0           172.29.230.191:47340    34.54.84.110:443</td>
                                 
                             </tr>
                             
@@ -7934,7 +8102,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:59906   216.58.205.42:443</td>
+                                <td>0           172.29.230.191:55436     13.107.5.93:443</td>
                                 
                             </tr>
                             
@@ -7942,11 +8110,11 @@
                                 
                                 <td>tcp</td>
                                 
-                                <td>ESTAB</td>
+                                <td>TIME-WAIT</td>
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:48150   216.58.206.10:443   users:(("language_server",pid=16040,fd=34))</td>
+                                <td>0                127.0.0.1:39984       127.0.0.1:5001</td>
                                 
                             </tr>
                             
@@ -7954,11 +8122,35 @@
                                 
                                 <td>tcp</td>
                                 
-                                <td>ESTAB</td>
+                                <td>TIME-WAIT</td>
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:50422    34.54.84.110:443   users:(("language_server",pid=20604,fd=11))</td>
+                                <td>0                127.0.0.1:39990       127.0.0.1:5001</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>TIME-WAIT</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0                127.0.0.1:40000       127.0.0.1:5001</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>TIME-WAIT</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0                127.0.0.1:40010       127.0.0.1:5001</td>
                                 
                             </tr>
                             
@@ -7994,7 +8186,19 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:45454       127.0.0.1:5001</td>
+                                <td>0           172.29.230.191:55212    34.54.84.110:443</td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                
+                                <td>tcp</td>
+                                
+                                <td>ESTAB</td>
+                                
+                                <td>0</td>
+                                
+                                <td>0           172.29.230.191:56402    34.54.84.110:443   users:(("language_server",pid=16040,fd=149))</td>
                                 
                             </tr>
                             
@@ -8006,7 +8210,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:45464       127.0.0.1:5001</td>
+                                <td>0                127.0.0.1:47234       127.0.0.1:5001</td>
                                 
                             </tr>
                             
@@ -8018,7 +8222,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:45480       127.0.0.1:5001</td>
+                                <td>0                127.0.0.1:47238       127.0.0.1:5001</td>
                                 
                             </tr>
                             
@@ -8042,7 +8246,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:50124       127.0.0.1:36389 users:(("language_server",pid=20604,fd=20))</td>
+                                <td>0           172.29.230.191:54390 142.251.142.138:443   users:(("language_server",pid=20604,fd=17))</td>
                                 
                             </tr>
                             
@@ -8054,19 +8258,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0           172.29.230.191:60940    34.54.84.110:443   users:(("language_server",pid=16040,fd=22))</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>tcp</td>
-                                
-                                <td>TIME-WAIT</td>
-                                
-                                <td>0</td>
-                                
-                                <td>0                127.0.0.1:54696       127.0.0.1:5001</td>
+                                <td>0           172.29.230.191:58962    34.54.84.110:443   users:(("language_server",pid=20604,fd=11))</td>
                                 
                             </tr>
                             
@@ -8078,7 +8270,7 @@
                                 
                                 <td>0</td>
                                 
-                                <td>0                127.0.0.1:36389       127.0.0.1:50124 users:(("antigravity",pid=20415,fd=76))</td>
+                                <td>0                127.0.0.1:51416       127.0.0.1:36389 users:(("language_server",pid=20604,fd=20))</td>
                                 
                             </tr>
                             
@@ -8089,16 +8281,20 @@
 
             
             
+            </div> <!-- end plugin-content -->
         </div>
         
-        <div class="plugin-block">
-            <div class="plugin-header">
+        <div class="plugin-block" id="plugin-4">
+            <div class="plugin-header" onclick="togglePlugin('plugin-4')">
                 <div class="plugin-icon">⚙</div>
                 <div class="plugin-name">linux.lsmod.Lsmod</div>
                 
                     <span class="plugin-count">114 entradas</span>
                 
+                <div class="collapse-btn">▼</div>
             </div>
+
+            <div class="plugin-content">
 
             
             
@@ -8108,11 +8304,11 @@
                         <thead>
                             <tr>
                                 
-                                <th>Module</th>
+                                <th class="sortable" onclick="sortTable(this, 0)">Module</th>
                                 
-                                <th>Size</th>
+                                <th class="sortable" onclick="sortTable(this, 1)">Size</th>
                                 
-                                <th>Used by</th>
+                                <th class="sortable" onclick="sortTable(this, 2)">Used by</th>
                                 
                             </tr>
                         </thead>
@@ -9265,16 +9461,20 @@
 
             
             
+            </div> <!-- end plugin-content -->
         </div>
         
-        <div class="plugin-block">
-            <div class="plugin-header">
+        <div class="plugin-block" id="plugin-5">
+            <div class="plugin-header" onclick="togglePlugin('plugin-5')">
                 <div class="plugin-icon">⚙</div>
                 <div class="plugin-name">linux.bash.Bash</div>
                 
                     <span class="plugin-count">61 entradas</span>
                 
+                <div class="collapse-btn">▼</div>
             </div>
+
+            <div class="plugin-content">
 
             
             
@@ -9284,11 +9484,11 @@
                         <thead>
                             <tr>
                                 
-                                <th>Source</th>
+                                <th class="sortable" onclick="sortTable(this, 0)">Source</th>
                                 
-                                <th>Timestamp</th>
+                                <th class="sortable" onclick="sortTable(this, 1)">Timestamp</th>
                                 
-                                <th>Command</th>
+                                <th class="sortable" onclick="sortTable(this, 2)">Command</th>
                                 
                             </tr>
                         </thead>
@@ -9911,15 +10111,51 @@
 
             
             
+            </div> <!-- end plugin-content -->
         </div>
         
     </div>
 
     <!-- FOOTER -->
     <div class="report-footer">
-        Generado automáticamente por Digital Forensics Suite · 2026-05-12 09:31:21
+        Generado automáticamente por Digital Forensics Suite · 2026-05-12 09:44:06
     </div>
 
 </div>
-</body>
-</html>
+<script>
+    function togglePlugin(id) {
+        document.getElementById(id).classList.toggle('collapsed');
+    }
+
+    function sortTable(th, colIdx) {
+        const table = th.closest('table');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const isAsc = th.classList.contains('sort-asc');
+        
+        // Reset headers
+        table.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+        
+        rows.sort((a, b) => {
+            const aVal = a.cells[colIdx].innerText.trim();
+            const bVal = b.cells[colIdx].innerText.trim();
+            
+            // Try numeric sort
+            const aNum = parseFloat(aVal.replace(/,/g, ''));
+            const bNum = parseFloat(bVal.replace(/,/g, ''));
+            
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return isAsc ? bNum - aNum : aNum - bNum;
+            }
+            
+            // Default string sort
+            return isAsc 
+                ? bVal.localeCompare(aVal, undefined, {numeric: true, sensitivity: 'base'})
+                : aVal.localeCompare(bVal, undefined, {numeric: true, sensitivity: 'base'});
+        });
+        
+        th.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+</body></html>

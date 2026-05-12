@@ -230,14 +230,23 @@
             border: 1px dashed var(--c-border);
         }
 
-        /* footer */
-        .report-footer {
-            padding: 20px 36px;
-            border-top: 1px solid var(--c-border);
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px; color: var(--c-text-secondary);
+        /* interaction */
+        .plugin-header { cursor: pointer; transition: background 0.2s; border-radius: 8px; padding: 4px 8px; margin-left: -8px; }
+        .plugin-header:hover { background: rgba(255,255,255,0.05); }
+        .collapse-btn {
+            margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 14px;
+            color: var(--c-text-secondary); transition: transform 0.3s;
         }
+        .plugin-block.collapsed .collapse-btn { transform: rotate(-90deg); }
+        .plugin-block.collapsed .plugin-content { display: none; }
+
+        th.sortable { cursor: pointer; user-select: none; position: relative; padding-right: 25px; }
+        th.sortable:hover { color: var(--c-text-primary); background: rgba(61,142,248,0.2); }
+        th.sortable::after {
+            content: '↕'; position: absolute; right: 8px; opacity: 0.3; font-size: 10px;
+        }
+        th.sort-asc::after { content: '↑'; opacity: 1; }
+        th.sort-desc::after { content: '↓'; opacity: 1; }
     </style>
 </head>
 <body>
@@ -314,8 +323,8 @@
         <div class="section-heading">Resultados por Plugin</div>
 
         {% for plugin, data in findings.items() %}
-        <div class="plugin-block">
-            <div class="plugin-header">
+        <div class="plugin-block" id="plugin-{{ loop.index }}">
+            <div class="plugin-header" onclick="togglePlugin('plugin-{{ loop.index }}')">
                 <div class="plugin-icon">⚙</div>
                 <div class="plugin-name">{{ plugin }}</div>
                 {% if data is iterable and data is not string and data is not mapping %}
@@ -323,7 +332,10 @@
                 {% elif data is mapping %}
                     <span class="plugin-count">{{ data | length }} campos</span>
                 {% endif %}
+                <div class="collapse-btn">▼</div>
             </div>
+
+            <div class="plugin-content">
 
             {# ── CASE 1: List of dicts → columnar table ── #}
             {% if data is iterable and data is not string and data is not mapping %}
@@ -333,7 +345,7 @@
                         <thead>
                             <tr>
                                 {% for header in data[0].keys() %}
-                                <th>{{ header }}</th>
+                                <th class="sortable" onclick="sortTable(this, {{ loop.index0 }})">{{ header }}</th>
                                 {% endfor %}
                             </tr>
                         </thead>
@@ -420,11 +432,12 @@
             {% else %}
                 <div class="table-wrapper">
                     <table class="raw-table">
-                        <thead><tr><th>Salida</th></tr></thead>
+                        <thead><tr><th class="sortable" onclick="sortTable(this, 0)">Salida</th></tr></thead>
                         <tbody><tr><td style="white-space:pre-wrap;">{{ data }}</td></tr></tbody>
                     </table>
                 </div>
             {% endif %}
+            </div> <!-- end plugin-content -->
         </div>
         {% endfor %}
     </div>
@@ -435,5 +448,40 @@
     </div>
 
 </div>
-</body>
-</html>
+<script>
+    function togglePlugin(id) {
+        document.getElementById(id).classList.toggle('collapsed');
+    }
+
+    function sortTable(th, colIdx) {
+        const table = th.closest('table');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const isAsc = th.classList.contains('sort-asc');
+        
+        // Reset headers
+        table.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+        
+        rows.sort((a, b) => {
+            const aVal = a.cells[colIdx].innerText.trim();
+            const bVal = b.cells[colIdx].innerText.trim();
+            
+            // Try numeric sort
+            const aNum = parseFloat(aVal.replace(/,/g, ''));
+            const bNum = parseFloat(bVal.replace(/,/g, ''));
+            
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return isAsc ? bNum - aNum : aNum - bNum;
+            }
+            
+            // Default string sort
+            return isAsc 
+                ? bVal.localeCompare(aVal, undefined, {numeric: true, sensitivity: 'base'})
+                : aVal.localeCompare(bVal, undefined, {numeric: true, sensitivity: 'base'});
+        });
+        
+        th.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+</body></html>
