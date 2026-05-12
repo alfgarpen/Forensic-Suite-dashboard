@@ -67,9 +67,28 @@ class VolatilityManager:
         if args is None:
             args = []
 
-        # Build command: vol -f dump -r json plugin_name
+        # 1. Detect custom symbols directory
+        symbol_dirs = []
+        # Check standard locations
+        root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        potential_symbol_paths = [
+            os.path.join(root_dir, "symbols"),
+            os.path.join(root_dir, "data", "symbols"),
+            os.path.join(os.getcwd(), "symbols")
+        ]
+        for p in potential_symbol_paths:
+            if os.path.isdir(p):
+                symbol_dirs.append(p)
+                if log_callback:
+                    log_callback(f"[*] Using custom symbol directory: {p}")
+
+        # Build command: vol [-s SYMBOLS] -f dump -r json plugin_name
         base_cmd = self.vol_path.split()
-        full_cmd = base_cmd + ["-f", dump_path, "-r", "json", plugin_name] + args
+        symbol_args = []
+        if symbol_dirs:
+            symbol_args = ["-s", os.pathsep.join(symbol_dirs)]
+            
+        full_cmd = base_cmd + symbol_args + ["-f", dump_path, "-r", "json", plugin_name] + args
 
         if log_callback:
             log_callback(f"[+] Starting execution: {' '.join(full_cmd)}")
@@ -110,6 +129,12 @@ class VolatilityManager:
 
             if process.returncode != 0:
                 error_msg = "\n".join(stderr_data) or "Unknown Volatility error"
+                
+                # Friendly hint for missing symbols
+                if "symbol_table_name" in error_msg or "layer_name" in error_msg:
+                    error_msg += "\n[!] TIP: This usually means Volatility lacks symbols for this kernel. " \
+                                 "Try adding .json symbols to a 'symbols/' directory."
+                
                 return {"status": "error", "error": error_msg}
 
             # Parse JSON from stdout

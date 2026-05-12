@@ -29,17 +29,29 @@ class AnalysisEngine:
         """
         self.log_callback(f"[!] Starting forensic analysis for: {os.path.basename(self.dump_path)}")
         
+        # 0. Basic Validation
+        if os.path.exists(self.dump_path):
+            file_size = os.path.getsize(self.dump_path)
+            if file_size < 1024 * 1024: # Less than 1MB
+                self.log_callback(f"[!] WARNING: File size is very small ({file_size / 1024:.2f} KB). "
+                                   "This is likely NOT a valid memory dump.")
+
         # 1. Basic Metadata
         detected_os = detect_os_from_dump(self.dump_path)
         self.log_callback(f"[+] Initial OS detection: {detected_os}")
+        
+        # Calculate hashes for the report
+        self.log_callback("[*] Calculating file hashes (MD5, SHA256)...")
+        md5_res = HashService.calculate_hash(self.dump_path, 'md5')
+        sha256_res = HashService.calculate_hash(self.dump_path, 'sha256')
         
         # 2. Refine OS Detection if unknown using Volatility
         if detected_os == "unknown" and self.vol_manager.is_installed:
             self.log_callback("[*] Attempting advanced OS detection via Volatility banners...")
             # Try windows.info or linux.banner
-            for probe in ["windows.info", "linux.banner"]:
+            for probe in ["windows.info", "linux.banner", "banners.Banners"]:
                 res = self.vol_manager.execute_plugin(self.dump_path, probe)
-                if res["status"] == "success":
+                if res["status"] == "success" and res.get("data"):
                     detected_os = "windows" if "windows" in probe else "linux"
                     self.log_callback(f"[+] Advanced detection confirmed: {detected_os}")
                     break
@@ -64,7 +76,12 @@ class AnalysisEngine:
                 "dump_path": self.dump_path,
                 "detected_os": detected_os,
                 "analysis_time": datetime.now().isoformat(),
-                "volatility_version": self.vol_manager.get_version()
+                "volatility_version": self.vol_manager.get_version(),
+                "hashes": {
+                    "md5": md5_res["hash"] if md5_res else "N/A",
+                    "sha256": sha256_res["hash"] if sha256_res else "N/A"
+                },
+                "dump_size_bytes": os.path.getsize(self.dump_path) if os.path.exists(self.dump_path) else 0
             },
             "artifacts": {}
         }
@@ -80,12 +97,20 @@ class AnalysisEngine:
             # Try Volatility
             res = self.vol_manager.execute_plugin(self.dump_path, p_name, log_callback=self.log_callback)
             
+            is_success = False
             if res["status"] == "success":
                 parsed = ArtifactParser.parse(p_name, res["data"])
-                results["artifacts"][p_name] = parsed
-                self.log_callback(f"[+] {p_name} completed successfully. Artifacts found: {parsed.get('count', 'N/A')}")
-            else:
-                self.log_callback(f"[-] {p_name} failed: {res.get('error')}")
+                # Even if status is success, Volatility might return empty list if it failed to find anything meaningful
+                if parsed.get("count", 0) > 0 or parsed.get("data"):
+                    results["artifacts"][p_name] = parsed
+                    self.log_callback(f"[+] {p_name} completed successfully. Artifacts found: {parsed.get('count', 'N/A')}")
+                    is_success = True
+                else:
+                    self.log_callback(f"[*] {p_name} returned no data.")
+
+            if not is_success:
+                if res["status"] != "success":
+                    self.log_callback(f"[-] {p_name} failed: {res.get('error')}")
                 
                 # 6. Fallback
                 fallback_cat = CommandFallback.map_plugin_to_category(p_name)
@@ -94,7 +119,6 @@ class AnalysisEngine:
                     f_res = CommandFallback.run_fallback(fallback_cat)
                     if f_res["status"] == "success":
                         # Parse the fallback output (it's a string)
-                        # We use the original plugin name as key so they don't overwrite each other
                         parsed_fallback = ArtifactParser.parse(p_name, f_res["output"])
                         results["artifacts"][p_name] = parsed_fallback
                         self.log_callback(f"[+] Fallback for {fallback_cat} successful.")
