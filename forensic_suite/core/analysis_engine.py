@@ -118,8 +118,9 @@ class AnalysisEngine:
                     self.log_callback(f"[*] Attempting native fallback for {fallback_cat}...")
                     f_res = CommandFallback.run_fallback(fallback_cat)
                     if f_res["status"] == "success":
-                        # Parse the fallback output (it's a string)
-                        parsed_fallback = ArtifactParser.parse(p_name, f_res["output"])
+                        # Parse the fallback output (it can be a string or structured data)
+                        fallback_input = f_res.get("data", f_res.get("output"))
+                        parsed_fallback = ArtifactParser.parse(p_name, fallback_input)
                         results["artifacts"][p_name] = parsed_fallback
                         self.log_callback(f"[+] Fallback for {fallback_cat} successful.")
                     else:

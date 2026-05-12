@@ -47,21 +47,45 @@ class CommandFallback:
             valid_files = [f for f in history_files if os.path.exists(f) and os.access(f, os.R_OK)]
             if valid_files:
                 try:
-                    # Combine multiple history files
-                    output = ""
+                    history_data = []
                     for vf in valid_files:
-                        output += f"--- History from {vf} ---\n"
-                        output += subprocess.check_output(["cat", vf], text=True, errors='replace')
-                        output += "\n\n"
+                        with open(vf, 'r', errors='replace') as f:
+                            for line in f:
+                                line = line.strip()
+                                if not line: continue
+                                
+                                cmd = line
+                                ts = "N/A"
+                                
+                                # Handle Zsh history format: : 1234567890:0;command
+                                if line.startswith(":"):
+                                    try:
+                                        parts = line.split(";", 1)
+                                        if len(parts) > 1:
+                                            meta = parts[0][1:].strip() # remove ":" and strip
+                                            meta_parts = meta.split(":")
+                                            if meta_parts:
+                                                from datetime import datetime
+                                                ts_unix = int(meta_parts[0])
+                                                ts = datetime.fromtimestamp(ts_unix).strftime('%Y-%m-%d %H:%M:%S')
+                                            cmd = parts[1]
+                                    except:
+                                        pass # Fallback to raw line
+                                
+                                history_data.append({
+                                    "Source": os.path.basename(vf),
+                                    "Timestamp": ts,
+                                    "Command": cmd
+                                })
                     
                     return {
                         "status": "success",
                         "source": "native_command",
                         "command": "cat " + " ".join(valid_files),
-                        "output": output
+                        "data": history_data
                     }
                 except Exception as e:
-                    logger.warning(f"Failed to read some history files: {e}")
+                    logger.warning(f"Failed to parse history files: {e}")
 
         cmd = commands.get(category.lower())
         if not cmd:

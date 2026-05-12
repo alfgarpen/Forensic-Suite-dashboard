@@ -76,9 +76,25 @@ class ArtifactParser:
             return ArtifactParser._parse_malfind(raw_data)
         elif "info" in plugin_name or "banners" in plugin_name:
             return ArtifactParser._parse_info(raw_data)
+        elif "bash" in plugin_name:
+            return ArtifactParser._parse_history(raw_data)
         
         # Default: return raw data wrapped in a success status
         return {"status": "success", "data": raw_data}
+
+    @staticmethod
+    def _parse_history(data) -> dict:
+        # If it's already a list of dicts (from fallback), just return it
+        if isinstance(data, list):
+            return {
+                "status": "success",
+                "type": "history",
+                "items": data,
+                "count": len(data)
+            }
+        
+        # If it's a string, we'll let GenericTableParser try or just wrap it
+        return {"status": "success", "output": data}
 
     @staticmethod
     def _parse_pslist(data: list) -> dict:
