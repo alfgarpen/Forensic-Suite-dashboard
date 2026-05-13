@@ -6,9 +6,12 @@ from forensic_suite.services.volatility_service import VolatilityService
 from forensic_suite.utils.file_utils import FileUtils
 
 api_bp = Blueprint('api', __name__)
-# Try to reach the root templates dir, assuming app is running from root
-DATA_DIR = os.path.join(os.getcwd(), 'data')
+# Project root is 3 levels up from backend/forensic_suite/api/routes.py
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+REPORTS_DIR = os.path.join(BASE_DIR, 'reports')
 os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(REPORTS_DIR, exist_ok=True)
 
 @api_bp.route('/')
 def dashboard():
@@ -99,9 +102,27 @@ def current_dump():
 
 @api_bp.route('/download/report', methods=['GET'])
 def download_report():
+    # Priority 1: Specific report requested via query param
+    filename = request.args.get('file')
+    if filename:
+        report_path = os.path.join(REPORTS_DIR, filename)
+        if os.path.exists(report_path):
+            return send_file(report_path, as_attachment=False) # View in browser
+
+    # Priority 2: Generic 'report.html' in DATA_DIR (legacy/active)
     report_path = os.path.join(DATA_DIR, 'report.html')
     if os.path.exists(report_path):
-        return send_file(report_path, as_attachment=True)
+        return send_file(report_path, as_attachment=False)
+    
+    # Priority 3: Latest report in REPORTS_DIR
+    try:
+        reports = [f for f in os.listdir(REPORTS_DIR) if f.endswith('.html')]
+        if reports:
+            latest_report = max([os.path.join(REPORTS_DIR, f) for f in reports], key=os.path.getmtime)
+            return send_file(latest_report, as_attachment=False)
+    except Exception:
+        pass
+
     return "Report not found", 404
 
 @api_bp.route('/api/results', methods=['GET'])

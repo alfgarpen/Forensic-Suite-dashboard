@@ -10,6 +10,10 @@ BACKEND_DIR = BASE_DIR / "backend"
 UPLOADS_DIR = BASE_DIR / "uploads"
 SCRIPTS_DIR = BASE_DIR / "scripts"
 RUNTIME_DIR = BASE_DIR / "runtime"
+DATA_DIR = BASE_DIR / "data"
+ARTIFACTS_DIR = BASE_DIR / "artifacts"
+REPORTS_DIR = BASE_DIR / "reports"
+TEMPLATES_DIR = BASE_DIR / "frontend" / "templates"
 
 def run_startup_analysis():
     print("=== Forensic Suite: Automated Startup Pipeline ===")
@@ -44,7 +48,7 @@ def run_startup_analysis():
     try:
         subprocess.check_call([
             str(python_exe), str(analysis_script),
-            "--input", str(dump_path),
+            "--dump", str(dump_path),
             "--output", str(results_path)
         ])
         print("[*] Analysis complete.")
@@ -58,17 +62,44 @@ def run_startup_analysis():
     report_name = f"reporte_{timestamp}.html"
     
     try:
+        report_output = REPORTS_DIR / report_name
         subprocess.check_call([
             str(python_exe), str(report_script),
             "--results", str(results_path),
-            "--output", str(BASE_DIR / "reports" / report_name)
+            "--output", str(report_output),
+            "--templates", str(TEMPLATES_DIR)
         ])
+        
+        # 4. Update active state for Dashboard
+        print(f"[*] Updating dashboard active state...")
+        import shutil
+        shutil.copy2(results_path, DATA_DIR / "results.json")
+        shutil.copy2(report_output, DATA_DIR / "report.html")
+        
+        # Ensure world readability so Dashboard (run as user) can read root-created files
+        os.chmod(results_path, 0o644)
+        os.chmod(report_output, 0o644)
+        os.chmod(DATA_DIR / "results.json", 0o644)
+        os.chmod(DATA_DIR / "report.html", 0o644)
+        
+        # Update current_dump.json metadata
+        import json
+        state_file = DATA_DIR / "current_dump.json"
+        state = {
+            "active_memory_dump": str(dump_path),
+            "filename": dump_filename,
+            "status": "analysis_completed",
+            "last_results": str(DATA_DIR / "results.json"),
+            "timestamp": timestamp,
+            "size_human": f"{os.path.getsize(dump_path) // (1024*1024)} MB",
+            "hash": "N/A" # Could be calculated if needed
+        }
+        with open(state_file, 'w') as f:
+            json.dump(state, f, indent=4)
+
         print(f"[*] Startup pipeline finished. Report: {report_name}")
     except Exception as e:
-        print(f"[!] Report generation failed: {e}")
-
-if __name__ == "__main__":
-    run_startup_analysis()
+        print(f"[!] Report generation or state update failed: {e}")
 
 if __name__ == "__main__":
     run_startup_analysis()
