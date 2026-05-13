@@ -1,0 +1,11 @@
+{
+    "base_dir": "/usr/local/Forensic-Suite-dashboard",
+    "backend_dir": "/usr/local/Forensic-Suite-dashboard/backend",
+    "uploads_dir": "/usr/local/Forensic-Suite-dashboard/uploads",
+    "artifacts_dir": "/usr/local/Forensic-Suite-dashboard/artifacts",
+    "reports_dir": "/usr/local/Forensic-Suite-dashboard/reports",
+    "logs_dir": "/usr/local/Forensic-Suite-dashboard/logs",
+    "volatility_path": "/usr/local/Forensic-Suite-dashboard/volatility3",
+    "port": 5001,
+    "debug": false
+}

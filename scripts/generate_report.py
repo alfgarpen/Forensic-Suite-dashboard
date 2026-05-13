@@ -48,15 +48,21 @@ class ReportGenerator:
             click.echo(f"Error generating report: {e}")
             return False
 
+import datetime
+
 @click.command()
-@click.option('--results', '-r', default='data/results.json', help='Path to analysis results JSON.')
-@click.option('--output', '-o', default='data/report.html', help='Path to output HTML report.')
-@click.option('--templates', '-t', default='templates', help='Path to Jinja2 templates directory.')
+@click.option('--results', '-r', default='artifacts/results.json', help='Path to analysis results JSON.')
+@click.option('--output', '-o', help='Path to output HTML report. Defaults to reports/reporte_TIMESTAMP.html')
+@click.option('--templates', '-t', default='frontend/templates', help='Path to Jinja2 templates directory.')
 def main(results, output, templates):
     """Generates an HTML report from analysis results."""
     click.echo("--- Digital Forensics: Report Generation ---")
     
-    data_dir = 'data'
+    if not output:
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        output = f'reports/reporte_{timestamp}.html'
+    
+    data_dir = 'artifacts'
     state_file = os.path.join(data_dir, 'current_dump.json')
     evidence_info = None
     

@@ -1,0 +1,14 @@
+[Unit]
+Description=Forensic Suite Startup Analysis
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/usr/local/Forensic-Suite-dashboard
+ExecStart=/usr/local/Forensic-Suite-dashboard/runtime/bin/python /usr/local/Forensic-Suite-dashboard/installer/startup_analysis.py
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
