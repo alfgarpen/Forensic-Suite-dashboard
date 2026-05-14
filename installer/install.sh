@@ -1,61 +1,79 @@
 #!/bin/bash
 
-# Forensic Suite Linux Installer
-# Requires sudo/root privileges
+# Forensic Suite - Robust Linux Installer
+# This script prepares the system, installs dependencies, and sets up systemd services.
+# Supports installation in any directory (portable).
 
 set -e
 
-echo "=== Forensic Suite Linux Installation ==="
+echo "=========================================="
+echo "      Forensic Suite - Installer          "
+echo "=========================================="
 
-# 0. Fix line endings for all shell scripts
-echo "[*] Ensuring correct line endings for scripts..."
-find "$(dirname "$0")" -name "*.sh" -exec sed -i 's/\r$//' {} +
-
-# 1. Install system dependencies
-echo "[*] Updating package list and installing dependencies..."
-sudo apt-get update -y
-sudo apt-get install -y python3-venv python3-pip build-essential libpcre3 libpcre3-dev git
-
-# 2. Run the core setup script
-echo "[*] Running core setup script..."
-python3 "$(dirname "$0")/setup.py"
-
-# 3. Setup Systemd Services
+# 0. Environment Setup
 BASE_DIR=$(realpath "$(dirname "$0")/..")
 USER_NAME=$(whoami)
+SERVICE_DIR="/etc/systemd/system"
 
-echo "[*] Configuring Systemd services for user: $USER_NAME..."
+echo "[*] Base Directory: $BASE_DIR"
+echo "[*] Current User:   $USER_NAME"
 
-# Dashboard Service
-DASHBOARD_SERVICE="/etc/systemd/system/forensicsuite-dashboard.service"
-echo "    - Creating $DASHBOARD_SERVICE"
-sudo sed -e "s|PLACEHOLDER_BASE_DIR|$BASE_DIR|g" \
-         -e "s|PLACEHOLDER_USER|$USER_NAME|g" \
-         "$BASE_DIR/installer/forensic-dashboard.service" | sudo tee "$DASHBOARD_SERVICE" > /dev/null
+# 1. System Dependencies
+echo "[*] Checking system dependencies..."
+sudo apt-get update -y
+sudo apt-get install -y python3-venv python3-pip build-essential libpcre3 libpcre3-dev git curl
 
-# Startup Analysis Service
-STARTUP_SERVICE="/etc/systemd/system/forensicsuite-startup.service"
-echo "    - Creating $STARTUP_SERVICE"
-sudo sed -e "s|PLACEHOLDER_BASE_DIR|$BASE_DIR|g" \
-         -e "s|PLACEHOLDER_USER|root|g" \
-         "$BASE_DIR/installer/forensicsuite-startup.service" | sudo tee "$STARTUP_SERVICE" > /dev/null
+# 2. Python Environment & Project Structure
+echo "[*] Running core setup (venv, folders, volatility)..."
+python3 "$BASE_DIR/installer/setup.py"
 
-# Remote Transfer Service
-REMOTE_SERVICE="/etc/systemd/system/forensicsuite-remote.service"
-echo "    - Creating $REMOTE_SERVICE"
-sudo cp "$BASE_DIR/installer/forensicsuite-remote.service" "$REMOTE_SERVICE"
-sudo sed -i "s|User=alfongp|User=$USER_NAME|g" "$REMOTE_SERVICE"
-sudo sed -i "s|/home/alfongp/Documentos/Forensic-Suite-dashboard|$BASE_DIR|g" "$REMOTE_SERVICE"
+# 3. Systemd Services Configuration
+echo "[*] Configuring system services..."
+
+SERVICES=("forensicsuite-dashboard.service" "forensicsuite-startup.service" "forensicsuite-remote.service")
+
+# Map of service files in installer/ to system names
+declare -A SERVICE_MAP
+SERVICE_MAP["forensicsuite-dashboard.service"]="forensic-dashboard.service"
+SERVICE_MAP["forensicsuite-startup.service"]="forensicsuite-startup.service"
+SERVICE_MAP["forensicsuite-remote.service"]="forensicsuite-remote.service"
+
+for SVC_NAME in "${!SERVICE_MAP[@]}"; do
+    SRC_FILE="$BASE_DIR/installer/${SERVICE_MAP[$SVC_NAME]}"
+    DST_FILE="$SERVICE_DIR/$SVC_NAME"
+    
+    if [ -f "$SRC_FILE" ]; then
+        echo "    - Installing $SVC_NAME"
+        
+        # Determine service user (startup service runs as root for memory access)
+        RUN_USER="$USER_NAME"
+        if [[ "$SVC_NAME" == *"startup"* ]]; then
+            RUN_USER="root"
+        fi
+
+        # Apply placeholders
+        sudo sed -e "s|PLACEHOLDER_BASE_DIR|$BASE_DIR|g" \
+                 -e "s|PLACEHOLDER_USER|$RUN_USER|g" \
+                 "$SRC_FILE" | sudo tee "$DST_FILE" > /dev/null
+    else
+        echo "    [!] Warning: Service template $SRC_FILE not found."
+    fi
+done
 
 # 4. Finalize
-echo "[*] Enabling and starting services..."
+echo "[*] Reloading systemd and enabling services..."
 sudo systemctl daemon-reload
-sudo systemctl enable forensicsuite-dashboard.service
-sudo systemctl enable forensicsuite-startup.service
-sudo systemctl enable forensicsuite-remote.service
-sudo systemctl start forensicsuite-dashboard.service
-sudo systemctl start forensicsuite-remote.service
 
-echo "=== Installation Finished ==="
-echo "Dashboard should be available at http://localhost:5001"
-echo "Check status with: systemctl status forensicsuite-dashboard"
+for SVC_NAME in "${!SERVICE_MAP[@]}"; do
+    sudo systemctl enable "$SVC_NAME"
+    sudo systemctl restart "$SVC_NAME" || echo "    [!] Error starting $SVC_NAME"
+done
+
+echo ""
+echo "=========================================="
+echo "       Installation Successful!           "
+echo "=========================================="
+echo ">> Dashboard: http://localhost:5001"
+echo ">> Reports:   $BASE_DIR/reports"
+echo ">> Logs:      $BASE_DIR/logs"
+echo "=========================================="

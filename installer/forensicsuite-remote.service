@@ -4,9 +4,10 @@ After=network.target
 
 [Service]
 Type=simple
-User=alfongp
-WorkingDirectory=/home/alfongp/Documentos/Forensic-Suite-dashboard
-ExecStart=/home/alfongp/Documentos/Forensic-Suite-dashboard/runtime/bin/python /home/alfongp/Documentos/Forensic-Suite-dashboard/installer/remote_service.py
+User=PLACEHOLDER_USER
+WorkingDirectory=PLACEHOLDER_BASE_DIR
+Environment="PYTHONPATH=PLACEHOLDER_BASE_DIR/backend"
+ExecStart=PLACEHOLDER_BASE_DIR/runtime/bin/python PLACEHOLDER_BASE_DIR/installer/remote_service.py
 Restart=always
 RestartSec=10
 
