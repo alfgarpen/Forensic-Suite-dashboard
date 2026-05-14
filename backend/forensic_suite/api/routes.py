@@ -125,6 +125,25 @@ def download_report():
 
     return "Report not found", 404
 
+@api_bp.route('/api/reports/list', methods=['GET'])
+def list_reports():
+    """Returns all generated reports (from REPORTS_DIR) with Flask-served URLs."""
+    try:
+        reports = []
+        if os.path.exists(REPORTS_DIR):
+            for f in sorted(os.listdir(REPORTS_DIR), reverse=True):
+                if f.endswith('.html'):
+                    full_path = os.path.join(REPORTS_DIR, f)
+                    reports.append({
+                        'filename': f,
+                        'url': f'/download/report?file={f}',
+                        'size_kb': round(os.path.getsize(full_path) / 1024, 1),
+                        'modified': os.path.getmtime(full_path)
+                    })
+        return jsonify({'status': 'success', 'reports': reports})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 @api_bp.route('/api/results', methods=['GET'])
 def get_results():
     """Returns the latest analysis results JSON for inline table preview."""

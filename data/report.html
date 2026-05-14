@@ -284,11 +284,11 @@
         <div class="meta-grid">
             <div class="meta-card">
                 <div class="meta-label">Archivo de Volcado</div>
-                <div class="meta-value normal">dump_20260513_125456.raw</div>
+                <div class="meta-value normal">dump_20260514_015918.raw</div>
             </div>
             <div class="meta-card">
                 <div class="meta-label">Tamaño</div>
-                <div class="meta-value normal"> bytes</div>
+                <div class="meta-value normal">1076 bytes</div>
             </div>
             <div class="meta-card">
                 <div class="meta-label">MD5</div>
@@ -300,25 +300,25 @@
             </div>
             <div class="meta-card">
                 <div class="meta-label">Perfil SO Detectado</div>
-                <div class="meta-value normal">Linux 6.17.0-23-generic x86_64</div>
+                <div class="meta-value normal">Unknown (via Volatility N/A)</div>
             </div>
             <div class="meta-card">
                 <div class="meta-label">Plugins Ejecutados</div>
-                <div class="meta-value normal">windows.info.Info, windows.pslist.PsList</div>
+                <div class="meta-value normal"></div>
             </div>
             <div class="meta-card">
                 <div class="meta-label">Generado el</div>
-                <div class="meta-value normal">N/A</div>
+                <div class="meta-value normal">2026-05-14 01:59:22</div>
             </div>
         </div>
     </div>
 
     <!-- EXECUTIVE SUMMARY -->
     <div class="exec-section">
-        <div class="exec-card ">
+        <div class="exec-card low">
             <div class="exec-top">
                 <div class="exec-title">Executive Summary</div>
-                <span class="severity-pill "></span>
+                <span class="severity-pill low">low</span>
             </div>
             <div class="threats-label">Amenazas Detectadas</div>
             
@@ -332,413 +332,11 @@
         <div class="section-heading">Resultados por Plugin</div>
 
         
-        <div class="plugin-block" id="plugin-1">
-            <div class="plugin-header" onclick="togglePlugin('plugin-1')">
-                <div class="plugin-icon">⚙</div>
-                <div class="plugin-name">windows.info.Info</div>
-                
-                    <span class="plugin-count">3 campos</span>
-                
-                <div class="collapse-btn">▼</div>
-            </div>
-
-            <div class="plugin-content">
-            
-            
-            
-                
-                <div class="table-wrapper">
-                    <table class="kv-table">
-                        <thead>
-                            <tr><th>Propiedad</th><th>Valor</th></tr>
-                        </thead>
-                        <tbody>
-                            
-                            <tr>
-                                <td>Kernel Base</td>
-                                <td>
-                                    
-                                    
-                                        0xf807abcdef123456 (Simulado)
-                                    
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>DTB</td>
-                                <td>
-                                    
-                                    
-                                        0x1aa000 (Simulado)
-                                    
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>SystemTime</td>
-                                <td>
-                                    
-                                    
-                                        2026-05-13 10:55:00 UTC
-                                    
-                                </td>
-                            </tr>
-                            
-                        </tbody>
-                    </table>
-                </div>
-                
-
-            
-            
-            </div> <!-- end plugin-content -->
-        </div>
-        
-        <div class="plugin-block" id="plugin-2">
-            <div class="plugin-header" onclick="togglePlugin('plugin-2')">
-                <div class="plugin-icon">⚙</div>
-                <div class="plugin-name">windows.pslist.PsList</div>
-                
-                    <span class="plugin-count">30 entradas</span>
-                
-                <div class="collapse-btn">▼</div>
-            </div>
-
-            <div class="plugin-content">
-            
-            
-            
-                
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                
-                                <th class="sortable" onclick="sortTable(this, 0)">PID</th>
-                                
-                                <th class="sortable" onclick="sortTable(this, 1)">Name</th>
-                                
-                                <th class="sortable" onclick="sortTable(this, 2)">Parent</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                            <tr>
-                                
-                                <td>1</td>
-                                
-                                <td>systemd</td>
-                                
-                                <td>0</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>2</td>
-                                
-                                <td>kthreadd</td>
-                                
-                                <td>0</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>3</td>
-                                
-                                <td>pool_workqueue_release</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>4</td>
-                                
-                                <td>kworker/R-rcu_gp</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>5</td>
-                                
-                                <td>kworker/R-sync_wq</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>6</td>
-                                
-                                <td>kworker/R-kvfree_rcu_reclaim</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>7</td>
-                                
-                                <td>kworker/R-slub_flushwq</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>8</td>
-                                
-                                <td>kworker/R-netns</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>10</td>
-                                
-                                <td>kworker/0:0H-events_highpri</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>11</td>
-                                
-                                <td>kworker/0:1-events</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>13</td>
-                                
-                                <td>kworker/R-mm_percpu_wq</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>14</td>
-                                
-                                <td>ksoftirqd/0</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>15</td>
-                                
-                                <td>rcu_preempt</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>16</td>
-                                
-                                <td>rcu_exp_par_gp_kthread_worker/0</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>17</td>
-                                
-                                <td>rcu_exp_gp_kthread_worker</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>18</td>
-                                
-                                <td>migration/0</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>19</td>
-                                
-                                <td>idle_inject/0</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>20</td>
-                                
-                                <td>cpuhp/0</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>21</td>
-                                
-                                <td>cpuhp/2</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>22</td>
-                                
-                                <td>idle_inject/2</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>23</td>
-                                
-                                <td>migration/2</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>24</td>
-                                
-                                <td>ksoftirqd/2</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>27</td>
-                                
-                                <td>cpuhp/4</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>28</td>
-                                
-                                <td>idle_inject/4</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>29</td>
-                                
-                                <td>migration/4</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>30</td>
-                                
-                                <td>ksoftirqd/4</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>32</td>
-                                
-                                <td>kworker/4:0H-events_highpri</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>33</td>
-                                
-                                <td>cpuhp/5</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>34</td>
-                                
-                                <td>idle_inject/5</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                
-                                <td>35</td>
-                                
-                                <td>migration/5</td>
-                                
-                                <td>2</td>
-                                
-                            </tr>
-                            
-                        </tbody>
-                    </table>
-                </div>
-                
-
-            
-            
-            </div> <!-- end plugin-content -->
-        </div>
-        
     </div>
 
     <!-- FOOTER -->
     <div class="report-footer">
-        Generado automáticamente por Digital Forensics Suite · N/A
+        Generado automáticamente por Digital Forensics Suite · 2026-05-14 01:59:22
     </div>
 
 </div>

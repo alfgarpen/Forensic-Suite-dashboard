@@ -3,31 +3,31 @@
 PLUGIN_REGISTRY = {
     "windows": {
         "System Info": {
-            "windows.info.Info": "General system information and metadata.",
+            "windows.info": "General system information and metadata.",
         },
         "Processes": {
-            "windows.pslist.PsList": "List of running processes.",
-            "windows.pstree.PsTree": "Process tree structure.",
-            "windows.cmdline.CmdLine": "Command line arguments for processes.",
-            "windows.handles.Handles": "Open handles for each process.",
-            "windows.dlllist.DllList": "Loaded DLLs for each process.",
+            "windows.pslist": "List of running processes.",
+            "windows.pstree": "Process tree structure.",
+            "windows.cmdline": "Command line arguments for processes.",
+            "windows.handles": "Open handles for each process.",
+            "windows.dlllist": "Loaded DLLs for each process.",
         },
         "Network": {
-            "windows.netscan.NetScan": "Active network connections and sockets.",
-            "windows.netstat.NetStat": "Network statistics and status.",
+            "windows.netscan": "Active network connections and sockets.",
+            "windows.netstat": "Network statistics and status.",
         },
         "Malware": {
-            "windows.malfind.Malfind": "Detection of potentially injected code and memory artifacts.",
-            "windows.ldrmodules.LdrModules": "Detect unlinked DLLs.",
+            "windows.malfind": "Detection of potentially injected code and memory artifacts.",
+            "windows.ldrmodules": "Detect unlinked DLLs.",
         },
         "Registry/Persistence": {
-            "windows.registry.printkey.PrintKey": "Print registry keys and values.",
-            "windows.registry.hivelist.HiveList": "List available registry hives.",
-            "windows.services.Services": "List of Windows services.",
+            "windows.registry.printkey": "Print registry keys and values.",
+            "windows.registry.hivelist": "List available registry hives.",
+            "windows.services": "List of Windows services.",
         },
         "Users": {
-            "windows.getsids.GetSIDs": "List SIDs for processes.",
-            "windows.hashdump.Hashdump": "Extract password hashes from memory.",
+            "windows.getsids": "List SIDs for processes.",
+            "windows.hashdump": "Extract password hashes from memory.",
         }
     },
     "linux": {
@@ -35,28 +35,28 @@ PLUGIN_REGISTRY = {
             "banners.Banners": "Display the kernel banner and system info.",
         },
         "Processes": {
-            "linux.pslist.PsList": "List of running processes.",
-            "linux.pstree.PsTree": "Process tree structure.",
-            "linux.psaux.PsAux": "List processes with aux information.",
+            "linux.pslist": "List of running processes.",
+            "linux.pstree": "Process tree structure.",
+            "linux.psaux": "List processes with aux information.",
         },
         "Network": {
-            "linux.sockstat.Sockstat": "Network connections and statistics.",
+            "linux.sockstat": "Network connections and statistics.",
         },
         "Kernel": {
-            "linux.lsmod.Lsmod": "List loaded kernel modules.",
-            "linux.check_modules.Check_modules": "Check for hidden kernel modules.",
+            "linux.lsmod": "List loaded kernel modules.",
+            "linux.check_modules": "Check for hidden kernel modules.",
         },
         "Environment": {
-            "linux.bash.Bash": "Recover bash command history.",
-            "linux.envars.Envars": "List process environment variables.",
+            "linux.bash": "Recover bash command history.",
+            "linux.envars": "List process environment variables.",
         }
     },
     "mac": {
         "Processes": {
-            "mac.pslist.PsList": "List of running processes.",
+            "mac.pslist": "List of running processes.",
         },
         "Network": {
-            "mac.netstat.Netstat": "Network connections.",
+            "mac.netstat": "Network connections.",
         }
     }
 }

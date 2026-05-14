@@ -19,7 +19,7 @@ class ApiController:
         if cls._analysis_mgr is None:
             cls._analysis_mgr = AnalysisManager(data_dir)
         if cls._report_mgr is None:
-            cls._report_mgr = ReportManager(data_dir)
+            cls._report_mgr = ReportManager(data_dir)  # will auto-resolve templates_dir
         return cls._evidence_mgr, cls._analysis_mgr, cls._report_mgr
 
     @staticmethod

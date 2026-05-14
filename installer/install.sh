@@ -7,47 +7,46 @@ set -e
 
 echo "=== Forensic Suite Linux Installation ==="
 
+# 0. Fix line endings for all shell scripts
+echo "[*] Ensuring correct line endings for scripts..."
+find "$(dirname "$0")" -name "*.sh" -exec sed -i 's/\r$//' {} +
+
 # 1. Install system dependencies
 echo "[*] Updating package list and installing dependencies..."
 sudo apt-get update -y
-sudo apt-get install -y python3-venv python3-pip build-essential libpcre3 libpcre3-dev
+sudo apt-get install -y python3-venv python3-pip build-essential libpcre3 libpcre3-dev git
 
 # 2. Run the core setup script
 echo "[*] Running core setup script..."
 python3 "$(dirname "$0")/setup.py"
 
-# 3. Setup Systemd Service
-echo "[*] Configuring Systemd service..."
+# 3. Setup Systemd Services
 BASE_DIR=$(realpath "$(dirname "$0")/..")
-SERVICE_FILE="/etc/systemd/system/forensicsuite.service"
 USER_NAME=$(whoami)
 
-sudo bash -c "cat > $SERVICE_FILE" <<EOF
-[Unit]
-Description=Forensic Suite Dashboard Service
-After=network.target
+echo "[*] Configuring Systemd services for user: $USER_NAME..."
 
-[Service]
-User=$USER_NAME
-WorkingDirectory=$BASE_DIR/backend
-ExecStart=$BASE_DIR/runtime/bin/python $BASE_DIR/backend/app.py
-Restart=always
-Environment=PYTHONPATH=$BASE_DIR/backend
+# Dashboard Service
+DASHBOARD_SERVICE="/etc/systemd/system/forensicsuite-dashboard.service"
+echo "    - Creating $DASHBOARD_SERVICE"
+sudo sed -e "s|PLACEHOLDER_BASE_DIR|$BASE_DIR|g" \
+         -e "s|PLACEHOLDER_USER|$USER_NAME|g" \
+         "$BASE_DIR/installer/forensic-dashboard.service" | sudo tee "$DASHBOARD_SERVICE" > /dev/null
 
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# 4. Setup Startup Analysis Service
-echo "[*] Configuring Startup Analysis service..."
+# Startup Analysis Service
 STARTUP_SERVICE="/etc/systemd/system/forensicsuite-startup.service"
-sudo cp "$BASE_DIR/installer/forensicsuite-startup.service" "$STARTUP_SERVICE"
+echo "    - Creating $STARTUP_SERVICE"
+sudo sed -e "s|PLACEHOLDER_BASE_DIR|$BASE_DIR|g" \
+         -e "s|PLACEHOLDER_USER|root|g" \
+         "$BASE_DIR/installer/forensicsuite-startup.service" | sudo tee "$STARTUP_SERVICE" > /dev/null
 
-echo "[*] Enabling services..."
+# 4. Finalize
+echo "[*] Enabling and starting services..."
 sudo systemctl daemon-reload
-sudo systemctl enable forensicsuite.service
+sudo systemctl enable forensicsuite-dashboard.service
 sudo systemctl enable forensicsuite-startup.service
-sudo systemctl start forensicsuite.service
+sudo systemctl start forensicsuite-dashboard.service
 
 echo "=== Installation Finished ==="
 echo "Dashboard should be available at http://localhost:5001"
+echo "Check status with: systemctl status forensicsuite-dashboard"

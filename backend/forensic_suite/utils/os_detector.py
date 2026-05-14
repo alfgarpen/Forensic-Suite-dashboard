@@ -35,15 +35,20 @@ def detect_os_from_dump(dump_path: str) -> str:
             # Check for Windows Minidump
             if header.startswith(b'MDMP'):
                 return "windows"
+
+            # Check for LiME (Linux Memory Extractor) - starts with 'LiME' (\x4c\x69\x4d\x45)
+            if header.startswith(b'LiME'):
+                return "linux"
                 
             # Fallback to extension
             ext = os.path.splitext(dump_path)[1].lower()
-            if ext == '.mem':
+            if ext in ['.mem', '.dmp', '.vmem']:
                 return "windows"
-            elif ext == '.lime':
+            elif ext in ['.lime', '.elf']:
                 return "linux"
             elif ext == '.raw':
-                return "unknown" # Could be either
+                # .raw is ambiguous, keep as unknown to trigger advanced detection
+                return "unknown"
                 
     except Exception:
         pass

@@ -48,14 +48,15 @@ def setup_venv():
 
 def configure_app():
     print("[*] Configuring application settings...")
+    # Use relative paths from project root to keep it portable
     settings = {
-        "base_dir": str(BASE_DIR),
-        "backend_dir": str(BACKEND_DIR),
-        "uploads_dir": str(UPLOADS_DIR),
-        "artifacts_dir": str(ARTIFACTS_DIR),
-        "reports_dir": str(REPORTS_DIR),
-        "logs_dir": str(LOGS_DIR),
-        "volatility_path": str(VOLATILITY_DIR),
+        "base_dir": ".",
+        "backend_dir": "backend",
+        "uploads_dir": "uploads",
+        "artifacts_dir": "artifacts",
+        "reports_dir": "reports",
+        "logs_dir": "logs",
+        "volatility_path": "volatility3",
         "port": 5001,
         "debug": False
     }
@@ -63,7 +64,7 @@ def configure_app():
     config_file = CONFIG_DIR / "settings.json"
     with open(config_file, "w") as f:
         json.dump(settings, f, indent=4)
-    print(f"    - Configured: {config_file.relative_to(BASE_DIR)}")
+    print(f"    - Configured portable settings: {config_file.relative_to(BASE_DIR)}")
 
 def setup_volatility():
     print("[*] Checking Volatility 3 setup...")

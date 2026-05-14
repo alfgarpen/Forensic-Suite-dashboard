@@ -623,7 +623,17 @@
                     </div>
                     <div class="info-card" id="download-card" style="display:none; text-align: center; border-color: var(--c-accent-green);">
                         <div class="info-card-label" style="color:var(--c-accent-green);">Resultados listos</div>
-                        <a href="/download/report" target="_blank" class="btn btn-green" style="text-decoration:none;">Descargar Final Report</a>
+                        <a href="/download/report" target="_blank" class="btn btn-green" style="text-decoration:none;">Ver Último Reporte</a>
+                    </div>
+                    <!-- HISTORIAL DE REPORTES -->
+                    <div class="info-card" id="reports-history-card" style="border-color: var(--c-accent-blue); margin-top:8px;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                            <div class="info-card-label" style="color:var(--c-accent-blue); margin-bottom:0;">Historial de Reportes</div>
+                            <button class="btn" style="font-size:10px;padding:4px 10px;margin-left:auto;" onclick="loadReportsList()">↻ Actualizar</button>
+                        </div>
+                        <div id="reports-list-container" style="font-family:'JetBrains Mono',monospace; font-size:11px; max-height:160px; overflow-y:auto;">
+                            <span style="color:var(--c-text-secondary);">Cargando...</span>
+                        </div>
                     </div>
                 </div>
                 <div class="terminal-box" id="term-rep">Esperando generación...&#10;</div>
@@ -1069,6 +1079,32 @@
             btn.innerText = "▶ Ejecutar Memdump & Pipeline Completo";
             btn.disabled = false;
         }
+
+        async function loadReportsList() {
+            const container = document.getElementById('reports-list-container');
+            try {
+                const res = await fetch('/api/reports/list');
+                const data = await res.json();
+                if (data.status === 'success' && data.reports.length > 0) {
+                    container.innerHTML = data.reports.map(r => {
+                        const date = new Date(r.modified * 1000).toLocaleString('es-ES');
+                        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--c-border);">
+                            <span style="color:var(--c-accent-green);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${r.filename}">${r.filename}</span>
+                            <span style="color:var(--c-text-secondary);font-size:10px;white-space:nowrap;">${r.size_kb} KB · ${date}</span>
+                            <a href="${r.url}" target="_blank" style="color:var(--c-accent-blue);text-decoration:none;font-size:10px;white-space:nowrap;">Ver ↗</a>
+                        </div>`;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<span style="color:var(--c-text-secondary);">No hay reportes generados aún.</span>';
+                }
+            } catch(e) {
+                container.innerHTML = '<span style="color:var(--c-accent-red);">Error al cargar reportes.</span>';
+            }
+        }
+
+        // Load reports list on startup and refresh every 30s
+        loadReportsList();
+        setInterval(loadReportsList, 30000);
     </script>
 </body>
 

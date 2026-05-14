@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=oneshot
 User=root
-WorkingDirectory=/usr/local/Forensic-Suite-dashboard
-ExecStart=/usr/local/Forensic-Suite-dashboard/runtime/bin/python /usr/local/Forensic-Suite-dashboard/installer/startup_analysis.py
+WorkingDirectory=PLACEHOLDER_BASE_DIR
+ExecStart=PLACEHOLDER_BASE_DIR/runtime/bin/python PLACEHOLDER_BASE_DIR/installer/startup_analysis.py
 RemainAfterExit=yes
 
 [Install]

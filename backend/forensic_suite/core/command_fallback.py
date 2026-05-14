@@ -137,3 +137,20 @@ class CommandFallback:
         elif "registry" in p or "hivelist" in p or "printkey" in p:
             return "registry"
         return None
+
+    @staticmethod
+    def detect_os_from_system_info() -> str:
+        """
+        Runs native system info command and tries to deduce the OS name.
+        Useful for live analysis fallback.
+        """
+        res = CommandFallback.run_fallback("system")
+        if res["status"] == "success":
+            output = res.get("output", "").lower()
+            if "linux" in output:
+                return "linux"
+            elif "windows" in output or "microsoft" in output:
+                return "windows"
+            elif "darwin" in output:
+                return "mac"
+        return "unknown"

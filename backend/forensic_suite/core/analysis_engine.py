@@ -48,20 +48,26 @@ class AnalysisEngine:
         # 2. Refine OS Detection if unknown using Volatility
         if detected_os == "unknown" and self.vol_manager.is_installed:
             self.log_callback("[*] Attempting advanced OS detection via Volatility banners...")
-            # Try windows.info or linux.banner
-            for probe in ["windows.info", "linux.banner", "banners.Banners"]:
+            # Try windows.info or banners.Banners
+            for probe in ["windows.info", "banners.Banners"]:
                 res = self.vol_manager.execute_plugin(self.dump_path, probe)
                 if res["status"] == "success" and res.get("data"):
                     detected_os = "windows" if "windows" in probe else "linux"
                     self.log_callback(f"[+] Advanced detection confirmed: {detected_os}")
                     break
         
-        # 3. Final Fallback: use local system info if still unknown
+        # 3. Final Fallback: use native system commands if still unknown
         if detected_os == "unknown":
-            from forensic_suite.utils.os_detector import get_local_os
-            self.log_callback("[*] Volatility could not detect OS. Falling back to local system info...")
-            detected_os = get_local_os()
-            self.log_callback(f"[+] Fallback detection (Local OS): {detected_os}")
+            self.log_callback("[*] Volatility could not detect OS. Falling back to native system info...")
+            detected_os = CommandFallback.detect_os_from_system_info()
+            
+            if detected_os == "unknown":
+                # Ultimate fallback: default to host OS from sys.platform
+                from forensic_suite.utils.os_detector import get_local_os
+                detected_os = get_local_os()
+                self.log_callback(f"[!] All detection methods failed. Using local system default: {detected_os}")
+            else:
+                self.log_callback(f"[+] Fallback detection (System Info): {detected_os}")
         
         # 4. Resolve Plugins to run
         if not plugins:

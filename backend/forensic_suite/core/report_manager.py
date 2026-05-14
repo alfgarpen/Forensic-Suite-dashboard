@@ -3,11 +3,16 @@ from typing import Optional
 from forensic_suite.core.reporting import Reporting
 from forensic_suite.utils.file_utils import FileUtils
 
+# Absolute path to frontend/templates, resolved from this file's location:
+# report_manager.py -> core -> forensic_suite -> backend -> project_root -> frontend/templates
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+_DEFAULT_TEMPLATES_DIR = os.path.join(_PROJECT_ROOT, 'frontend', 'templates')
+
 class ReportManager:
-    def __init__(self, data_dir: str, templates_dir: str = 'templates'):
+    def __init__(self, data_dir: str, templates_dir: str = None):
         self.data_dir = data_dir
-        self.templates_dir = templates_dir
-        self.reporter = Reporting(templates_dir)
+        self.templates_dir = templates_dir or _DEFAULT_TEMPLATES_DIR
+        self.reporter = Reporting(self.templates_dir)
 
     def generate(self, results_path: Optional[str] = None) -> dict:
         """

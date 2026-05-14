@@ -1,0 +1,168 @@
+{
+    "dump_file": "dump_20260514_015039.raw",
+    "os_profile": "Linux 6.17.0-20-generic x86_64",
+    "plugins_run": [
+        "windows.info.Info",
+        "windows.pslist.PsList"
+    ],
+    "findings": {
+        "windows.info.Info": {
+            "Kernel Base": "0xf807abcdef123456 (Simulado)",
+            "DTB": "0x1aa000 (Simulado)",
+            "SystemTime": "2026-05-13 23:50:42 UTC"
+        },
+        "windows.pslist.PsList": [
+            {
+                "PID": 1,
+                "Name": "systemd",
+                "Parent": 0
+            },
+            {
+                "PID": 2,
+                "Name": "kthreadd",
+                "Parent": 0
+            },
+            {
+                "PID": 3,
+                "Name": "pool_workqueue_release",
+                "Parent": 2
+            },
+            {
+                "PID": 4,
+                "Name": "kworker/R-rcu_gp",
+                "Parent": 2
+            },
+            {
+                "PID": 5,
+                "Name": "kworker/R-sync_wq",
+                "Parent": 2
+            },
+            {
+                "PID": 6,
+                "Name": "kworker/R-kvfree_rcu_reclaim",
+                "Parent": 2
+            },
+            {
+                "PID": 7,
+                "Name": "kworker/R-slub_flushwq",
+                "Parent": 2
+            },
+            {
+                "PID": 8,
+                "Name": "kworker/R-netns",
+                "Parent": 2
+            },
+            {
+                "PID": 9,
+                "Name": "kworker/0:0-events",
+                "Parent": 2
+            },
+            {
+                "PID": 10,
+                "Name": "kworker/0:1-events",
+                "Parent": 2
+            },
+            {
+                "PID": 11,
+                "Name": "kworker/0:0H-events_highpri",
+                "Parent": 2
+            },
+            {
+                "PID": 12,
+                "Name": "kworker/u8:0-ipv6_addrconf",
+                "Parent": 2
+            },
+            {
+                "PID": 13,
+                "Name": "kworker/R-mm_percpu_wq",
+                "Parent": 2
+            },
+            {
+                "PID": 14,
+                "Name": "ksoftirqd/0",
+                "Parent": 2
+            },
+            {
+                "PID": 15,
+                "Name": "rcu_preempt",
+                "Parent": 2
+            },
+            {
+                "PID": 16,
+                "Name": "rcu_exp_par_gp_kthread_worker/0",
+                "Parent": 2
+            },
+            {
+                "PID": 17,
+                "Name": "rcu_exp_gp_kthread_worker",
+                "Parent": 2
+            },
+            {
+                "PID": 18,
+                "Name": "migration/0",
+                "Parent": 2
+            },
+            {
+                "PID": 19,
+                "Name": "idle_inject/0",
+                "Parent": 2
+            },
+            {
+                "PID": 20,
+                "Name": "cpuhp/0",
+                "Parent": 2
+            },
+            {
+                "PID": 21,
+                "Name": "cpuhp/1",
+                "Parent": 2
+            },
+            {
+                "PID": 22,
+                "Name": "idle_inject/1",
+                "Parent": 2
+            },
+            {
+                "PID": 23,
+                "Name": "migration/1",
+                "Parent": 2
+            },
+            {
+                "PID": 24,
+                "Name": "ksoftirqd/1",
+                "Parent": 2
+            },
+            {
+                "PID": 25,
+                "Name": "kworker/1:0-events",
+                "Parent": 2
+            },
+            {
+                "PID": 26,
+                "Name": "kworker/1:0H-kblockd",
+                "Parent": 2
+            },
+            {
+                "PID": 27,
+                "Name": "kworker/u9:0-kvfree_rcu_reclaim",
+                "Parent": 2
+            },
+            {
+                "PID": 28,
+                "Name": "kworker/u10:0-flush-8:0",
+                "Parent": 2
+            },
+            {
+                "PID": 29,
+                "Name": "kdevtmpfs",
+                "Parent": 2
+            },
+            {
+                "PID": 30,
+                "Name": "kworker/R-inet_frag_wq",
+                "Parent": 2
+            }
+        ]
+    },
+    "source_dump": "/home/developer/Documentos/Forensic-Suite-dashboard/uploads/dump_20260514_015039.raw"
+}
