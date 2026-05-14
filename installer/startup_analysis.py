@@ -4,6 +4,7 @@ import sys
 import json
 import shutil
 import datetime
+import pwd
 from pathlib import Path
 
 # Paths
@@ -15,6 +16,14 @@ RUNTIME_DIR = BASE_DIR / "runtime"
 DATA_DIR = BASE_DIR / "data"
 ARTIFACTS_DIR = BASE_DIR / "artifacts"
 REPORTS_DIR = BASE_DIR / "reports"
+# Resolve the home directory of the user who owns the installation (to avoid /root/ when running as service)
+try:
+    owner_uid = os.stat(BASE_DIR).st_uid
+    USER_HOME = Path(pwd.getpwuid(owner_uid).pw_dir)
+except Exception:
+    USER_HOME = Path.home()
+
+EXTERNAL_REPORTS_DIR = USER_HOME / "Documentos" / "Reportes"
 TEMPLATES_DIR = BASE_DIR / "frontend" / "templates"
 
 # Inject backend into path so we can import forensic_suite directly
@@ -115,9 +124,32 @@ def run_startup_analysis():
         shutil.copy2(results_path, DATA_DIR / "results.json")
         shutil.copy2(report_output, DATA_DIR / "report.html")
 
-        # Fix ownership and permissions
+        # Fix ownership and permissions (Move this up so uid/gid are available)
         stat_info = os.stat(BASE_DIR)
         uid, gid = stat_info.st_uid, stat_info.st_gid
+
+        # Modular copy to Documents/Reportes
+        try:
+            EXTERNAL_REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+            # Fix directory permissions too
+            os.chmod(EXTERNAL_REPORTS_DIR, 0o777)
+            try:
+                os.chown(EXTERNAL_REPORTS_DIR, uid, gid)
+            except:
+                pass
+                
+            external_report_path = EXTERNAL_REPORTS_DIR / f"report_{timestamp}.html"
+            shutil.copy2(report_output, external_report_path)
+            print(f"[*] Copy saved to: {external_report_path}")
+            
+            # Ensure the copied file has correct permissions too (777 as requested)
+            os.chmod(external_report_path, 0o777)
+            try:
+                os.chown(external_report_path, uid, gid)
+            except:
+                pass
+        except Exception as copy_err:
+            print(f"[!] Failed to copy to external reports: {copy_err}")
 
         for f in [dump_path, results_path, report_output,
                   DATA_DIR / "results.json", DATA_DIR / "report.html",
