@@ -129,7 +129,11 @@
             border-bottom: 1px solid var(--c-border);
             padding: 0 24px;
             gap: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
+
+        .db-nav::-webkit-scrollbar { display: none; }
 
         .nav-tab {
             padding: 12px 20px;
@@ -493,6 +497,7 @@
             <button class="nav-tab" onclick="switchTab('script1')">01 · Adquisición<span class="num">acq</span></button>
             <button class="nav-tab" onclick="switchTab('script2')">02 · Análisis<span class="num">vol</span></button>
             <button class="nav-tab" onclick="switchTab('script3')">03 · Reporte<span class="num">html</span></button>
+            <button class="nav-tab" onclick="switchTab('remote')">Transferencia Remota<span class="num">ssh</span></button>
         </div>
 
         <!-- SECCIÓN EVIDENCIA ACTIVA -->
@@ -648,6 +653,39 @@
                     <div id="preview-findings"></div>
                 </div>
             </div>
+
+            <!-- REMOTE TRANSFER -->
+            <div class="tab-panel" id="tab-remote">
+                <div class="section-header">
+                    <span class="section-badge badge-purple">SSH / SCP</span>
+                    <span class="section-title">Transferencia automática de reportes</span>
+                </div>
+
+                <div class="overview-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="overview-card card-blue" id="ssh-status-card">
+                        <div class="ov-num">Estado de conexión</div>
+                        <div class="ov-name" id="ssh-status-label"><span style="color:var(--c-accent-amber)">●</span> Verificando...</div>
+                        <div class="ov-desc">Conexión con el servidor remoto de reportes via SSH.</div>
+                    </div>
+                    <div class="overview-card card-green">
+                        <div class="ov-num">Último envío</div>
+                        <div class="ov-name" id="last-transfer-time">N/A</div>
+                        <div class="ov-desc">Fecha y hora de la última transferencia completada con éxito.</div>
+                    </div>
+                    <div class="overview-card card-amber">
+                        <div class="ov-num">Cola de envío</div>
+                        <div class="ov-name" id="queue-count">0 archivos</div>
+                        <div class="ov-desc">Reportes pendientes de envío o en espera de reintento.</div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-label">Historial de Transferencias · logs/transfer.log</div>
+                    <div id="transfer-log-container" style="background:var(--c-bg); border: 1px solid var(--c-border); border-radius: 8px; padding: 12px; font-family:'JetBrains Mono',monospace; font-size: 11px; max-height: 300px; overflow-y: auto; color: var(--c-text-secondary); white-space: pre-wrap;">
+                        <div style="color:var(--c-accent-blue)">Iniciando monitorización remota...</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -657,7 +695,7 @@
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + id).classList.add('active');
-            const tabs = { overview: 0, script1: 1, script2: 2, script3: 3 };
+            const tabs = { overview: 0, script1: 1, script2: 2, script3: 3, remote: 4 };
             document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
             
             if (id === 'script2') {
@@ -1105,6 +1143,23 @@
         // Load reports list on startup and refresh every 30s
         loadReportsList();
         setInterval(loadReportsList, 30000);
+
+        function updateRemoteStatus() {
+            // Fetch remote transfer logs if needed (requires a dedicated API endpoint or serving logs dir)
+            // For now we simulate or use a specific endpoint if we added one
+            fetch('/api/remote/logs').then(r => r.json()).then(data => {
+                if (data.status === 'success') {
+                    const logDiv = document.getElementById('transfer-log-container');
+                    logDiv.innerText = data.logs;
+                    logDiv.scrollTop = logDiv.scrollHeight;
+                    
+                    document.getElementById('ssh-status-label').innerHTML = '<span style="color:var(--c-accent-green)">●</span> Conectado';
+                }
+            }).catch(e => {});
+        }
+
+        setInterval(updateRemoteStatus, 5000);
+        updateRemoteStatus();
     </script>
 </body>
 

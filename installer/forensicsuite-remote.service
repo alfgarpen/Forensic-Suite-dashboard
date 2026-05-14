@@ -1,0 +1,14 @@
+[Unit]
+Description=Forensic Suite Remote Transfer Service
+After=network.target
+
+[Service]
+Type=simple
+User=alfongp
+WorkingDirectory=/home/alfongp/Documentos/Forensic-Suite-dashboard
+ExecStart=/home/alfongp/Documentos/Forensic-Suite-dashboard/runtime/bin/python /home/alfongp/Documentos/Forensic-Suite-dashboard/installer/remote_service.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

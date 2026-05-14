@@ -157,3 +157,16 @@ def get_results():
         return jsonify(data)
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@api_bp.route('/api/remote/logs', methods=['GET'])
+def get_remote_logs():
+    """Returns the content of logs/transfer.log"""
+    log_path = os.path.join(BASE_DIR, 'logs', 'transfer.log')
+    if not os.path.exists(log_path):
+        return jsonify({'status': 'success', 'logs': 'No hay logs de transferencia aún.'})
+    try:
+        with open(log_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        return jsonify({'status': 'success', 'logs': content})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500

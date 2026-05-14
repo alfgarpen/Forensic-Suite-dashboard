@@ -40,12 +40,21 @@ sudo sed -e "s|PLACEHOLDER_BASE_DIR|$BASE_DIR|g" \
          -e "s|PLACEHOLDER_USER|root|g" \
          "$BASE_DIR/installer/forensicsuite-startup.service" | sudo tee "$STARTUP_SERVICE" > /dev/null
 
+# Remote Transfer Service
+REMOTE_SERVICE="/etc/systemd/system/forensicsuite-remote.service"
+echo "    - Creating $REMOTE_SERVICE"
+sudo cp "$BASE_DIR/installer/forensicsuite-remote.service" "$REMOTE_SERVICE"
+sudo sed -i "s|User=alfongp|User=$USER_NAME|g" "$REMOTE_SERVICE"
+sudo sed -i "s|/home/alfongp/Documentos/Forensic-Suite-dashboard|$BASE_DIR|g" "$REMOTE_SERVICE"
+
 # 4. Finalize
 echo "[*] Enabling and starting services..."
 sudo systemctl daemon-reload
 sudo systemctl enable forensicsuite-dashboard.service
 sudo systemctl enable forensicsuite-startup.service
+sudo systemctl enable forensicsuite-remote.service
 sudo systemctl start forensicsuite-dashboard.service
+sudo systemctl start forensicsuite-remote.service
 
 echo "=== Installation Finished ==="
 echo "Dashboard should be available at http://localhost:5001"
