@@ -22,34 +22,12 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 
-def generate_report_like_web(results_path: Path, output_path: Path) -> bool:
+def generate_report_like_web(results_data: dict, output_path: Path) -> bool:
     """
     Generates the HTML report using the exact same Reporting class as the web dashboard.
-    This guarantees identical output (alerts, severity, findings normalization, etc.).
     """
     from forensic_suite.core.reporting import Reporting
     
-    # Load results JSON
-    with open(results_path, 'r', encoding='utf-8') as f:
-        results_data = json.load(f)
-
-    # Enrich metadata to match Reporting.generate_html_report expectations
-    metadata = results_data.setdefault('metadata', {})
-    
-    state_file = DATA_DIR / "current_dump.json"
-    if state_file.exists():
-        with open(state_file, 'r') as f:
-            active = json.load(f)
-        
-        # Match reporting.py expectations: metadata['hashes'], metadata['dump_size_bytes']
-        metadata.update({
-            "dump_path": active.get('active_memory_dump'),
-            "hashes": {"md5": "N/A", "sha256": active.get('hash', 'N/A')},
-            "dump_size_bytes": active.get('size_bytes', 0),
-            "acquisition_source": active.get('source', 'startup_automated'),
-            "acquisition_time": active.get('timestamp'),
-        })
-
     reporter = Reporting(str(TEMPLATES_DIR))
     return reporter.generate_html_report(results_data, str(output_path))
 
@@ -82,45 +60,33 @@ def run_startup_analysis():
         print(f"[!] Memory acquisition failed: {e}")
         return
 
-    # 2. Volatility 3 Analysis
-    print("[*] Phase 2: Running Volatility 3 analysis...")
-    analysis_script = SCRIPTS_DIR / "analyze_dump.py"
+    # 2. Forensic Analysis Engine
+    print("[*] Phase 2: Running Forensic Analysis Engine...")
+    from forensic_suite.core.analysis_engine import AnalysisEngine
     results_path = ARTIFACTS_DIR / f"results_{timestamp}.json"
 
     try:
-        subprocess.check_call([
-            str(python_exe), str(analysis_script),
-            "--dump", str(dump_path),
-            "--output", str(results_path)
-        ])
+        engine = AnalysisEngine(str(dump_path))
+        # Run standard plugins (None = default set)
+        results_data = engine.run_analysis()
+        
+        with open(results_path, 'w', encoding='utf-8') as f:
+            json.dump(results_data, f, indent=4)
+            
         print("[*] Analysis complete.")
     except Exception as e:
         print(f"[!] Analysis failed: {e}")
+        import traceback
+        traceback.print_exc()
         return
 
     # 3. Generate report using the same engine as the web dashboard
-    print("[*] Phase 3: Generating HTML report (web-identical engine)...")
+    print("[*] Phase 3: Generating HTML report...")
     report_name = f"reporte_{timestamp}.html"
     report_output = REPORTS_DIR / report_name
 
     try:
-        # Before generating report, we need a current_dump.json for metadata enrichment
-        dump_size_bytes = os.path.getsize(dump_path)
-        state = {
-            "active_memory_dump": str(dump_path),
-            "filename": dump_filename,
-            "status": "analysis_completed",
-            "last_results": str(DATA_DIR / "results.json"),
-            "timestamp": timestamp,
-            "size_bytes": dump_size_bytes,
-            "size_human": f"{dump_size_bytes // (1024 * 1024)} MB",
-            "hash": "N/A",
-            "source": "startup_automated"
-        }
-        with open(DATA_DIR / "current_dump.json", 'w') as f:
-            json.dump(state, f, indent=4)
-
-        success = generate_report_like_web(results_path, report_output)
+        success = generate_report_like_web(results_data, report_output)
         if not success:
             print("[!] Report generation failed (template error).")
             return
@@ -128,23 +94,40 @@ def run_startup_analysis():
         # 4. Update dashboard active state
         print("[*] Updating dashboard active state...")
 
+        # Update current_dump.json metadata from engine results
+        metadata = results_data.get("metadata", {})
+        state = {
+            "active_memory_dump": str(dump_path),
+            "filename": dump_filename,
+            "status": "analysis_completed",
+            "last_results": str(DATA_DIR / "results.json"),
+            "timestamp": timestamp,
+            "size_bytes": metadata.get("dump_size_bytes", 0),
+            "size_human": f"{metadata.get('dump_size_bytes', 0) // (1024 * 1024)} MB",
+            "hash": metadata.get("hashes", {}).get("sha256", "N/A"),
+            "detected_os": metadata.get("detected_os", "Unknown"),
+            "source": "startup_automated"
+        }
+        with open(DATA_DIR / "current_dump.json", 'w') as f:
+            json.dump(state, f, indent=4)
+
         # Copy to data/ so it's accessible as file:// and via /download/report
         shutil.copy2(results_path, DATA_DIR / "results.json")
         shutil.copy2(report_output, DATA_DIR / "report.html")
 
         # Fix ownership and permissions
-        # Get UID/GID from BASE_DIR to match the user's workspace
         stat_info = os.stat(BASE_DIR)
         uid, gid = stat_info.st_uid, stat_info.st_gid
 
         for f in [dump_path, results_path, report_output,
                   DATA_DIR / "results.json", DATA_DIR / "report.html",
                   DATA_DIR / "current_dump.json"]:
-            os.chmod(f, 0o644)
-            try:
-                os.chown(f, uid, gid)
-            except:
-                pass
+            if os.path.exists(f):
+                os.chmod(f, 0o644)
+                try:
+                    os.chown(f, uid, gid)
+                except:
+                    pass
 
         print(f"[*] Startup pipeline finished. Report: {report_name}")
         print(f"[*] Also available at: {DATA_DIR / 'report.html'}")

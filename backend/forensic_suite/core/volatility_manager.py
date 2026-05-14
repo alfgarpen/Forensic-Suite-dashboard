@@ -26,6 +26,10 @@ class VolatilityManager:
         for cmd_name in ["vol", "volatility", "volatility3"]:
             cmd_path = os.path.join(python_bin_dir, cmd_name)
             if os.path.exists(cmd_path):
+                # If we're on Linux/Mac and it's a script, it's safer to run with sys.executable
+                # to avoid issues with broken shebangs in moved venvs.
+                if sys.platform != "win32":
+                    return f"{sys.executable} {cmd_path}"
                 return cmd_path
 
         # 2. Check if 'vol.py' exists in common locations
@@ -34,18 +38,11 @@ class VolatilityManager:
             if os.path.exists(vol_py):
                 return f"{sys.executable} {vol_py}"
 
-        # 3. Check if it's installed as a module (using the correct entry point if possible)
-        try:
-            import volatility3
-            # We don't use -m volatility3.cli as it often lacks __main__.py
-            # If we reached here, the package exists, but we prefer finding the executable
-        except ImportError:
-            pass
-
-        # 4. Check if 'vol' or 'volatility' is in PATH
+        # 3. Check if 'vol' or 'volatility' is in PATH
         for cmd in ["vol", "volatility", "volatility3"]:
             try:
-                subprocess.run([cmd, "--version"], capture_output=True, check=True)
+                # Use shell=False and list for security and reliability
+                subprocess.run([cmd, "--help"], capture_output=True, timeout=5)
                 return cmd
             except (subprocess.CalledProcessError, FileNotFoundError):
                 continue

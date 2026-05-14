@@ -103,20 +103,24 @@ class AnalysisEngine:
             # Try Volatility
             res = self.vol_manager.execute_plugin(self.dump_path, p_name, log_callback=self.log_callback)
             
+            plugin_result = None
             is_success = False
+            
             if res["status"] == "success":
                 parsed = ArtifactParser.parse(p_name, res["data"])
                 # Even if status is success, Volatility might return empty list if it failed to find anything meaningful
                 if parsed.get("count", 0) > 0 or parsed.get("data"):
-                    results["artifacts"][p_name] = parsed
+                    plugin_result = parsed
                     self.log_callback(f"[+] {p_name} completed successfully. Artifacts found: {parsed.get('count', 'N/A')}")
                     is_success = True
                 else:
                     self.log_callback(f"[*] {p_name} returned no data.")
+                    plugin_result = {"status": "success", "data": [], "count": 0, "message": "No results found by Volatility."}
 
             if not is_success:
+                error_msg = res.get('error', 'Unknown Volatility error')
                 if res["status"] != "success":
-                    self.log_callback(f"[-] {p_name} failed: {res.get('error')}")
+                    self.log_callback(f"[-] {p_name} failed: {error_msg}")
                 
                 # 6. Fallback
                 fallback_cat = CommandFallback.map_plugin_to_category(p_name)
@@ -127,10 +131,19 @@ class AnalysisEngine:
                         # Parse the fallback output (it can be a string or structured data)
                         fallback_input = f_res.get("data", f_res.get("output"))
                         parsed_fallback = ArtifactParser.parse(p_name, fallback_input)
-                        results["artifacts"][p_name] = parsed_fallback
+                        plugin_result = parsed_fallback
                         self.log_callback(f"[+] Fallback for {fallback_cat} successful.")
+                        is_success = True
                     else:
-                        self.log_callback(f"[-] Fallback failed: {f_res.get('error')}")
+                        fallback_err = f_res.get('error', 'Unknown fallback error')
+                        self.log_callback(f"[-] Fallback failed: {fallback_err}")
+                        plugin_result = {"status": "error", "error": f"Volatility: {error_msg} | Fallback: {fallback_err}"}
+                else:
+                    plugin_result = {"status": "error", "error": error_msg}
+            
+            # Always store the result
+            if plugin_result:
+                results["artifacts"][p_name] = plugin_result
                 
         self.log_callback("[!] Analysis completed.")
         return results

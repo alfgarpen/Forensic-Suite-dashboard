@@ -99,7 +99,19 @@ class CommandFallback:
             if not cmd:
                 return {"status": "error", "error": f"Category {category} not supported on this platform."}
 
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+            # Ensure we have a reasonable PATH for finding system commands
+            env = os.environ.copy()
+            if not is_windows:
+                # Add common paths if they are missing
+                extra_paths = ["/usr/bin", "/bin", "/usr/sbin", "/sbin", "/usr/local/bin"]
+                current_path = env.get("PATH", "")
+                path_list = current_path.split(os.pathsep) if current_path else []
+                for p in extra_paths:
+                    if p not in path_list:
+                        path_list.append(p)
+                env["PATH"] = os.pathsep.join(path_list)
+
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30, env=env)
             if result.returncode == 0:
                 return {
                     "status": "success",

@@ -21,12 +21,17 @@ class ReportGenerator:
             template = self.env.get_template('report_template.html')
             
             # Prepare context
+            metadata = data.get('metadata', {})
+            artifacts = data.get('artifacts', data.get('findings', {}))
+            
             context = {
-                "dump_file": data.get('dump_file', data.get('source_dump', 'N/A')),
-                "os_profile": data.get('os_profile', 'N/A'),
-                "plugins_run": data.get('plugins_run', []),
-                "findings": data.get('findings', {}),
-                "generation_time": data.get('analysis_time', 'N/A')
+                "dump_file": metadata.get('dump_path', data.get('dump_file', 'N/A')),
+                "os_profile": f"{metadata.get('detected_os', 'N/A')} (via Volatility {metadata.get('volatility_version', 'N/A')})",
+                "plugins_run": list(artifacts.keys()),
+                "findings": artifacts,
+                "dump_hashes": metadata.get('hashes', {}),
+                "dump_size": metadata.get('dump_size_bytes', 0),
+                "generation_time": metadata.get('analysis_time', 'N/A')
             }
 
             # Add evidence metadata if provided
