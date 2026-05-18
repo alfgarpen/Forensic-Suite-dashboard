@@ -1,53 +1,41 @@
 # Guía: Conexión del Servidor de Reportes Remoto
 
-Para que el sistema automático funcione, el equipo que genera los reportes debe poder entrar al equipo remoto sin contraseña usando **SSH Keys**.
-
-## Paso 1: Obtener tu Clave Pública
-El sistema ya ha generado una clave de alta seguridad (`ed25519`) para ti. Ejecuta este comando en tu terminal para verla:
-
-```bash
-cat ~/.ssh/id_ed25519.pub
-```
-
-**Copia el texto completo** que empieza por `ssh-ed25519 ...`.
+Para que el sistema automático funcione, la Suite Forense puede conectarse a un servidor remoto mediante **SSH/SFTP utilizando autenticación por contraseña**. Este es el método más simple y rápido de configurar.
 
 ---
 
-## Paso 2: Configurar el Servidor Remoto (Receptor)
-En el equipo que va a recibir los reportes (el servidor), debes autorizar tu clave:
+## Paso 1: Configurar la Suite Forense
 
-1. Entra al servidor remoto.
-2. Edita el archivo de claves autorizadas:
-   ```bash
-   nano ~/.ssh/authorized_keys
-   ```
-3. Pega la clave que copiaste en el paso anterior en una línea nueva.
-4. Guarda y sal (`Ctrl+O`, `Enter`, `Ctrl+X`).
-
-> [!TIP]
-> Si el servidor es nuevo, asegúrate de que la carpeta `.ssh` tiene permisos `700` y el archivo `authorized_keys` tiene `600`.
-
----
-
-## Paso 3: Configurar la Suite Forense
-Ahora debes decirle a la Suite a qué IP enviar los datos. Edita el archivo de configuración:
+Edita el archivo de configuración en tu equipo local para introducir los datos del servidor receptor.
 
 **Archivo:** `config/remote_config.json`
 
 ```json
 {
-    "remote_host": "IP_DEL_SERVIDOR",
-    "remote_user": "USUARIO_DEL_SERVIDOR",
-    "remote_path": "/ruta/donde/guardar/reportes/",
-    "ssh_key_path": "/home/alfongp/.ssh/id_ed25519",
-    "enabled": true
+  "remote_host": "IP_DEL_SERVIDOR",
+  "remote_port": 22,
+  "remote_user": "USUARIO_DEL_SERVIDOR",
+  "remote_password": "TU_CONTRASEÑA_SSH",
+  "remote_path": "/ruta/donde/guardar/reportes/",
+  "enabled": true,
+  "auto_rename": true,
+  "verify_integrity": true
 }
 ```
 
+### Campos disponibles:
+- **`remote_host`**: La dirección IP o nombre de host del servidor remoto.
+- **`remote_port`**: El puerto de SSH (por defecto, `22`).
+- **`remote_user`**: El usuario con el que te conectarás al servidor.
+- **`remote_password`**: La contraseña correspondiente a ese usuario.
+- **`remote_path`**: La ruta absoluta o relativa en el servidor remoto donde se guardarán los reportes (ej. `~/reports/`).
+- **`enabled`**: Cambiar a `true` para activar el servicio de monitoreo y envío automático.
+
 ---
 
-## Paso 4: Reiniciar el Servicio
-Para que los cambios de configuración se apliquen al sistema de vigilancia automática:
+## Paso 2: Reiniciar el Servicio Automático
+
+Para aplicar la nueva configuración y que el demonio en segundo plano empiece a monitorear y enviar los reportes automáticamente, ejecuta:
 
 ```bash
 sudo systemctl restart forensicsuite-remote.service
@@ -55,16 +43,26 @@ sudo systemctl restart forensicsuite-remote.service
 
 ---
 
-## Paso 5: Verificación
-1. Ve a la pestaña **Transferencia Remota** en el Dashboard.
-2. Genera un nuevo reporte (o mueve un archivo HTML a `Documentos/Reportes/`).
-3. En el log del Dashboard deberías ver:
-   - `[INFO] Detectado nuevo reporte...`
-   - `[INFO] Conectando a SSH...`
-   - `[SUCCESS] Transferencia completada: Reporte_XXX.html`
+## Paso 3: Verificación
+
+1. Dirígete a la pestaña **Transferencia Remota** en el Dashboard.
+2. Genera un nuevo reporte en el sistema (o añade un archivo `.html` a la carpeta local `Documentos/Reportes/`).
+3. En el log del Dashboard o en `logs/transfer.log` deberías ver el progreso automático:
+   - `[INFO] Report detected: ...`
+   - `[INFO] Transferencia iniciada`
+   - `[INFO] Transferencia completada`
+   - `[INFO] Verificación OK` (si la verificación de integridad está activada)
 
 ---
 
 ## Solución de problemas
-- **Permisos denegados:** Asegúrate de que el usuario remoto tiene permisos de escritura en `remote_path`.
-- **Host unreachable:** Verifica que puedes hacer `ping` a la IP del servidor y que el puerto 22 (SSH) está abierto.
+
+- **Autenticación fallida:** Asegúrate de que el usuario y la contraseña introducidos en `remote_config.json` son correctos y que puedes conectarte manualmente desde una terminal con:
+  ```bash
+  ssh USUARIO_DEL_SERVIDOR@IP_DEL_SERVIDOR
+  ```
+- **Ruta no encontrada o sin permisos:** El usuario especificado debe tener permisos de lectura y escritura en la carpeta especificada en `remote_path`.
+- **El servicio no inicia:** Puedes revisar los logs del sistema del servicio ejecutando:
+  ```bash
+  sudo journalctl -u forensicsuite-remote.service -n 50 -f
+  ```

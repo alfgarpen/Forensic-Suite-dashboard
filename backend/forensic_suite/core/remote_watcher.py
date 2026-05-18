@@ -22,6 +22,18 @@ class ReportHandler(FileSystemEventHandler):
 
 def start_watcher(path_to_watch):
     manager = RemoteTransferManager()
+    
+    # Process any existing files in the directory first to avoid boot race conditions
+    print(f"Scanning for existing reports in: {path_to_watch}")
+    try:
+        for f in Path(path_to_watch).glob("*.html"):
+            if f.is_file():
+                print(f"Found existing report at startup: {f}")
+                time.sleep(0.5)
+                manager.transfer_file(f)
+    except Exception as e:
+        print(f"Error scanning existing reports: {e}")
+
     event_handler = ReportHandler(manager)
     observer = Observer()
     observer.schedule(event_handler, path_to_watch, recursive=False)

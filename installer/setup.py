@@ -68,12 +68,12 @@ def configure_app():
         remote_config = {
             "remote_host": "127.0.0.1",
             "remote_user": "forensic",
+            "remote_password": "YOUR_SSH_PASSWORD",
             "remote_port": 22,
             "remote_path": "/home/forensic/reports/",
-            "ssh_key_path": str(Path.home() / ".ssh" / "id_ed25519"),
-            "enabled": False,
-            "auto_rename": True,
-            "verify_integrity": True
+            "enabled": false,
+            "auto_rename": true,
+            "verify_integrity": true
         }
         with open(remote_config_file, "w") as f:
             json.dump(remote_config, f, indent=4)

@@ -7,12 +7,9 @@ import shutil
 import logging
 import threading
 import time
-import io
 from pathlib import Path
 import paramiko
 from scp import SCPClient
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ed25519
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -38,8 +35,6 @@ logging.basicConfig(
 class RemoteTransferManager:
     def __init__(self):
         self.config = self._load_config()
-        self.ssh_key_path = Path.home() / ".ssh" / "id_ed25519"
-        self.ensure_ssh_keys()
 
     def _load_config(self):
         try:
@@ -49,33 +44,7 @@ class RemoteTransferManager:
             logging.error(f"Error loading config: {e}")
             return {}
 
-    def ensure_ssh_keys(self):
-        """Generates ed25519 keys if they don't exist."""
-        ssh_dir = self.ssh_key_path.parent
-        ssh_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-        
-        if not self.ssh_key_path.exists():
-            logging.info("Generating new ed25519 SSH keys...")
-            # Generate using cryptography
-            priv_key = ed25519.Ed25519PrivateKey.generate()
-            private_bytes = priv_key.private_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PrivateFormat.OpenSSH,
-                encryption_algorithm=serialization.NoEncryption()
-            )
-            
-            # Save private key
-            with open(self.ssh_key_path, "wb") as f:
-                f.write(private_bytes)
-            os.chmod(self.ssh_key_path, 0o600)
-
-            # Load into paramiko to get public key parts
-            key = paramiko.Ed25519Key.from_private_key(io.StringIO(private_bytes.decode()))
-            
-            # Write public key
-            with open(str(self.ssh_key_path) + ".pub", "w") as f:
-                f.write(f"{key.get_name()} {key.get_base64()} forensic-suite-auto\n")
-            logging.info(f"SSH keys generated at {self.ssh_key_path}")
+    # SSH keys generation removed to simplify remote service
 
     def get_hostname(self):
         return socket.gethostname()
@@ -139,7 +108,7 @@ class RemoteTransferManager:
                 hostname=self.config.get("remote_host"),
                 port=self.config.get("remote_port", 22),
                 username=self.config.get("remote_user"),
-                key_filename=str(self.ssh_key_path),
+                password=self.config.get("remote_password"),
                 timeout=10
             )
 
@@ -192,4 +161,4 @@ if __name__ == "__main__":
     # Test
     manager = RemoteTransferManager()
     print(f"Hostname: {manager.get_hostname()}")
-    print(f"SSH Key: {manager.ssh_key_path}")
+    print(f"Config: {manager.config}")
