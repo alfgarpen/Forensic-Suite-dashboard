@@ -71,9 +71,9 @@ def configure_app():
             "remote_password": "YOUR_SSH_PASSWORD",
             "remote_port": 22,
             "remote_path": "/home/forensic/reports/",
-            "enabled": false,
-            "auto_rename": true,
-            "verify_integrity": true
+            "enabled": False,
+            "auto_rename": True,
+            "verify_integrity": True
         }
         with open(remote_config_file, "w") as f:
             json.dump(remote_config, f, indent=4)
