@@ -109,7 +109,9 @@ class RemoteTransferManager:
                 port=self.config.get("remote_port", 22),
                 username=self.config.get("remote_user"),
                 password=self.config.get("remote_password"),
-                timeout=10
+                timeout=10,
+                look_for_keys=False,
+                allow_agent=False
             )
 
             # Create remote directory structure if it doesn't exist
